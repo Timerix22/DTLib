@@ -9,6 +9,5 @@
         // вот к этому объекту подключайте методы для вывода логов
         public static LogDelegate Log;
         public static LogDelegate LogNoTime;
-        public static LogDelegate FSP_DownloadSpeed;
     }
 }

@@ -55,133 +55,6 @@ namespace DTLib
             socket.Send(list.ToArray());
         }
 
-        /*
-        // скачивает файл с помощью FSP протокола
-        public static void FSP_Download(this Socket mainSocket, string filePath_server, string filePath_client)
-        {
-            Log("b", $"requesting file download: {filePath_server}\n");
-            mainSocket.SendPackage("requesting file download".ToBytes());
-            mainSocket.SendPackage(filePath_server.ToBytes());
-            FSP_Download(mainSocket, filePath_client);
-        }
-        public static void FSP_Download(this Socket mainSocket, string filePath_client)
-        {
-            File.Create(filePath_client);
-            using var fileStream = File.OpenWrite(filePath_client);
-            var fileSize = mainSocket.GetPackage().ToStr().ToUInt();
-            var hashstr = mainSocket.GetPackage().HashToString();
-            mainSocket.SendPackage("ready".ToBytes());
-            int packagesCount = 0;
-            byte[] buffer = new byte[5120];
-            int fullPackagesCount = SimpleConverter.Truncate(fileSize / buffer.Length);
-            // рассчёт скорости
-            int seconds = 0;
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                Log("c", $"speed= {packagesCount * buffer.Length / (seconds * 1000)} kb/s\n");
-            });
-            // получение файла
-            for (; packagesCount < fullPackagesCount; packagesCount++)
-            {
-                buffer = mainSocket.GetPackage();
-                fileStream.Write(buffer, 0, buffer.Length);
-                fileStream.Flush();
-            }
-            speedCounter.Stop();
-            // получение остатка
-            if ((fileSize - fileStream.Position) > 0)
-            {
-                mainSocket.SendPackage("remain request".ToBytes());
-                buffer = mainSocket.GetPackage();
-                fileStream.Write(buffer, 0, buffer.Length);
-            }
-            fileStream.Flush();
-            fileStream.Close();
-            Log(new string[] { "g", $"   downloaded {packagesCount * 5120 + buffer.Length} of {fileSize} bytes\n" });
-
-        }
-
-        public static byte[] FSP_DownloadToMemory(this Socket mainSocket, string filePath_server)
-        {
-            Log("b", $"requesting file download: {filePath_server}\n");
-            mainSocket.SendPackage("requesting file download".ToBytes());
-            mainSocket.SendPackage(filePath_server.ToBytes());
-            using var fileStream = new System.IO.MemoryStream();
-            var fileSize = mainSocket.GetPackage().ToStr().ToUInt();
-            var hashstr = mainSocket.GetPackage().HashToString();
-            mainSocket.SendPackage("ready".ToBytes());
-            int packagesCount = 0;
-            byte[] buffer = new byte[5120];
-            int fullPackagesCount = SimpleConverter.Truncate(fileSize / buffer.Length);
-            // рассчёт скорости
-            int seconds = 0;
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                Log("c", $"speed= {packagesCount * buffer.Length / (seconds * 1000)} kb/s\n");
-            });
-            // получение файла
-            for (; packagesCount < fullPackagesCount; packagesCount++)
-            {
-                buffer = mainSocket.GetPackage();
-                fileStream.Write(buffer, 0, buffer.Length);
-                fileStream.Flush();
-            }
-            speedCounter.Stop();
-            // получение остатка
-            if ((fileSize - fileStream.Position) > 0)
-            {
-                mainSocket.SendPackage("remain request".ToBytes());
-                buffer = mainSocket.GetPackage();
-                fileStream.Write(buffer, 0, buffer.Length);
-            }
-            byte[] output = fileStream.GetBuffer();
-            fileStream.Close();
-            Log(new string[] { "g", $"   downloaded {packagesCount * 5120 + buffer.Length} of {fileSize} bytes\n" });
-            return output;
-        }
-
-        // отдаёт файл с помощью FSP протокола
-        public static void FSP_Upload(this Socket mainSocket, string filePath)
-        {
-            Log("b", $"uploading file {filePath}\n");
-            using var fileStream = File.OpenRead(filePath);
-            var fileSize = File.GetSize(filePath);
-            var fileHash = new Hasher().HashFile(filePath);
-            mainSocket.SendPackage(fileSize.ToString().ToBytes());
-            mainSocket.SendPackage(fileHash);
-            if (mainSocket.GetPackage().ToStr() != "ready") throw new Exception("user socket isn't ready");
-            byte[] buffer = new byte[5120];
-            var hashstr = fileHash.HashToString();
-            int packagesCount = 0;
-            int seconds = 0;
-            // рассчёт скорости
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                Log("c", $"speed= {packagesCount * buffer.Length / (seconds * 1000)} kb/s\n");
-            });
-            // отправка файла
-            int fullPackagesCount = SimpleConverter.Truncate(fileSize / buffer.Length);
-            for (; packagesCount < fullPackagesCount; packagesCount++)
-            {
-                fileStream.Read(buffer, 0, buffer.Length);
-                mainSocket.SendPackage(buffer);
-            }
-            speedCounter.Stop();
-            // досылка остатка
-            if ((fileSize - fileStream.Position) > 0)
-            {
-                if (mainSocket.GetPackage().ToStr() != "remain request") throw new Exception("FSP_Upload() error: didn't get remain request");
-                buffer = new byte[(fileSize - fileStream.Position).ToInt()];
-                fileStream.Read(buffer, 0, buffer.Length);
-                mainSocket.SendPackage(buffer);
-            }
-            fileStream.Close();
-            Log(new string[] { "g", $"   uploaded {packagesCount * 5120 + buffer.Length} of {fileSize} bytes\n" });
-        }
-        */
         // получает с сайта публичный ip
         public static string GetPublicIP() => new WebClient().DownloadString("https://ipv4bot.whatismyipaddress.com/");
 
@@ -338,7 +211,7 @@ namespace DTLib
                 var hasher = new Hasher();
                 foreach (string fileOnServer in manifest.Keys)
                 {
-                    string fileOnClient = dirOnClient+fileOnServer;
+                    string fileOnClient = dirOnClient + fileOnServer;
                     if (debug) Log("b", "file <", "c", fileOnClient, "b", ">...  ");
                     if (!File.Exists(fileOnClient))
                     {

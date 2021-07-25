@@ -18,7 +18,7 @@ namespace DTLib
         public Dtsod(string text)
         {
             Text = text;
-            foreach (KeyValuePair<string, dynamic> pair in ParseNew(text))
+            foreach (KeyValuePair<string, dynamic> pair in Parse(text))
                 Add(pair.Key, pair.Value);
         }
 
@@ -83,7 +83,7 @@ namespace DTLib
             Default
         }
 
-        Dictionary<string, dynamic> ParseNew(string text)
+        Dictionary<string, dynamic> Parse(string text)
         {
             Dictionary<string, dynamic> parsed = new();
             int i = 0;
@@ -212,7 +212,7 @@ namespace DTLib
                     if (debug) LogNoTime("y", text[i].ToString());
                     type = ValueType.Complex;
                     if (debug) LogNoTime("g", valueBuilder.ToString());
-                    return ParseNew(valueBuilder.ToString());
+                    return Parse(valueBuilder.ToString());
                 }
 
                 dynamic ParseValueToRightType(string stringValue)
@@ -284,136 +284,6 @@ namespace DTLib
                 }
                 throw new Exception("Dtsod.Parse.ReadValue error: end of text");
             }
-        }
-
-
-        Dictionary<string, dynamic> ParseOld(string text)
-        {
-            Dictionary<string, dynamic> output = new();
-            StringBuilder nameStrB = new();
-            StringBuilder valStrB = new();
-            dynamic value = null;
-            bool readValue = false;
-            bool readString = false;
-            bool readListElem = false;
-            bool isList = false;
-
-            dynamic StringToElse(string str)
-            {
-                if (readString) return str;
-                // bool
-                switch (str)
-                {
-                    // предустановленные значения
-                    case "true": return true;
-                    case "false": return false;
-                    case "null": return null;
-                    default:
-                        // double
-                        if (str.Contains(".")) return SimpleConverter.ToDouble(str);
-                        // ushort, uint, ulong
-                        else if (str.Length > 2 && str[str.Length - 2] == 'u')
-                            return str[str.Length - 1] switch
-                            {
-                                's' => SimpleConverter.ToUShort(str.Remove(str.Length - 2)),
-                                'i' => SimpleConverter.ToUInt(str.Remove(str.Length - 2)),
-                                'l' => SimpleConverter.ToULong(str.Remove(str.Length - 2)),
-                                _ => throw new Exception($"ParseConfig() error: unknown data type <u{str[str.Length - 1]}>"),
-                            };
-                        // short, int, long
-                        else return str[str.Length - 1] switch
-                        {
-                            's' => SimpleConverter.ToShort(str.Remove(str.Length - 1)),
-                            'l' => SimpleConverter.ToLong(str.Remove(str.Length - 1)),
-                            _ => SimpleConverter.ToInt(str),
-                        };
-                }
-            }
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (debug) LogNoTime(text[i].ToString());
-
-                void ReadString()
-                {
-                    i++;
-                    while (text[i] != '"' || text[i - 1] == '\\')
-                    {
-                        if (debug) LogNoTime(text[i].ToString());
-                        valStrB.Append(text[i]);
-                        i++;
-                    }
-                }
-
-                switch (text[i])
-                {
-                    case '{':
-                        i++;
-                        for (; text[i] != '}'; i++)
-                        {
-                            if (text[i] == '"') ReadString();
-                            else valStrB.Append(text[i]);
-                        }
-                        value = ParseOld(valStrB.ToString());
-                        valStrB.Clear();
-                        break;
-                    case '}':
-                        throw new Exception("ParseConfig() error: unexpected '}' at " + i + "char");
-                    case '"':
-                        readString = true;
-                        ReadString();
-                        break;
-                    case ':':
-                        readValue = true;
-                        break;
-                    case ' ':
-                    case '\t':
-                    case '\r':
-                    case '\n':
-                        break;
-                    case '[':
-                        isList = true;
-                        value = new List<dynamic>();
-                        break;
-                    case ',':
-                    case ']':
-                        if (isList) value.Add(StringToElse(valStrB.ToString()));
-                        else throw new Exception($"unexpected <{text[i]}> at text[{i}]");
-                        valStrB.Clear();
-                        break;
-                    case ';':
-                        // конвертация value в нужный тип данных
-                        if (!isList && valStrB.Length > 0) value = StringToElse(valStrB.ToString());
-                        if (readListElem)
-                        {
-                            if (!output.ContainsKey(nameStrB.ToString())) output.Add(nameStrB.ToString(), new List<dynamic>());
-                            output[nameStrB.ToString()].Add(value);
-                        }
-                        else output.Add(nameStrB.ToString(), value);
-                        nameStrB.Clear();
-                        valStrB.Clear();
-                        value = null;
-                        readValue = false;
-                        readString = false;
-                        readListElem = false;
-                        isList = false;
-                        break;
-                    // коммент
-                    case '#':
-                        for (; i < text.Length && text[i] != '\n'; i++) ;
-                        break;
-                    // если $ перед названием параметра поставить, значение (value) добавится в лист с таким названием (nameStrB.ToString())
-                    case '$':
-                        if (nameStrB.ToString().Length != 0) throw new Exception("unexpected usage of '$' at char " + i.ToString());
-                        readListElem = true;
-                        break;
-                    default:
-                        if (readValue) valStrB.Append(text[i]);
-                        else nameStrB.Append(text[i]);
-                        break;
-                };
-            }
-            return output;
         }
     }
 }
