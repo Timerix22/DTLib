@@ -64,8 +64,12 @@ namespace DTLib.Filesystem
             for (int i = 0; i < files.Count; i++)
                 File.Delete(files[i]);
             for (int i = subdirs.Count - 1; i >= 0; i--)
-                System.IO.Directory.Delete(subdirs[i]);
-            System.IO.Directory.Delete(dir);
+            {
+                PublicLog.Log($"deleting {subdirs[i]}\n");
+                if (Directory.Exists(subdirs[i])) System.IO.Directory.Delete(subdirs[i], true);
+            }
+            PublicLog.Log($"deleting {dir}\n");
+            if (Directory.Exists(dir)) System.IO.Directory.Delete(dir, true);
         }
 
         public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(dir);
@@ -112,5 +116,20 @@ namespace DTLib.Filesystem
         }
 
         public static string GetCurrent() => System.IO.Directory.GetCurrentDirectory();
+
+        public static void GrantAccess(string fullPath)
+        {
+            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(fullPath);
+            System.Security.AccessControl.DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+            dirSecurity.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(
+                new System.Security.Principal.SecurityIdentifier(
+                    System.Security.Principal.WellKnownSidType.WorldSid, null),
+                    System.Security.AccessControl.FileSystemRights.FullControl,
+                    System.Security.AccessControl.InheritanceFlags.ObjectInherit |
+                    System.Security.AccessControl.InheritanceFlags.ContainerInherit,
+                    System.Security.AccessControl.PropagationFlags.NoPropagateInherit,
+                    System.Security.AccessControl.AccessControlType.Allow));
+            dirInfo.SetAccessControl(dirSecurity);
+        }
     }
 }

@@ -9,8 +9,9 @@ namespace DTLib.Filesystem
         public static bool Exists(string file) => System.IO.File.Exists(file);
 
         // если файл не существует, создаёт файл, создаёт папки из его пути
-        public static void Create(string file)
+        public static void Create(string file, bool delete_old = false)
         {
+            if (delete_old && File.Exists(file)) File.Delete(file);
             if (!File.Exists(file))
             {
                 if (file.Contains("\\")) Directory.Create(file.Remove(file.LastIndexOf('\\')));
@@ -65,9 +66,8 @@ namespace DTLib.Filesystem
         }
         public static System.IO.FileStream OpenWrite(string file)
         {
-            if (Exists(file)) Delete(file);
-            File.Create(file);
-            return System.IO.File.OpenWrite(file);
+            File.Create(file, true);
+            return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate);
         }
         public static System.IO.FileStream OpenAppend(string file)
         {

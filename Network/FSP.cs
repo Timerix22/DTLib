@@ -1,4 +1,5 @@
-﻿using DTLib.Filesystem;
+﻿using DTLib.Dtsod;
+using DTLib.Filesystem;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -13,12 +14,16 @@ namespace DTLib.Network
     public class FSP
     {
         Socket mainSocket;
-        public bool debug = true;
+        public bool debug = false;
         public FSP(Socket _mainSocket) => mainSocket = _mainSocket;
 
         public uint BytesDownloaded = 0;
         public uint BytesUploaded = 0;
         public uint Filesize = 0;
+
+        /*public delegate void PackageTransferDel(uint size);
+        public event PackageTransferDel PackageRecieved;
+        public event PackageTransferDel PackageSent;*/
 
         // скачивает файл с помощью FSP протокола
         public void DownloadFile(string filePath_server, string filePath_client)
@@ -31,7 +36,7 @@ namespace DTLib.Network
 
         public void DownloadFile(string filePath_client)
         {
-            File.Create(filePath_client);
+            BytesDownloaded = 0;
             using var fileStream = File.OpenWrite(filePath_client);
             Filesize = mainSocket.GetPackage().ToStr().ToUInt();
             var hashstr = mainSocket.GetPackage().HashToString();
@@ -40,68 +45,79 @@ namespace DTLib.Network
             byte[] buffer = new byte[5120];
             int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
             // рассчёт скорости
-            int seconds = 0;
+            /*int seconds = 0;
             var speedCounter = new Timer(true, 1000, () =>
             {
                 seconds++;
-                Log("c", $"speed= {packagesCount * buffer.Length / (seconds * 1000)} kb/s\n");
-            });
+                PackageRecieved(BytesDownloaded);
+            });*/
             // получение файла
-            for (; packagesCount < fullPackagesCount; packagesCount++)
+            
+            for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
             {
                 buffer = mainSocket.GetPackage();
+                BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
-                fileStream.Flush();
+                if (n == 100)
+                {
+                    fileStream.Flush();
+                    n = 0;
+                }
+                else n++;
             }
-            speedCounter.Stop();
             // получение остатка
             if ((Filesize - fileStream.Position) > 0)
             {
                 mainSocket.SendPackage("remain request".ToBytes());
                 buffer = mainSocket.GetPackage();
+                BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
             }
+            //speedCounter.Stop();
             fileStream.Flush();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   downloaded {packagesCount * 5120 + buffer.Length} of {Filesize} bytes\n" });
+            if (debug) Log(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
         }
+
         public byte[] DownloadFileToMemory(string filePath_server)
         {
+            BytesDownloaded = 0;
             if (debug) Log("b", $"requesting file download: {filePath_server}\n");
             mainSocket.SendPackage("requesting file download".ToBytes());
             mainSocket.SendPackage(filePath_server.ToBytes());
             using var fileStream = new System.IO.MemoryStream();
-            var fileSize = mainSocket.GetPackage().ToStr().ToUInt();
+            Filesize = mainSocket.GetPackage().ToStr().ToUInt();
             var hashstr = mainSocket.GetPackage().HashToString();
             mainSocket.SendPackage("ready".ToBytes());
             int packagesCount = 0;
             byte[] buffer = new byte[5120];
-            int fullPackagesCount = SimpleConverter.Truncate(fileSize / buffer.Length);
+            int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
             // рассчёт скорости
-            int seconds = 0;
+            /*int seconds = 0;
             var speedCounter = new Timer(true, 1000, () =>
             {
                 seconds++;
-                Log("c", $"speed= {packagesCount * buffer.Length / (seconds * 1000)} kb/s\n");
-            });
+                PackageRecieved(BytesDownloaded);
+            });*/
             // получение файла
             for (; packagesCount < fullPackagesCount; packagesCount++)
             {
                 buffer = mainSocket.GetPackage();
+                BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
-                fileStream.Flush();
             }
-            speedCounter.Stop();
             // получение остатка
-            if ((fileSize - fileStream.Position) > 0)
+            if ((Filesize - fileStream.Position) > 0)
             {
                 mainSocket.SendPackage("remain request".ToBytes());
                 buffer = mainSocket.GetPackage();
+                BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
             }
+            //speedCounter.Stop();
             byte[] output = fileStream.GetBuffer();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   downloaded {packagesCount * 5120 + buffer.Length} of {fileSize} bytes\n" });
+            if (debug) Log(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
             return output;
         }
 
@@ -118,32 +134,42 @@ namespace DTLib.Network
             byte[] buffer = new byte[5120];
             var hashstr = fileHash.HashToString();
             int packagesCount = 0;
-            // отправка файла
             int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
+            // рассчёт скорости
+            /*int seconds = 0;
+            var speedCounter = new Timer(true, 1000, () =>
+            {
+                seconds++;
+                PackageSent(BytesUploaded);
+            });*/
+            // отправка файла
             for (; packagesCount < fullPackagesCount; packagesCount++)
             {
                 fileStream.Read(buffer, 0, buffer.Length);
                 mainSocket.SendPackage(buffer);
+                BytesUploaded += (uint)buffer.Length;
             }
             // досылка остатка
             if ((Filesize - fileStream.Position) > 0)
             {
-                if (mainSocket.GetPackage().ToStr() != "remain request") throw new Exception("FSP_Upload() error: didn't get remain request");
+                mainSocket.GetAnswer("remain request");
                 buffer = new byte[(Filesize - fileStream.Position).ToInt()];
                 fileStream.Read(buffer, 0, buffer.Length);
                 mainSocket.SendPackage(buffer);
+                BytesUploaded += (uint)buffer.Length;
             }
+            //speedCounter.Stop();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   uploaded {packagesCount * 5120 + buffer.Length} of {Filesize} bytes\n" });
+            if (debug) Log(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
         }
 
         public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
         {
             if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
             if (!dirOnServer.EndsWith("\\")) dirOnServer += "\\";
-            Log("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
-            var manifest = new Dtsod(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
-            Log("g", $"found {manifest.Values.Count} files in manifest\n");
+            if (debug) Log("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
+            var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
+            if (debug) Log("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
             {
@@ -174,18 +200,18 @@ namespace DTLib.Network
                     }
                 }
                 // удаление пустых папок
-                foreach (string dir in dirs)
+                /*foreach (string dir in dirs)
                 {
                     if (Directory.Exists(dir) && Directory.GetAllFiles(dir).Count == 0)
                     {
                         if (debug) Log("y", $"deleting empty dir: {dir}\n");
                         Directory.Delete(dir);
                     }
-                }
+                }*/
             }
         }
 
-        static public void CreateManifest(string dir)
+        public static void CreateManifest(string dir)
         {
             if (!dir.EndsWith("\\")) dir += "\\";
             Log($"b", $"creating manifest of {dir}\n");

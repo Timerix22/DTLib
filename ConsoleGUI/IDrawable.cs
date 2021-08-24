@@ -7,6 +7,7 @@
         public ushort Height { get; }
         public char[] Textmap { get; }
         public char[] Colormap { get; }
+        public string Name { get; }
 
         public void GenTextmap();
 

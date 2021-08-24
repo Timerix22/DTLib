@@ -8,7 +8,7 @@ namespace DTLib.Network
     //
     // отправка/получение пакетов
     //
-    static public class Package
+    public static class Package
     {
         // принимает пакет
         public static byte[] GetPackage(this Socket socket)
@@ -22,7 +22,6 @@ namespace DTLib.Network
                 {
                     socket.Receive(data, data.Length, 0);
                     packageSize = data.BytesToInt();
-
                 }
                 if (packageSize != 0 && socket.Available >= packageSize)
                 {
@@ -46,6 +45,13 @@ namespace DTLib.Network
             list.AddRange(packageSize);
             list.AddRange(data);
             socket.Send(list.ToArray());
+        }
+
+        // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
+        public static void GetAnswer(this Socket socket, string answer)
+        {
+            var rec = socket.GetPackage().ToStr();
+            if (rec != answer) throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
         }
     }
 }

@@ -4,18 +4,25 @@ using System.Linq;
 using System.Text;
 using static DTLib.PublicLog;
 
-namespace DTLib
+namespace DTLib.Dtsod
 {
     //
     // это как json но не совсем
     //
-    public class Dtsod : Dictionary<string, dynamic>
+    // v2.0
+    // полностью переписан парсер
+    //  
+    // v2.1
+    // парсер теперь не может игнорировать комменты, потом починю
+    // теперь числовые значения конвертируются в правильный тип, а не в int64/uint64 (новый вариант switch из c#9.0 делал какую-то херню)
+    // исправлены некоторые другие баги
+    class DtsodV21 : Dictionary<string, dynamic>
     {
         static readonly bool debug = false;
+        string Text;
 
-        public string Text { get; }
         //public Dictionary<string, dynamic> Values { get; set; }
-        public Dtsod(string text)
+        public DtsodV21(string text)
         {
             Text = text;
             foreach (KeyValuePair<string, dynamic> pair in Parse(text))
@@ -23,7 +30,7 @@ namespace DTLib
         }
 
         // выдаёт Exception
-        new public dynamic this[string key]
+        public new dynamic this[string key]
         {
             get
             {
@@ -38,7 +45,7 @@ namespace DTLib
         }
 
         // не выдаёт KeyNotFoundException
-        new public bool TryGetValue(string key, out dynamic value)
+        public new bool TryGetValue(string key, out dynamic value)
         {
             try
             {
@@ -79,7 +86,7 @@ namespace DTLib
             Int,
             Uint,
             Null,
-            Boolean,*/
+            Bool,*/
             Default
         }
 
@@ -88,23 +95,25 @@ namespace DTLib
             Dictionary<string, dynamic> parsed = new();
             int i = 0;
             for (; i < text.Length; i++) ReadName();
+            if (debug) LogNoTime("g", $"Parse returns {parsed.Keys.Count} keys\n");
             return parsed;
+
+            // СЛОМАНО
+            /*void ReadCommentLine()
+            {
+                for (; i < text.Length && text[i] != '\n'; i++) if (debug) LogNoTime("gray", text[i].ToString());
+            }*/
 
             void ReadName()
             {
-                void ReadCommentLine()
-                {
-                    for (; i < text.Length && text[i] != '\n'; i++) ;
-                }
 
                 bool isListElem = false;
                 dynamic value = null;
                 StringBuilder defaultNameBuilder = new();
 
-                if (debug) LogNoTime("m", "ReadName");
+                if (debug) LogNoTime("m", "ReadName\n");
                 for (; i < text.Length; i++)
                 {
-                    if (debug) LogNoTime("w", text[i].ToString());
                     switch (text[i])
                     {
                         case ' ':
@@ -114,31 +123,32 @@ namespace DTLib
                             break;
                         case ':':
                             i++;
-                            value = ReadValue();
                             string name = defaultNameBuilder.ToString();
-                            if (debug) LogNoTime("c", $"parsed.Add({name}, {value})\n");
+                            value = ReadValue();
+                            if (debug) LogNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
                             if (isListElem)
                             {
                                 if (!parsed.ContainsKey(name)) parsed.Add(name, new List<dynamic>());
                                 parsed[name].Add(value);
                             }
                             else parsed.Add(name, value);
-                            if (debug) LogNoTime("g", "ReadName return\n");
                             return;
                         // строка, начинающаяся с # будет считаться комментом
                         case '#':
-                            ReadCommentLine();
+                            //ReadCommentLine();
                             break;
                         case '}':
                             throw new Exception("Parse.ReadName() error: unexpected '}' at " + i + " char");
                         // если $ перед названием параметра поставить, значение value добавится в лист с названием name
                         case '$':
+                            if (debug) LogNoTime("w", text[i].ToString());
                             if (defaultNameBuilder.ToString().Length != 0) throw new Exception("Parse.ReadName() error: unexpected '$' at " + i + " char");
                             isListElem = true;
                             break;
                         case ';':
                             throw new Exception("Parse.ReadName() error: unexpected ';' at " + i + " char");
                         default:
+                            if (debug) LogNoTime("w", text[i].ToString());
                             defaultNameBuilder.Append(text[i]);
                             break;
                     }
@@ -148,6 +158,7 @@ namespace DTLib
             dynamic ReadValue()
             {
                 ValueType type = ValueType.Default;
+                dynamic value = null;
 
                 string ReadString()
                 {
@@ -181,7 +192,8 @@ namespace DTLib
                             case '\n':
                                 break;
                             case ',':
-                                output.Add(ParseValueToRightType(valueBuilder.ToString()));
+                                ParseValueToRightType(valueBuilder.ToString());
+                                output.Add(value);
                                 valueBuilder.Clear();
                                 break;
                             default:
@@ -190,7 +202,10 @@ namespace DTLib
                         }
                     }
                     if (valueBuilder.Length > 0)
-                        output.Add(ParseValueToRightType(valueBuilder.ToString()));
+                    {
+                        ParseValueToRightType(valueBuilder.ToString());
+                        output.Add(value);
+                    }
                     if (debug) LogNoTime("c", text[i].ToString());
                     type = ValueType.List;
                     return output;
@@ -198,55 +213,92 @@ namespace DTLib
 
                 Dictionary<string, dynamic> ReadComplex()
                 {
-                    i++;
                     StringBuilder valueBuilder = new();
-                    for (; text[i] != '}'; i++)
+                    int balance = 1;
+                    i++;
+                    for (; balance != 0; i++)
                     {
                         if (debug) LogNoTime("y", text[i].ToString());
-                        if (text[i] == '"')
+                        switch (text[i])
                         {
-                            valueBuilder.Append(ReadString());
+                            case '"':
+                                valueBuilder.Append(ReadString());
+                                break;
+                            case '}':
+                                balance--;
+                                if (debug) LogNoTime("b", $"\nbalance -- = {balance}\n");
+                                if (balance != 0) valueBuilder.Append(text[i]);
+                                break;
+                            case '{':
+                                balance++;
+                                if (debug) LogNoTime("b", $"\nbalance ++ = {balance}\n");
+                                valueBuilder.Append(text[i]);
+                                break;
+                            default:
+                                valueBuilder.Append(text[i]);
+                                break;
                         }
-                        else valueBuilder.Append(text[i]);
                     }
-                    if (debug) LogNoTime("y", text[i].ToString());
+                    i--;   // i++ в for выполняется даже когда balance == 0, то есть text[i] получается == ;, что ломает всё
                     type = ValueType.Complex;
-                    if (debug) LogNoTime("g", valueBuilder.ToString());
                     return Parse(valueBuilder.ToString());
                 }
 
-                dynamic ParseValueToRightType(string stringValue)
+                void ParseValueToRightType(string stringValue)
                 {
 
-                    if (debug) LogNoTime("g", $"\nParseValueToRightType({stringValue})");
-                    return stringValue switch
+                    if (debug) LogNoTime("b", $"\nParseValueToRightType({stringValue})\n");
+                    switch (stringValue)
                     {
-                        _ when stringValue.Contains('"') => stringValue.Remove(stringValue.Length - 1).Remove(0, 1),
+
                         // bool
-                        "true" or "false" => stringValue.ToBool(),
+                        case "true":
+                        case "false":
+                            value = stringValue.ToBool();
+                            break;
                         // null
-                        "null" => null,
-                        // double
-                        _ when stringValue.Contains('.') => stringValue.ToDouble(),
-                        // ushort, ulong, uint
-                        _ when (stringValue.Length > 2 && stringValue[stringValue.Length - 2] == 'u') => stringValue[stringValue.Length - 1] switch
-                        {
-                            's' => stringValue.Remove(stringValue.Length - 2).ToUShort(),
-                            'i' => stringValue.Remove(stringValue.Length - 2).ToUInt(),
-                            'l' => stringValue.Remove(stringValue.Length - 2).ToULong(),
-                            _ => throw new Exception($"Dtsod.Parse.ReadValue() error: wrong type <u{stringValue[stringValue.Length - 1]}>")
-                        },
-                        // short, long, int
-                        _ => stringValue[stringValue.Length - 1] switch
-                        {
-                            's' => stringValue.Remove(stringValue.Length - 1).ToShort(),
-                            'l' => stringValue.Remove(stringValue.Length - 1).ToLong(),
-                            _ => stringValue.ToInt()
-                        }
+                        case "null":
+                            value = null;
+                            break;
+                        default:
+                            if (stringValue.Contains('"')) value = stringValue.Remove(stringValue.Length - 1).Remove(0, 1);
+                            // double
+                            else if (stringValue.Contains('.')) value = stringValue.ToDouble();
+                            // ushort; ulong; uint
+                            else if (stringValue.Length > 2 && stringValue[stringValue.Length - 2] == 'u')
+                            {
+                                switch (stringValue[stringValue.Length - 1])
+                                {
+                                    case 's':
+                                        value = stringValue.Remove(stringValue.Length - 2).ToUShort();
+                                        break;
+                                    case 'i':
+                                        value = stringValue.Remove(stringValue.Length - 2).ToUInt();
+                                        break;
+                                    case 'l':
+                                        value = stringValue.Remove(stringValue.Length - 2).ToULong();
+                                        break;
+                                    default:
+                                        throw new Exception($"Dtsod.Parse.ReadValue() error: value= wrong type <u{stringValue[stringValue.Length - 1]}>");
+                                };
+                            }
+                            // short; long; int
+                            else switch (stringValue[stringValue.Length - 1])
+                                {
+                                    case 's':
+                                        value = stringValue.Remove(stringValue.Length - 1).ToShort();
+                                        break;
+                                    case 'l':
+                                        value = stringValue.Remove(stringValue.Length - 1).ToLong();
+                                        break;
+                                    default:
+                                        value = stringValue.ToShort();
+                                        break;
+                                }
+                            break;
                     };
                 }
 
-                dynamic value = null;
                 StringBuilder defaultValueBuilder = new();
                 if (debug) LogNoTime("m", "\nReadValue\n");
                 for (; i < text.Length; i++)
@@ -263,26 +315,32 @@ namespace DTLib
                             value = ReadString();
                             break;
                         case ';':
-                            if (debug) LogNoTime("g", $"\nReadValue returns type {type} value <{value}>\n");
-                            return type switch
+                            switch (type)
                             {
-                                ValueType.List or ValueType.Complex => value,
-                                ValueType.String => ParseValueToRightType(value),
-                                ValueType.Default => ParseValueToRightType(defaultValueBuilder.ToString()),
-                                _ => throw new Exception($"Dtlib.Parse.ReadValue() error: can't convert value to type <{type}>")
+                                case ValueType.String:
+                                    ParseValueToRightType(value);
+                                    break;
+                                case ValueType.Default:
+                                    ParseValueToRightType(defaultValueBuilder.ToString());
+                                    break;
                             };
+                            return value;
                         case '[':
                             value = ReadList();
                             break;
                         case '{':
                             value = ReadComplex();
                             break;
+                        // строка, начинающаяся с # будет считаться комментом
+                        case '#':
+                            //ReadCommentLine();
+                            break;
                         default:
                             defaultValueBuilder.Append(text[i]);
                             break;
                     }
                 }
-                throw new Exception("Dtsod.Parse.ReadValue error: end of text");
+                throw new Exception("Dtsod.Parse.ReadValue error: wtf it's the end of function");
             }
         }
     }

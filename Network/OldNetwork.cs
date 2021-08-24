@@ -11,7 +11,7 @@ namespace DTLib.Network
 
 
         // получает с сайта публичный ip
-        public static string GetPublicIP() => new WebClient().DownloadString("https://ipv4bot.whatismyipaddress.com/");
+        public static string GetPublicIP() => new WebClient().DownloadString("https://ifconfig.me/ip");
 
         // пингует айпи с помощью встроенной в винду проги, возвращает задержку
         public static string PingIP(string address)

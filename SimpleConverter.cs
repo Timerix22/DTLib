@@ -51,14 +51,6 @@ namespace DTLib
         // из-за чего вызов метода так: Math.Truncate(10/3) выдаст ошибку "неоднозначный вызов"
         public static int Truncate<T>(this T number) => Math.Truncate(number.ToDouble()).ToInt();
 
-        // сортирует в порядке возрастания элементы если это возможно, используя стандартный метод list.Sort();
-        public static T[] Sort<T>(this T[] array)
-        {
-            var list = array.ToList();
-            list.Sort();
-            return list.ToArray();
-        }
-
         // массив в лист
         public static List<T> ToList<T>(this T[] input)
         {
@@ -84,18 +76,6 @@ namespace DTLib
             return false;
         }
 
-        // конвертирует массив в строку
-        public static string MergeToString<T>(this T[] array, string separator)
-        {
-            var b = new StringBuilder();
-            for (int i = 0; i < array.Length; i++)
-            {
-                b.Append(array[i].ToString());
-                b.Append(separator);
-            }
-            return b.ToString();
-        }
-
         // сокращение конвертации
         public static int ToInt<T>(this T input) => Convert.ToInt32(input);
         public static uint ToUInt<T>(this T input) => Convert.ToUInt32(input);
@@ -107,14 +87,6 @@ namespace DTLib
         public static byte ToByte<T>(this T input) => Convert.ToByte(input);
         public static sbyte ToSByte<T>(this T input) => Convert.ToSByte(input);
         public static bool ToBool<T>(this T input) => Convert.ToBoolean(input);
-
-        public static string AutoBuild(params object[] parts)
-        {
-            var builder = new StringBuilder();
-            for (int i = 0; i < parts.Length; i++)
-                builder.Append(parts[i]);
-            return builder.ToString();
-        }
 
         public static int BytesToInt(this byte[] bytes)
         {
@@ -135,7 +107,15 @@ namespace DTLib
             return output.ToArray();
         }
 
-        public static string ToString<T>(this IEnumerable<T> collection, string separator)
+        public static string AutoBuild(params object[] parts)
+        {
+            var builder = new StringBuilder();
+            for (int i = 0; i < parts.Length; i++)
+                builder.Append(parts[i].ToString());
+            return builder.ToString();
+        }
+
+        public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
         {
             StringBuilder builder = new();
             foreach (T elem in collection)
@@ -146,6 +126,22 @@ namespace DTLib
             builder.Remove(builder.Length - separator.Length, separator.Length);
             return builder.ToString();
         }
+        public static string MergeToString<T>(this IEnumerable<T> collection)
+        {
+            StringBuilder builder = new();
+            foreach (T elem in collection)
+            {
+                builder.Append(elem.ToString());
+            }
+            return builder.ToString();
+        }
 
+        public static string Multiply(this string input, int howMany)
+        {
+            StringBuilder b = new();
+            for (int i = 0; i < howMany; i++)
+                b.Append(input);
+            return b.ToString();
+        }
     }
 }
