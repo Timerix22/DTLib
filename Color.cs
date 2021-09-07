@@ -2,7 +2,7 @@
 
 namespace DTLib
 {
-    public class Color
+    public abstract class Color
     {
         public record RGBA(byte R, byte G, byte B, byte A)
         {

@@ -14,7 +14,7 @@ namespace DTLib.Network
     public class FSP
     {
         Socket mainSocket;
-        public bool debug = false;
+        static public bool debug = false;
         public FSP(Socket _mainSocket) => mainSocket = _mainSocket;
 
         public uint BytesDownloaded = 0;
@@ -28,7 +28,7 @@ namespace DTLib.Network
         // скачивает файл с помощью FSP протокола
         public void DownloadFile(string filePath_server, string filePath_client)
         {
-            if (debug) Log("b", $"requesting file download: {filePath_server}\n");
+            Debug("b", $"requesting file download: {filePath_server}\n");
             mainSocket.SendPackage("requesting file download".ToBytes());
             mainSocket.SendPackage(filePath_server.ToBytes());
             DownloadFile(filePath_client);
@@ -52,7 +52,7 @@ namespace DTLib.Network
                 PackageRecieved(BytesDownloaded);
             });*/
             // получение файла
-            
+
             for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
             {
                 buffer = mainSocket.GetPackage();
@@ -76,13 +76,13 @@ namespace DTLib.Network
             //speedCounter.Stop();
             fileStream.Flush();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
+            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
         }
 
         public byte[] DownloadFileToMemory(string filePath_server)
         {
             BytesDownloaded = 0;
-            if (debug) Log("b", $"requesting file download: {filePath_server}\n");
+            Debug("b", $"requesting file download: {filePath_server}\n");
             mainSocket.SendPackage("requesting file download".ToBytes());
             mainSocket.SendPackage(filePath_server.ToBytes());
             using var fileStream = new System.IO.MemoryStream();
@@ -117,14 +117,14 @@ namespace DTLib.Network
             //speedCounter.Stop();
             byte[] output = fileStream.GetBuffer();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
+            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
             return output;
         }
 
         // отдаёт файл с помощью FSP протокола
         public void UploadFile(string filePath)
         {
-            if (debug) Log("b", $"uploading file {filePath}\n");
+            Debug("b", $"uploading file {filePath}\n");
             using var fileStream = File.OpenRead(filePath);
             Filesize = File.GetSize(filePath).ToUInt();
             var fileHash = new Hasher().HashFile(filePath);
@@ -160,32 +160,32 @@ namespace DTLib.Network
             }
             //speedCounter.Stop();
             fileStream.Close();
-            if (debug) Log(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
+            Debug(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
         }
 
         public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
         {
             if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
             if (!dirOnServer.EndsWith("\\")) dirOnServer += "\\";
-            if (debug) Log("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
+            Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
             var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
-            if (debug) Log("g", $"found {manifest.Values.Count} files in manifest\n");
+            Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
             {
                 string fileOnClient = dirOnClient + fileOnServer;
-                if (debug) Log("b", "file <", "c", fileOnClient, "b", ">...  ");
+                Debug("b", "file <", "c", fileOnClient, "b", ">...  ");
                 if (!File.Exists(fileOnClient))
                 {
-                    if (debug) LogNoTime("y", "doesn't exist\n");
+                    DebugNoTime("y", "doesn't exist\n");
                     DownloadFile(dirOnServer + fileOnServer, fileOnClient);
                 }
                 else if (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer])
                 {
-                    if (debug) LogNoTime("y", "outdated\n");
+                    DebugNoTime("y", "outdated\n");
                     DownloadFile(dirOnServer + fileOnServer, fileOnClient);
                 }
-                else if (debug) LogNoTime("g", "without changes\n");
+                else DebugNoTime("g", "without changes\n");
             }
             // удаление лишних файлов
             if (delete_excess)
@@ -195,7 +195,7 @@ namespace DTLib.Network
                 {
                     if (!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
                     {
-                        if (debug) Log("y", $"deleting excess file: {file}\n");
+                        Debug("y", $"deleting excess file: {file}\n");
                         File.Delete(file);
                     }
                 }
@@ -204,7 +204,7 @@ namespace DTLib.Network
                 {
                     if (Directory.Exists(dir) && Directory.GetAllFiles(dir).Count == 0)
                     {
-                        if (debug) Log("y", $"deleting empty dir: {dir}\n");
+                        Debug("y", $"deleting empty dir: {dir}\n");
                         Directory.Delete(dir);
                     }
                 }*/
@@ -229,6 +229,15 @@ namespace DTLib.Network
             }
             File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
             Log($"g", $"   manifest of {dir} created\n");
+        }
+
+        void Debug(params string[] msg)
+        {
+            if (debug) Log(msg);
+        }
+        void DebugNoTime(params string[] msg)
+        {
+            if (debug) LogNoTime(msg);
         }
     }
 }

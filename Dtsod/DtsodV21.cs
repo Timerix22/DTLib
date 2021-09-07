@@ -95,13 +95,13 @@ namespace DTLib.Dtsod
             Dictionary<string, dynamic> parsed = new();
             int i = 0;
             for (; i < text.Length; i++) ReadName();
-            if (debug) LogNoTime("g", $"Parse returns {parsed.Keys.Count} keys\n");
+            DebugNoTime("g", $"Parse returns {parsed.Keys.Count} keys\n");
             return parsed;
 
             // СЛОМАНО
             /*void ReadCommentLine()
             {
-                for (; i < text.Length && text[i] != '\n'; i++) if (debug) LogNoTime("gray", text[i].ToString());
+                for (; i < text.Length && text[i] != '\n'; i++) DebugNoTime("gray", text[i].ToString());
             }*/
 
             void ReadName()
@@ -111,7 +111,7 @@ namespace DTLib.Dtsod
                 dynamic value = null;
                 StringBuilder defaultNameBuilder = new();
 
-                if (debug) LogNoTime("m", "ReadName\n");
+                DebugNoTime("m", "ReadName\n");
                 for (; i < text.Length; i++)
                 {
                     switch (text[i])
@@ -125,7 +125,7 @@ namespace DTLib.Dtsod
                             i++;
                             string name = defaultNameBuilder.ToString();
                             value = ReadValue();
-                            if (debug) LogNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
+                            DebugNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
                             if (isListElem)
                             {
                                 if (!parsed.ContainsKey(name)) parsed.Add(name, new List<dynamic>());
@@ -141,14 +141,14 @@ namespace DTLib.Dtsod
                             throw new Exception("Parse.ReadName() error: unexpected '}' at " + i + " char");
                         // если $ перед названием параметра поставить, значение value добавится в лист с названием name
                         case '$':
-                            if (debug) LogNoTime("w", text[i].ToString());
+                            DebugNoTime("w", text[i].ToString());
                             if (defaultNameBuilder.ToString().Length != 0) throw new Exception("Parse.ReadName() error: unexpected '$' at " + i + " char");
                             isListElem = true;
                             break;
                         case ';':
                             throw new Exception("Parse.ReadName() error: unexpected ';' at " + i + " char");
                         default:
-                            if (debug) LogNoTime("w", text[i].ToString());
+                            DebugNoTime("w", text[i].ToString());
                             defaultNameBuilder.Append(text[i]);
                             break;
                     }
@@ -167,11 +167,11 @@ namespace DTLib.Dtsod
                     valueBuilder.Append('"');
                     for (; text[i] != '"' || text[i - 1] == '\\'; i++)
                     {
-                        if (debug) LogNoTime("gray", text[i].ToString());
+                        DebugNoTime("gray", text[i].ToString());
                         valueBuilder.Append(text[i]);
                     }
                     valueBuilder.Append('"');
-                    if (debug) LogNoTime("gray", text[i].ToString());
+                    DebugNoTime("gray", text[i].ToString());
                     type = ValueType.String;
                     return valueBuilder.ToString();
                 }
@@ -183,7 +183,7 @@ namespace DTLib.Dtsod
                     StringBuilder valueBuilder = new();
                     for (; text[i] != ']'; i++)
                     {
-                        if (debug) LogNoTime("c", text[i].ToString());
+                        DebugNoTime("c", text[i].ToString());
                         switch (text[i])
                         {
                             case ' ':
@@ -206,7 +206,7 @@ namespace DTLib.Dtsod
                         ParseValueToRightType(valueBuilder.ToString());
                         output.Add(value);
                     }
-                    if (debug) LogNoTime("c", text[i].ToString());
+                    DebugNoTime("c", text[i].ToString());
                     type = ValueType.List;
                     return output;
                 }
@@ -218,7 +218,7 @@ namespace DTLib.Dtsod
                     i++;
                     for (; balance != 0; i++)
                     {
-                        if (debug) LogNoTime("y", text[i].ToString());
+                        DebugNoTime("y", text[i].ToString());
                         switch (text[i])
                         {
                             case '"':
@@ -226,12 +226,12 @@ namespace DTLib.Dtsod
                                 break;
                             case '}':
                                 balance--;
-                                if (debug) LogNoTime("b", $"\nbalance -- = {balance}\n");
+                                DebugNoTime("b", $"\nbalance -- = {balance}\n");
                                 if (balance != 0) valueBuilder.Append(text[i]);
                                 break;
                             case '{':
                                 balance++;
-                                if (debug) LogNoTime("b", $"\nbalance ++ = {balance}\n");
+                                DebugNoTime("b", $"\nbalance ++ = {balance}\n");
                                 valueBuilder.Append(text[i]);
                                 break;
                             default:
@@ -247,7 +247,7 @@ namespace DTLib.Dtsod
                 void ParseValueToRightType(string stringValue)
                 {
 
-                    if (debug) LogNoTime("b", $"\nParseValueToRightType({stringValue})\n");
+                    DebugNoTime("b", $"\nParseValueToRightType({stringValue})\n");
                     switch (stringValue)
                     {
 
@@ -300,10 +300,10 @@ namespace DTLib.Dtsod
                 }
 
                 StringBuilder defaultValueBuilder = new();
-                if (debug) LogNoTime("m", "\nReadValue\n");
+                DebugNoTime("m", "\nReadValue\n");
                 for (; i < text.Length; i++)
                 {
-                    if (debug) LogNoTime("b", text[i].ToString());
+                    DebugNoTime("b", text[i].ToString());
                     switch (text[i])
                     {
                         case ' ':
@@ -342,6 +342,16 @@ namespace DTLib.Dtsod
                 }
                 throw new Exception("Dtsod.Parse.ReadValue error: wtf it's the end of function");
             }
+        }
+
+
+        void Debug(params string[] msg)
+        {
+            if (debug) Log(msg);
+        }
+        void DebugNoTime(params string[] msg)
+        {
+            if (debug) LogNoTime(msg);
         }
     }
 }
