@@ -22,7 +22,7 @@ namespace DTLib.ConsoleGUI
 
         void ParseLayoutFile(string layout_file)
         {
-            DtsodV22 layout = new(File.ReadAllText(layout_file));
+            DtsodV23 layout = new(File.ReadAllText(layout_file));
             AnchorPoint = (layout[Name]["anchor"][0], layout[Name]["anchor"][1]);
             Width = layout[Name]["width"];
             Height = layout[Name]["height"];

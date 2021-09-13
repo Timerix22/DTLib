@@ -1,6 +1,5 @@
 ﻿using DTLib.Dtsod;
 using DTLib.Filesystem;
-using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -130,7 +129,7 @@ namespace DTLib.Network
             var fileHash = new Hasher().HashFile(filePath);
             mainSocket.SendPackage(Filesize.ToString().ToBytes());
             mainSocket.SendPackage(fileHash);
-            if (mainSocket.GetPackage().ToStr() != "ready") throw new Exception("user socket isn't ready");
+            mainSocket.GetAnswer("ready");
             byte[] buffer = new byte[5120];
             var hashstr = fileHash.HashToString();
             int packagesCount = 0;
@@ -163,6 +162,52 @@ namespace DTLib.Network
             Debug(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
         }
 
+        /*public void DownloadByManifest(string manifestString, string dirOnClient, bool overwrite = false, bool delete_excess = false)
+        {
+            if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
+            var manifest = new DtsodV23(manifestString);
+            Debug("g", $"found {manifest.Values.Count} files in manifest\n");
+            var hasher = new Hasher();
+            foreach (string fileOnServer in manifest.Keys)
+            {
+                string fileOnClient = dirOnClient + fileOnServer;
+                Debug("b", "file <", "c", fileOnClient, "b", ">...  ");
+                if (!File.Exists(fileOnClient))
+                {
+                    DebugNoTime("y", "doesn't exist\n");
+                    DownloadFile(fileOnServer, fileOnClient);
+                }
+                else if (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer])
+                {
+                    DebugNoTime("y", "outdated\n");
+                    DownloadFile(fileOnServer, fileOnClient);
+                }
+                else DebugNoTime("g", "without changes\n");
+            }
+            // удаление лишних файлов
+            if (delete_excess)
+            {
+                List<string> dirs = new();
+                foreach (string file in Directory.GetAllFiles(dirOnClient, ref dirs))
+                {
+                    if (!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
+                    {
+                        Debug("y", $"deleting excess file: {file}\n");
+                        File.Delete(file);
+                    }
+                }
+                // удаление пустых папок
+                /*foreach (string dir in dirs)
+                {
+                    if (Directory.Exists(dir) && Directory.GetAllFiles(dir).Count == 0)
+                    {
+                        Debug("y", $"deleting empty dir: {dir}\n");
+                        Directory.Delete(dir);
+                    }
+                }*/
+        /*}
+    }*/
+
         public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
         {
             if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
@@ -190,8 +235,7 @@ namespace DTLib.Network
             // удаление лишних файлов
             if (delete_excess)
             {
-                List<string> dirs = new();
-                foreach (string file in Directory.GetAllFiles(dirOnClient, ref dirs))
+                foreach (string file in Directory.GetAllFiles(dirOnClient))
                 {
                     if (!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
                     {
@@ -199,15 +243,6 @@ namespace DTLib.Network
                         File.Delete(file);
                     }
                 }
-                // удаление пустых папок
-                /*foreach (string dir in dirs)
-                {
-                    if (Directory.Exists(dir) && Directory.GetAllFiles(dir).Count == 0)
-                    {
-                        Debug("y", $"deleting empty dir: {dir}\n");
-                        Directory.Delete(dir);
-                    }
-                }*/
             }
         }
 
@@ -227,15 +262,15 @@ namespace DTLib.Network
                 manifestBuilder.Append(hash.HashToString());
                 manifestBuilder.Append("\";\n");
             }
+            Debug($"g", $"   manifest of {dir} created\n");
             File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
-            Log($"g", $"   manifest of {dir} created\n");
         }
 
-        void Debug(params string[] msg)
+        static void Debug(params string[] msg)
         {
             if (debug) Log(msg);
         }
-        void DebugNoTime(params string[] msg)
+        static void DebugNoTime(params string[] msg)
         {
             if (debug) LogNoTime(msg);
         }

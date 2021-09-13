@@ -53,5 +53,11 @@ namespace DTLib.Network
             var rec = socket.GetPackage().ToStr();
             if (rec != answer) throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
         }
+
+        public static byte[] RequestPackage(this Socket socket, byte[] request)
+        {
+            socket.SendPackage(request);
+            return socket.GetPackage();
+        }
     }
 }
