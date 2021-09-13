@@ -20,8 +20,11 @@ namespace DTLib.Dtsod
     // 
     // v22
     // метод ToString() теперь действительно деконструирует объект в текст, а не возвращает параметр text из конструктора
+    //
+    // v23
+    // добавлен конструктор без параметров и метод Expand
 
-    class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>
+    public class DtsodV23 : Dictionary<string, DtsodV23.ValueStruct>
     {
         static readonly bool debug = false;
 
@@ -44,14 +47,16 @@ namespace DTLib.Dtsod
             }
         }
 
-        public DtsodV22(string text)
+        public DtsodV23() { }
+
+        public DtsodV23(string text)
         {
             foreach (KeyValuePair<string, ValueStruct> pair in Parse(text))
                 Add(pair.Key, pair.Value);
         }
 
 
-        public DtsodV22(Dictionary<string, DtsodV22.ValueStruct> dict)
+        public DtsodV23(Dictionary<string, DtsodV23.ValueStruct> dict)
         {
             foreach (KeyValuePair<string, ValueStruct> pair in dict)
                 Add(pair.Key, pair.Value);
@@ -102,13 +107,13 @@ namespace DTLib.Dtsod
             }
         }
 
-        DtsodV22 Parse(string text)
+        DtsodV23 Parse(string text)
         {
             Dictionary<string, ValueStruct> parsed = new();
             int i = 0;
             for (; i < text.Length; i++) ReadName();
             DebugNoTime("g", $"Parse returns {parsed.Keys.Count} keys\n");
-            return new DtsodV22(parsed);
+            return new DtsodV23(parsed);
 
             // СЛОМАНО
             /*void ReadCommentLine()
@@ -379,7 +384,7 @@ namespace DTLib.Dtsod
         public override string ToString() => Deconstruct(this);
 
         ushort tabCount = 0;
-        string Deconstruct(DtsodV22 dtsod)
+        string Deconstruct(DtsodV23 dtsod)
         {
             StringBuilder outBuilder = new();
             foreach (var key in dtsod.Keys)
@@ -454,7 +459,7 @@ namespace DTLib.Dtsod
             if (debug) PublicLog.LogNoTime(msg);
         }
 
-        public void Expand(DtsodV22 newPart)
+        public void Expand(DtsodV23 newPart)
         {
             foreach (KeyValuePair<string, ValueStruct> pair in newPart)
                 Add(pair.Key, pair.Value);
