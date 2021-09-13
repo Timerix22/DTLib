@@ -23,8 +23,9 @@ namespace DTLib
                     method();
                 } while (Repeat);
             });
-            TimerThread.Start();
         }
+
+        public void Start() => TimerThread.Start();
 
         // завершение потока
         public void Stop()

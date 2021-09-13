@@ -168,7 +168,7 @@ namespace DTLib.Network
             if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
             if (!dirOnServer.EndsWith("\\")) dirOnServer += "\\";
             Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
-            var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
+            var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
@@ -211,7 +211,7 @@ namespace DTLib.Network
             }
         }
 
-        public static void CreateManifest(string dir)
+        public static DtsodV23 CreateManifest(string dir)
         {
             if (!dir.EndsWith("\\")) dir += "\\";
             Log($"b", $"creating manifest of {dir}\n");
@@ -227,15 +227,15 @@ namespace DTLib.Network
                 manifestBuilder.Append(hash.HashToString());
                 manifestBuilder.Append("\";\n");
             }
-            File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
-            Log($"g", $"   manifest of {dir} created\n");
+            Debug($"g", $"   manifest of {dir} created\n");
+            return new DtsodV23(manifestBuilder.ToString());
         }
 
-        void Debug(params string[] msg)
+        static void Debug(params string[] msg)
         {
             if (debug) Log(msg);
         }
-        void DebugNoTime(params string[] msg)
+        static void DebugNoTime(params string[] msg)
         {
             if (debug) LogNoTime(msg);
         }
