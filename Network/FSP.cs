@@ -1,6 +1,5 @@
 ﻿using DTLib.Dtsod;
 using DTLib.Filesystem;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using static DTLib.PublicLog;
@@ -36,74 +35,53 @@ namespace DTLib.Network
         public void DownloadFile(string filePath_client)
         {
             BytesDownloaded = 0;
-            using var fileStream = File.OpenWrite(filePath_client);
-            Filesize = mainSocket.GetPackage().ToStr().ToUInt();
-            var hashstr = mainSocket.GetPackage().HashToString();
-            mainSocket.SendPackage("ready".ToBytes());
-            int packagesCount = 0;
-            byte[] buffer = new byte[5120];
-            int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
-            // рассчёт скорости
-            /*int seconds = 0;
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                PackageRecieved(BytesDownloaded);
-            });*/
-            // получение файла
-
-            for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
-            {
-                buffer = mainSocket.GetPackage();
-                BytesDownloaded += (uint)buffer.Length;
-                fileStream.Write(buffer, 0, buffer.Length);
-                if (n == 100)
-                {
-                    fileStream.Flush();
-                    n = 0;
-                }
-                else n++;
-            }
-            // получение остатка
-            if ((Filesize - fileStream.Position) > 0)
-            {
-                mainSocket.SendPackage("remain request".ToBytes());
-                buffer = mainSocket.GetPackage();
-                BytesDownloaded += (uint)buffer.Length;
-                fileStream.Write(buffer, 0, buffer.Length);
-            }
-            //speedCounter.Stop();
-            fileStream.Flush();
+            using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
+            Download_SharedCode(fileStream, true);
             fileStream.Close();
             Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
         }
 
         public byte[] DownloadFileToMemory(string filePath_server)
         {
-            BytesDownloaded = 0;
             Debug("b", $"requesting file download: {filePath_server}\n");
             mainSocket.SendPackage("requesting file download".ToBytes());
             mainSocket.SendPackage(filePath_server.ToBytes());
+            return DownloadFileToMemory();
+        }
+
+        public byte[] DownloadFileToMemory()
+        {
+            BytesDownloaded = 0;
             using var fileStream = new System.IO.MemoryStream();
+            Download_SharedCode(fileStream,false);
+            byte[] output = fileStream.GetBuffer();
+            fileStream.Close();
+            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
+            return output;
+        }
+
+        void Download_SharedCode(System.IO.Stream fileStream, bool requiresFlushing)
+        {
             Filesize = mainSocket.GetPackage().ToStr().ToUInt();
-            var hashstr = mainSocket.GetPackage().HashToString();
             mainSocket.SendPackage("ready".ToBytes());
             int packagesCount = 0;
             byte[] buffer = new byte[5120];
             int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
-            // рассчёт скорости
-            /*int seconds = 0;
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                PackageRecieved(BytesDownloaded);
-            });*/
-            // получение файла
-            for (; packagesCount < fullPackagesCount; packagesCount++)
+            // получение полных пакетов файла
+            for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
             {
                 buffer = mainSocket.GetPackage();
                 BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
+                if (requiresFlushing)
+                {
+                    if (n == 100)
+                    {
+                        fileStream.Flush();
+                        n = 0;
+                    }
+                    else n++;
+                }
             }
             // получение остатка
             if ((Filesize - fileStream.Position) > 0)
@@ -113,42 +91,32 @@ namespace DTLib.Network
                 BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
             }
-            //speedCounter.Stop();
-            byte[] output = fileStream.GetBuffer();
-            fileStream.Close();
-            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
-            return output;
+            if (requiresFlushing) fileStream.Flush();
         }
 
         // отдаёт файл с помощью FSP протокола
         public void UploadFile(string filePath)
         {
             Debug("b", $"uploading file {filePath}\n");
+            Debug("m", "0\n");
             using var fileStream = File.OpenRead(filePath);
             Filesize = File.GetSize(filePath).ToUInt();
-            var fileHash = new Hasher().HashFile(filePath);
+            Debug("m", "1\n");
             mainSocket.SendPackage(Filesize.ToString().ToBytes());
-            mainSocket.SendPackage(fileHash);
+            Debug("m", "2\n");
             mainSocket.GetAnswer("ready");
+            Debug("m", "3\n");
             byte[] buffer = new byte[5120];
-            var hashstr = fileHash.HashToString();
             int packagesCount = 0;
             int fullPackagesCount = SimpleConverter.Truncate(Filesize / buffer.Length);
-            // рассчёт скорости
-            /*int seconds = 0;
-            var speedCounter = new Timer(true, 1000, () =>
-            {
-                seconds++;
-                PackageSent(BytesUploaded);
-            });*/
-            // отправка файла
+            // отправка полных пакетов файла
             for (; packagesCount < fullPackagesCount; packagesCount++)
             {
                 fileStream.Read(buffer, 0, buffer.Length);
                 mainSocket.SendPackage(buffer);
                 BytesUploaded += (uint)buffer.Length;
             }
-            // досылка остатка
+            // отправка остатка
             if ((Filesize - fileStream.Position) > 0)
             {
                 mainSocket.GetAnswer("remain request");
@@ -157,7 +125,6 @@ namespace DTLib.Network
                 mainSocket.SendPackage(buffer);
                 BytesUploaded += (uint)buffer.Length;
             }
-            //speedCounter.Stop();
             fileStream.Close();
             Debug(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
         }
