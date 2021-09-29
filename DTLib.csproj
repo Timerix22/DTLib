@@ -39,7 +39,6 @@
     <Compile Include="ConsoleGUI\Label.cs" />
     <Compile Include="ConsoleGUI\Window.cs" />
     <Compile Include="ConsoleGUI\WindowOld.cs" />
-    <Compile Include="Dtsod\DtsodV22.cs" />
     <Compile Include="Dtsod\DtsodV23.cs" />
     <Compile Include="Dtsod\DtsodV21.cs" />
     <Compile Include="cs9somefix.cs" />

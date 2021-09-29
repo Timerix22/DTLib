@@ -46,6 +46,7 @@ namespace DTLib.Network
             list.AddRange(data);
             socket.Send(list.ToArray());
         }
+        public static void SendPackage(this Socket socket, string data) => SendPackage(socket, data.ToBytes());
 
         // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
         public static void GetAnswer(this Socket socket, string answer)
@@ -59,5 +60,6 @@ namespace DTLib.Network
             socket.SendPackage(request);
             return socket.GetPackage();
         }
+        public static byte[] RequestPackage(this Socket socket, string request) => socket.RequestPackage(request.ToBytes());
     }
 }

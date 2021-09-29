@@ -143,5 +143,7 @@ namespace DTLib
                 b.Append(input);
             return b.ToString();
         }
+
+        public static void Throw(this Exception ex) => throw ex;
     }
 }

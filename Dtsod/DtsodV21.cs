@@ -16,7 +16,7 @@ namespace DTLib.Dtsod
     // парсер теперь не может игнорировать комменты, потом починю
     // теперь числовые значения конвертируются в правильный тип, а не в int64/uint64 (новый вариант switch из c#9.0 делал какую-то херню)
     // исправлены некоторые другие баги
-    class DtsodV21 : Dictionary<string, dynamic>
+    public class DtsodV21 : Dictionary<string, dynamic>
     {
         static readonly bool debug = false;
         string Text;

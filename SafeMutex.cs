@@ -25,5 +25,11 @@ namespace DTLib
                 if (!isReleased) Mutex.ReleaseMutex();
             }
         }
+
+        public void Execute(Action action)
+        {
+            Execute(action, out Exception exception);
+            exception?.Throw();
+        }
     }
 }
