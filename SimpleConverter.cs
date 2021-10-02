@@ -9,24 +9,6 @@ namespace DTLib
     //
     public static class SimpleConverter
     {
-        public static Encoding UTF8 = new UTF8Encoding(false);
-        // байты в кодировке UTF8 в строку
-        public static string ToStr(this byte[] bytes) => UTF8.GetString(bytes);
-        public static string ToStr(this List<byte> bytes) => UTF8.GetString(bytes.ToArray());
-
-        // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
-        public static string HashToString(this byte[] hash)
-        {
-            var builder = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                builder.Append(hash[i].ToString("x2"));
-            }
-            return builder.ToString();
-        }
-
-        // строку в байты
-        public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
 
         // эти методы работают как надо, в отличии от стандартных, которые иногда дуркуют
         public static bool StartsWith(this byte[] source, byte[] startsWith)
@@ -88,14 +70,14 @@ namespace DTLib
         public static sbyte ToSByte<T>(this T input) => Convert.ToSByte(input);
         public static bool ToBool<T>(this T input) => Convert.ToBoolean(input);
 
-        public static int BytesToInt(this byte[] bytes)
+        public static int ToInt(this byte[] bytes)
         {
             int output = 0;
             for (ushort i = 0; i < bytes.Length; i++) output = output * 256 + bytes[i];
             return output;
         }
 
-        public static byte[] IntToBytes(this int num)
+        public static byte[] ToBytes(this int num)
         {
             List<byte> output = new();
             while (num != 0)
@@ -106,15 +88,30 @@ namespace DTLib
             output.Reverse();
             return output.ToArray();
         }
+        public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
 
-        public static string AutoBuild(params object[] parts)
+        public static Encoding UTF8 = new UTF8Encoding(false);
+        // байты в кодировке UTF8 в строку
+        public static string ToString(this byte[] bytes) => UTF8.GetString(bytes);
+
+        // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
+        public static string HashToString(this byte[] hash)
         {
             var builder = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                builder.Append(hash[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
+
+        public static string MergeToString(params object[] parts)
+        {
+            StringBuilder builder = new();
             for (int i = 0; i < parts.Length; i++)
                 builder.Append(parts[i].ToString());
             return builder.ToString();
         }
-
         public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
         {
             StringBuilder builder = new();
@@ -130,9 +127,7 @@ namespace DTLib
         {
             StringBuilder builder = new();
             foreach (T elem in collection)
-            {
                 builder.Append(elem.ToString());
-            }
             return builder.ToString();
         }
 

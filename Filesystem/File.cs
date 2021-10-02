@@ -39,7 +39,7 @@ namespace DTLib.Filesystem
             return output;
         }
 
-        public static string ReadAllText(string file) => ReadAllBytes(file).ToStr();
+        public static string ReadAllText(string file) => SimpleConverter.ToString(ReadAllBytes(file));
 
         public static void WriteAllBytes(string file, byte[] content)
         {

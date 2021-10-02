@@ -69,7 +69,7 @@ namespace DTLib.Network
             Mutex.Execute(() =>
             {
                 BytesDownloaded = 0;
-                Filesize = mainSocket.GetPackage().ToStr().ToUInt();
+                Filesize = SimpleConverter.ToString(mainSocket.GetPackage()).ToUInt();
                 mainSocket.SendPackage("ready".ToBytes());
                 int packagesCount = 0;
                 byte[] buffer = new byte[5120];
@@ -144,7 +144,7 @@ namespace DTLib.Network
             if (!dirOnClient.EndsWith("\\")) dirOnClient += "\\";
             if (!dirOnServer.EndsWith("\\")) dirOnServer += "\\";
             Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
-            var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").ToStr());
+            var manifest = new DtsodV23(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer + "manifest.dtsod")));
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
