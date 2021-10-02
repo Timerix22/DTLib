@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DTLib.Reactive
 {
-    public class ReactiveStream<T>
+    public class ReactiveStream<T> 
     {
         List<T> Storage = new();
         public event EventHandlerAsync<T> ElementAdded;
@@ -23,7 +23,7 @@ namespace DTLib.Reactive
             if (StoreData) StorageAccess.Execute(() => Storage.Add(elem));
             ElementAdded?.Invoke(this, elem);
         }
-
+        
         public void Clear()
         {
             if (StoreData) StorageAccess.Execute(() => Storage.Clear());
