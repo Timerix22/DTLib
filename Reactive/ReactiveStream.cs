@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DTLib.Reactive
 {
@@ -8,7 +7,7 @@ namespace DTLib.Reactive
         List<T> Storage = new();
         public event EventHandlerAsync<T> ElementAdded;
         SafeMutex StorageMutex = new();
-        public int Length { get { return StorageMutex.Execute(() => Storage.Count); } }
+        public int Length => StorageMutex.Execute(() => Storage.Count);
 
         public ReactiveStream() { }
 

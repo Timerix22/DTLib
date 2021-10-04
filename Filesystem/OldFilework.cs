@@ -10,7 +10,7 @@ namespace DTLib.Filesystem
         // записывает текст в файл и закрывает файл
         public static void LogToFile(string logfile, string msg)
         {
-            lock (new object())
+            lock(new object())
             {
                 File.AppendAllText(logfile, msg);
             }
@@ -19,39 +19,41 @@ namespace DTLib.Filesystem
         // чтение параметров из конфига
         public static string ReadFromConfig(string configfile, string key)
         {
-            lock (new object())
+            lock(new object())
             {
-                key += ": ";
+                key+=": ";
                 using var reader = new System.IO.StreamReader(configfile);
-                while (!reader.EndOfStream)
+                while(!reader.EndOfStream)
                 {
                     string st = reader.ReadLine();
-                    if (st.StartsWith(key))
+                    if(st.StartsWith(key))
                     {
                         string value = "";
-                        for (int i = key.Length; i < st.Length; i++)
+                        for(int i = key.Length; i<st.Length; i++)
                         {
-                            if (st[i] == '#') return value;
-                            if (st[i] == '%')
+                            if(st[i]=='#')
+                                return value;
+                            if(st[i]=='%')
                             {
                                 bool stop = false;
                                 string placeholder = "";
                                 i++;
-                                while (!stop)
+                                while(!stop)
                                 {
-                                    if (st[i] == '%')
+                                    if(st[i]=='%')
                                     {
-                                        stop = true;
-                                        value += ReadFromConfig(configfile, placeholder);
+                                        stop=true;
+                                        value+=ReadFromConfig(configfile, placeholder);
                                     }
                                     else
                                     {
-                                        placeholder += st[i];
+                                        placeholder+=st[i];
                                         i++;
                                     }
                                 }
                             }
-                            else value += st[i];
+                            else
+                                value+=st[i];
                         }
                         reader.Close();
                         //if (value == "") throw new System.Exception($"ReadFromConfig({configfile}, {key}) error: key not found");

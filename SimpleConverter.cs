@@ -13,18 +13,20 @@ namespace DTLib
         // эти методы работают как надо, в отличии от стандартных, которые иногда дуркуют
         public static bool StartsWith(this byte[] source, byte[] startsWith)
         {
-            for (int i = 0; i < startsWith.Length; i++)
+            for(int i = 0; i<startsWith.Length; i++)
             {
-                if (source[i] != startsWith[i]) return false;
+                if(source[i]!=startsWith[i])
+                    return false;
             }
             return true;
         }
 
         public static bool EndsWith(this byte[] source, byte[] endsWith)
         {
-            for (int i = 0; i < endsWith.Length; i++)
+            for(int i = 0; i<endsWith.Length; i++)
             {
-                if (source[source.Length - endsWith.Length + i] != endsWith[i]) return false;
+                if(source[source.Length-endsWith.Length+i]!=endsWith[i])
+                    return false;
             }
             return true;
         }
@@ -44,17 +46,18 @@ namespace DTLib
         // удаление нескольких элементов массива
         public static T[] RemoveRange<T>(this T[] input, int startIndex, int count)
         {
-            List<T> list = input.ToList();
+            var list = input.ToList();
             list.RemoveRange(startIndex, count);
             return list.ToArray();
         }
-        public static T[] RemoveRange<T>(this T[] input, int startIndex) => input.RemoveRange(startIndex, input.Length - startIndex);
+        public static T[] RemoveRange<T>(this T[] input, int startIndex) => input.RemoveRange(startIndex, input.Length-startIndex);
 
         // метод как у листов
         public static bool Contains<T>(this T[] array, T value)
         {
-            for (int i = 0; i < array.Length; i++)
-                if (array[i].Equals(value)) return true;
+            for(int i = 0; i<array.Length; i++)
+                if(array[i].Equals(value))
+                    return true;
             return false;
         }
 
@@ -73,17 +76,18 @@ namespace DTLib
         public static int ToInt(this byte[] bytes)
         {
             int output = 0;
-            for (ushort i = 0; i < bytes.Length; i++) output = output * 256 + bytes[i];
+            for(ushort i = 0; i<bytes.Length; i++)
+                output=output*256+bytes[i];
             return output;
         }
 
         public static byte[] ToBytes(this int num)
         {
             List<byte> output = new();
-            while (num != 0)
+            while(num!=0)
             {
-                output.Add(ToByte(num % 256));
-                num = Truncate(num / 256);
+                output.Add(ToByte(num%256));
+                num=Truncate(num/256);
             }
             output.Reverse();
             return output.ToArray();
@@ -98,7 +102,7 @@ namespace DTLib
         public static string HashToString(this byte[] hash)
         {
             var builder = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            for(int i = 0; i<hash.Length; i++)
             {
                 builder.Append(hash[i].ToString("x2"));
             }
@@ -108,25 +112,25 @@ namespace DTLib
         public static string MergeToString(params object[] parts)
         {
             StringBuilder builder = new();
-            for (int i = 0; i < parts.Length; i++)
+            for(int i = 0; i<parts.Length; i++)
                 builder.Append(parts[i].ToString());
             return builder.ToString();
         }
         public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
         {
             StringBuilder builder = new();
-            foreach (T elem in collection)
+            foreach(T elem in collection)
             {
                 builder.Append(elem.ToString());
                 builder.Append(separator);
             }
-            builder.Remove(builder.Length - separator.Length, separator.Length);
+            builder.Remove(builder.Length-separator.Length, separator.Length);
             return builder.ToString();
         }
         public static string MergeToString<T>(this IEnumerable<T> collection)
         {
             StringBuilder builder = new();
-            foreach (T elem in collection)
+            foreach(T elem in collection)
                 builder.Append(elem.ToString());
             return builder.ToString();
         }
@@ -134,7 +138,7 @@ namespace DTLib
         public static string Multiply(this string input, int howMany)
         {
             StringBuilder b = new();
-            for (int i = 0; i < howMany; i++)
+            for(int i = 0; i<howMany; i++)
                 b.Append(input);
             return b.ToString();
         }

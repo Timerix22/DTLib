@@ -18,21 +18,18 @@ namespace DTLib.ConsoleGUI
 
         public Label(string name, string textmapFile, string colormapFile)
         {
-            TextmapFile = textmapFile;
-            ColormapFile = colormapFile;
-            Name = name;
+            TextmapFile=textmapFile;
+            ColormapFile=colormapFile;
+            Name=name;
         }
 
-        public void GenColormap()
-        {
-            Colormap = File.ReadAllText(ColormapFile).ToCharArray();
-        }
+        public void GenColormap() => Colormap=File.ReadAllText(ColormapFile).ToCharArray();
 
         public void GenTextmap()
         {
-            Textmap = File.ReadAllText(TextmapFile).ToCharArray();
-            Width = 12;
-            Height = 3;
+            Textmap=File.ReadAllText(TextmapFile).ToCharArray();
+            Width=12;
+            Height=3;
         }
     }
 }

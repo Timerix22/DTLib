@@ -21,29 +21,29 @@ namespace DTLib.ConsoleGUI
 
         public WindowOld(int windowWidth, int windowHeight)
         {
-            WindowWidth = windowWidth;
-            WindowHeight = windowHeight;
-            Text = new char[windowWidth, windowHeight];
-            TextColors = new char[windowWidth, windowHeight];
-            nowText = TextColors;
-            nowTextColors = new char[windowWidth, windowHeight];
-            Console.WindowWidth = WindowWidth + 1;
-            Console.WindowHeight = WindowHeight + 1;
-            Console.BufferWidth = WindowWidth + 1;
-            Console.BufferHeight = WindowHeight + 1;
-            Console.OutputEncoding = Encoding.Unicode;
-            Console.InputEncoding = Encoding.Unicode;
-            Console.CursorVisible = false;
+            WindowWidth=windowWidth;
+            WindowHeight=windowHeight;
+            Text=new char[windowWidth, windowHeight];
+            TextColors=new char[windowWidth, windowHeight];
+            nowText=TextColors;
+            nowTextColors=new char[windowWidth, windowHeight];
+            Console.WindowWidth=WindowWidth+1;
+            Console.WindowHeight=WindowHeight+1;
+            Console.BufferWidth=WindowWidth+1;
+            Console.BufferHeight=WindowHeight+1;
+            Console.OutputEncoding=Encoding.Unicode;
+            Console.InputEncoding=Encoding.Unicode;
+            Console.CursorVisible=false;
             // заполнение массивов
-            for (sbyte y = 0; y < WindowHeight; y++)
+            for(sbyte y = 0; y<WindowHeight; y++)
             {
-                for (sbyte x = 0; x < WindowWidth; x++)
+                for(sbyte x = 0; x<WindowWidth; x++)
                 {
-                    Text[x, y] = ' ';
-                    TextColors[x, y] = 'w';
+                    Text[x, y]=' ';
+                    TextColors[x, y]='w';
                 }
             }
-            nowText = TextColors;
+            nowText=TextColors;
         }
 
         /*// считывает массив символов из файла
@@ -97,34 +97,31 @@ namespace DTLib.ConsoleGUI
             r.Close();
         }*/
 
-        public void ResetCursor()
-        {
-            Console.SetCursorPosition(0, WindowHeight);
-        }
+        public void ResetCursor() => Console.SetCursorPosition(0, WindowHeight);
 
         // заменяет символ выведенный, использовать после ShowAll()
         public void ChangeChar(sbyte x, sbyte y, char ch)
         {
-            Text[x, y] = ch;
-            nowText[x, y] = ch;
+            Text[x, y]=ch;
+            nowText[x, y]=ch;
             Console.SetCursorPosition(x, y);
             ColoredConsole.Write(TextColors[x, y].ToString(), ch.ToString());
         }
 
         public void ChangeColor(sbyte x, sbyte y, char color)
         {
-            TextColors[x, y] = color;
-            nowTextColors[x, y] = color;
+            TextColors[x, y]=color;
+            nowTextColors[x, y]=color;
             Console.SetCursorPosition(x, y);
             ColoredConsole.Write(color.ToString(), Text[x, y].ToString());
         }
 
         public void ChangeCharAndColor(sbyte x, sbyte y, char color, char ch)
         {
-            Text[x, y] = ch;
-            nowText[x, y] = ch;
-            TextColors[x, y] = color;
-            nowTextColors[x, y] = color;
+            Text[x, y]=ch;
+            nowText[x, y]=ch;
+            TextColors[x, y]=color;
+            nowTextColors[x, y]=color;
             Console.SetCursorPosition(x, y);
             ColoredConsole.Write(color.ToString(), ch.ToString());
         }
@@ -132,12 +129,12 @@ namespace DTLib.ConsoleGUI
         public void ChangeLine(sbyte x, sbyte y, char color, string line)
         {
             Console.SetCursorPosition(x, y);
-            for (sbyte i = 0; i < line.Length; i++)
+            for(sbyte i = 0; i<line.Length; i++)
             {
-                Text[x + i, y] = line[i];
-                nowText[x + i, y] = line[i];
-                TextColors[x + i, y] = color;
-                nowTextColors[x + i, y] = color;
+                Text[x+i, y]=line[i];
+                nowText[x+i, y]=line[i];
+                TextColors[x+i, y]=color;
+                nowTextColors[x+i, y]=color;
             }
             ColoredConsole.Write(color.ToString(), line);
         }
@@ -146,14 +143,14 @@ namespace DTLib.ConsoleGUI
         public void ShowAll()
         {
             var l = new List<string>();
-            for (sbyte y = 0; y < WindowHeight; y++)
+            for(sbyte y = 0; y<WindowHeight; y++)
             {
-                for (sbyte x = 0; x < WindowWidth; x++)
+                for(sbyte x = 0; x<WindowWidth; x++)
                 {
                     l.Add(TextColors[x, y].ToString());
                     l.Add(Text[x, y].ToString());
-                    nowText[x, y] = Text[x, y];
-                    nowTextColors[x, y] = TextColors[x, y];
+                    nowText[x, y]=Text[x, y];
+                    nowTextColors[x, y]=TextColors[x, y];
                 }
                 l.Add("w");
                 l.Add("\n");
@@ -164,16 +161,16 @@ namespace DTLib.ConsoleGUI
 
         public void UpdateAll()
         {
-            for (sbyte y = 0; y < WindowHeight; y++)
+            for(sbyte y = 0; y<WindowHeight; y++)
             {
-                for (sbyte x = 0; x < WindowWidth; x++)
+                for(sbyte x = 0; x<WindowWidth; x++)
                 {
                     Console.SetCursorPosition(x, y);
-                    if (TextColors[x, y] != nowTextColors[x, y] || Text[x, y] != nowText[x, y])
+                    if(TextColors[x, y]!=nowTextColors[x, y]||Text[x, y]!=nowText[x, y])
                     {
                         ColoredConsole.Write(TextColors[x, y].ToString(), Text[x, y].ToString());
-                        nowText[x, y] = Text[x, y];
-                        nowTextColors[x, y] = TextColors[x, y];
+                        nowText[x, y]=Text[x, y];
+                        nowTextColors[x, y]=TextColors[x, y];
                     }
                 }
                 Console.Write('\n');

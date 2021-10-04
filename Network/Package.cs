@@ -16,20 +16,21 @@ namespace DTLib.Network
             int packageSize = 0;
             byte[] data = new byte[2];
             // цикл выполняется пока не пройдёт 2000 мс
-            for (ushort s = 0; s < 400; s += 1)
+            for(ushort s = 0; s<400; s+=1)
             {
-                if (packageSize == 0 && socket.Available >= 2)
+                if(packageSize==0&&socket.Available>=2)
                 {
                     socket.Receive(data, data.Length, 0);
-                    packageSize = data.ToInt();
+                    packageSize=data.ToInt();
                 }
-                if (packageSize != 0 && socket.Available >= packageSize)
+                if(packageSize!=0&&socket.Available>=packageSize)
                 {
-                    data = new byte[packageSize];
+                    data=new byte[packageSize];
                     socket.Receive(data, data.Length, 0);
                     return data;
                 }
-                else Thread.Sleep(5);
+                else
+                    Thread.Sleep(5);
             }
             throw new Exception($"GetPackage() error: timeout. socket.Available={socket.Available}\n");
         }
@@ -37,11 +38,14 @@ namespace DTLib.Network
         // отправляет пакет
         public static void SendPackage(this Socket socket, byte[] data)
         {
-            if (data.Length > 65536) throw new Exception($"SendPackage() error: package is too big ({data.Length} bytes)");
-            if (data.Length == 0) throw new Exception($"SendPackage() error: package has zero size");
+            if(data.Length>65536)
+                throw new Exception($"SendPackage() error: package is too big ({data.Length} bytes)");
+            if(data.Length==0)
+                throw new Exception($"SendPackage() error: package has zero size");
             var list = new List<byte>();
             byte[] packageSize = data.Length.ToBytes();
-            if (packageSize.Length == 1) list.Add(0);
+            if(packageSize.Length==1)
+                list.Add(0);
             list.AddRange(packageSize);
             list.AddRange(data);
             socket.Send(list.ToArray());
@@ -51,8 +55,9 @@ namespace DTLib.Network
         // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
         public static void GetAnswer(this Socket socket, string answer)
         {
-            var rec = SimpleConverter.ToString(socket.GetPackage());
-            if (rec != answer) throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
+            string rec = SimpleConverter.ToString(socket.GetPackage());
+            if(rec!=answer)
+                throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
         }
 
         public static byte[] RequestPackage(this Socket socket, byte[] request)

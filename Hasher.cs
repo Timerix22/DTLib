@@ -20,7 +20,7 @@ namespace DTLib
         // хеш из двух массивов
         public byte[] Hash(byte[] input, byte[] salt)
         {
-            List<byte> rez = new List<byte>();
+            var rez = new List<byte>();
             rez.AddRange(input);
             rez.AddRange(salt);
             return sha256.ComputeHash(rez.ToArray());
@@ -29,18 +29,18 @@ namespace DTLib
         // хеш двух массивов зацикленный
         public byte[] HashCycled(byte[] input, byte[] salt, ushort cycles)
         {
-            for (uint i = 0; i < cycles; i++)
+            for(uint i = 0; i<cycles; i++)
             {
-                input = Hash(input, salt);
+                input=Hash(input, salt);
             }
             return input;
         }
         // хеш зацикленный
         public byte[] HashCycled(byte[] input, ushort cycles)
         {
-            for (uint i = 0; i < cycles; i++)
+            for(uint i = 0; i<cycles; i++)
             {
-                input = Hash(input);
+                input=Hash(input);
             }
             return input;
         }
@@ -48,9 +48,9 @@ namespace DTLib
         // хеш файла
         public byte[] HashFile(string filename)
         {
-            using var fileStream = File.OpenRead(filename);
+            using System.IO.FileStream fileStream = File.OpenRead(filename);
             //var then = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
-            var hash = xxh32.ComputeHash(fileStream);
+            byte[] hash = xxh32.ComputeHash(fileStream);
             //var now = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
             //PublicLog.Log($"xxh32 hash: {hash.HashToString()} time: {now - then}\n");
             fileStream.Close();

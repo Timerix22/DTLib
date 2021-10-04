@@ -12,7 +12,7 @@ namespace DTLib.Reactive
         public ReactiveWorker(ReactiveStream<T> stream) => Join(stream);
 
         public ReactiveWorker(IEnumerable<ReactiveStream<T>> streams) =>
-            ReactiveWorkerMutex.Execute(() => { foreach (var stream in streams) Join(stream); });
+            ReactiveWorkerMutex.Execute(() => { foreach(ReactiveStream<T> stream in streams) Join(stream); });
 
         public abstract void Join(ReactiveStream<T> stream);
         public abstract void Leave(ReactiveStream<T> stream);

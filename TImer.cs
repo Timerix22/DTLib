@@ -14,15 +14,15 @@ namespace DTLib
         // таймер сразу запускается
         public Timer(bool repeat, int delay, Action method)
         {
-            Repeat = repeat;
-            TimerThread = new Thread(() =>
-            {
-                do
-                {
-                    Thread.Sleep(delay);
-                    method();
-                } while (Repeat);
-            });
+            Repeat=repeat;
+            TimerThread=new Thread(() =>
+          {
+              do
+              {
+                  Thread.Sleep(delay);
+                  method();
+              } while(Repeat);
+          });
         }
 
         public void Start() => TimerThread.Start();
@@ -30,7 +30,7 @@ namespace DTLib
         // завершение потока
         public void Stop()
         {
-            Repeat = false;
+            Repeat=false;
             TimerThread.Abort();
         }
     }
