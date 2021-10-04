@@ -7,23 +7,19 @@ namespace DTLib.Reactive
     {
         List<T> Storage = new();
         public event EventHandlerAsync<T> ElementAdded;
-        bool StoreData = false;
-
         SafeMutex StorageMutex = new();
+        public int Length { get { return StorageMutex.Execute(() => Storage.Count); } }
 
         public ReactiveStream() { }
-        public ReactiveStream(bool storeData) => StoreData = storeData;
 
         public void Add(T elem)
         {
-            if (StoreData) StorageMutex.Execute(() => Storage.Add(elem));
+            StorageMutex.Execute(() => Storage.Add(elem));
             ElementAdded?.Invoke(this, elem);
         }
 
-        public void Clear()
-        {
-            if (StoreData) StorageMutex.Execute(() => Storage.Clear());
-            else throw new Exception("Can't clear ReactiveStream because StoreData==false");
-        }
+        public void Get(int index) => StorageMutex.Execute(() => Storage[index]);
+
+        public void Clear() => StorageMutex.Execute(() => Storage.Clear());
     }
 }

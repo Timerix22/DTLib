@@ -13,7 +13,7 @@ namespace DTLib.Reactive
         event Action<T> AnnounceEvent;
         public void Announce(T e)
         {
-            ReactiveWorkerMutex.Execute(()=>AnnounceEvent.Invoke(e));
+            ReactiveWorkerMutex.Execute(() => AnnounceEvent.Invoke(e));
         }
 
         public override void Join(ReactiveStream<T> stream)

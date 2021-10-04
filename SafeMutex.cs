@@ -14,10 +14,7 @@ namespace DTLib
             try
             {
                 exception = null;
-                Mutex.WaitOne();
-                action();
-                Mutex.ReleaseMutex();
-                isReleased = true;
+                Execute(action);
             }
             catch (Exception ex)
             {
@@ -28,8 +25,18 @@ namespace DTLib
 
         public void Execute(Action action)
         {
-            Execute(action, out Exception exception);
-            exception?.Throw();
+            Mutex.WaitOne();
+            action();
+            Mutex.ReleaseMutex();
+            isReleased = true;
+        }
+        public T Execute<T>(Func<T> action)
+        {
+            Mutex.WaitOne();
+            var rezult = action();
+            Mutex.ReleaseMutex();
+            isReleased = true;
+            return rezult;
         }
     }
 }
