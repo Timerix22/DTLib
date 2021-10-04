@@ -8,9 +8,9 @@ namespace DTLib.Reactive
 {
     public abstract class ReactiveWorker<T>
     {
-        List<ReactiveStream<T>> Streams = new();
+        protected List<ReactiveStream<T>> Streams = new();
 
-        SafeMutex StreamCollectionAccess = new();
+        protected SafeMutex StreamCollectionAccess = new();
 
         public void Join(ReactiveStream<T> stream) => StreamCollectionAccess.Execute(()=>Streams.Add(stream));
         public void Leave(ReactiveStream<T> stream) => StreamCollectionAccess.Execute(() => Streams.Remove(stream));
