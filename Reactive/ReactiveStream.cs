@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTLib.Reactive
 {
-    public class ReactiveStream<T> 
+    public class ReactiveStream<T>
     {
         List<T> Storage = new();
         public event EventHandlerAsync<T> ElementAdded;
         bool StoreData = false;
 
-        SafeMutex StorageAccess = new();
+        SafeMutex StorageMutex = new();
 
         public ReactiveStream() { }
         public ReactiveStream(bool storeData) => StoreData = storeData;
 
         public void Add(T elem)
         {
-            if (StoreData) StorageAccess.Execute(() => Storage.Add(elem));
+            if (StoreData) StorageMutex.Execute(() => Storage.Add(elem));
             ElementAdded?.Invoke(this, elem);
         }
-        
+
         public void Clear()
         {
-            if (StoreData) StorageAccess.Execute(() => Storage.Clear());
+            if (StoreData) StorageMutex.Execute(() => Storage.Clear());
+            else throw new Exception("Can't clear ReactiveStream because StoreData==false");
         }
     }
 }

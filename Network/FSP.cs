@@ -11,7 +11,7 @@ namespace DTLib.Network
     //
     public class FSP
     {
-        Socket mainSocket { get;  init; }
+        Socket mainSocket { get; init; }
         static public bool debug = false;
         public FSP(Socket _mainSocket) => mainSocket = _mainSocket;
 
