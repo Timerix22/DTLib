@@ -33,13 +33,7 @@
   <ItemGroup>
     <Compile Include="Color.cs" />
     <Compile Include="CompressedArray.cs" />
-    <Compile Include="ConsoleGUI\Container.cs" />
-    <Compile Include="ConsoleGUI\Control.cs" />
-    <Compile Include="ConsoleGUI\IDrawable.cs" />
-    <Compile Include="ConsoleGUI\Label.cs" />
-    <Compile Include="ConsoleGUI\Window.cs" />
-    <Compile Include="ConsoleGUI\WindowOld.cs" />
-    <Compile Include="Dtsod\DtsodV23.cs" />
+    <Compile Include="Dtsod\DtsodV22.cs" />
     <Compile Include="Dtsod\DtsodV21.cs" />
     <Compile Include="cs9somefix.cs" />
     <Compile Include="Dtsod\ValueTypes.cs" />

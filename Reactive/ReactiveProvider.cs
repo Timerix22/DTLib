@@ -14,15 +14,15 @@ namespace DTLib.Reactive
         public void Announce(T e) => ReactiveWorkerMutex.Execute(() => AnnounceEvent.Invoke(e));
 
         public override void Join(ReactiveStream<T> stream) => ReactiveWorkerMutex.Execute(() =>
-                                                             {
-                                                                 Streams.Add(stream);
-                                                                 AnnounceEvent+=stream.Add;
-                                                             });
+            {
+                Streams.Add(stream);
+                AnnounceEvent+=stream.Add;
+            });
 
         public override void Leave(ReactiveStream<T> stream) => ReactiveWorkerMutex.Execute(() =>
-                                                              {
-                                                                  Streams.Remove(stream);
-                                                                  AnnounceEvent-=stream.Add;
-                                                              });
+            {
+                Streams.Remove(stream);
+                AnnounceEvent-=stream.Add;
+            });
     }
 }

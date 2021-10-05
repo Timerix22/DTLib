@@ -1,6 +1,5 @@
 ﻿using DTLib.Dtsod;
 using DTLib.Filesystem;
-using System;
 using System.Net.Sockets;
 using System.Text;
 using static DTLib.PublicLog;
@@ -30,8 +29,7 @@ namespace DTLib.Network
                 Debug("b", $"requesting file download: {filePath_server}\n");
                 MainSocket.SendPackage("requesting file download".ToBytes());
                 MainSocket.SendPackage(filePath_server.ToBytes());
-            }, out Exception exception);
-            exception?.Throw();
+            });
             DownloadFile(filePath_client);
         }
 
@@ -50,8 +48,7 @@ namespace DTLib.Network
                 Debug("b", $"requesting file download: {filePath_server}\n");
                 MainSocket.SendPackage("requesting file download".ToBytes());
                 MainSocket.SendPackage(filePath_server.ToBytes());
-            }, out System.Exception exception);
-            exception?.Throw();
+            });
             return DownloadFileToMemory();
         }
 
@@ -100,8 +97,7 @@ namespace DTLib.Network
                     BytesDownloaded+=(uint)buffer.Length;
                     fileStream.Write(buffer, 0, buffer.Length);
                 }
-            }, out System.Exception exception);
-            exception?.Throw();
+            });
             if(requiresFlushing)
                 fileStream.Flush();
         }
@@ -136,8 +132,7 @@ namespace DTLib.Network
                     MainSocket.SendPackage(buffer);
                     BytesUploaded+=(uint)buffer.Length;
                 }
-            }, out System.Exception exception);
-            exception?.Throw();
+            });
             fileStream.Close();
             Debug(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
         }
@@ -149,7 +144,7 @@ namespace DTLib.Network
             if(!dirOnServer.EndsWith("\\"))
                 dirOnServer+="\\";
             Debug("b", "downloading manifest <", "c", dirOnServer+"manifest.dtsod", "b", ">\n");
-            var manifest = new DtsodV23(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
+            var manifest = new DtsodV22(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach(string fileOnServer in manifest.Keys)
