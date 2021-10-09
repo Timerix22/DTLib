@@ -27,5 +27,7 @@ namespace DTLib.Reactive
                 Streams.Remove(stream);
                 stream.ElementAdded-=ElementAdded;
             });
+
+        //public T GetElement()
     }
 }

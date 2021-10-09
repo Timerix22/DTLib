@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DTLib.Reactive
 {
     public class ReactiveStream<T>
     {
-        List<T> Storage = new();
+        List<(long time, T value)> Storage = new();
         public event EventHandlerAsync<T> ElementAdded;
         SafeMutex StorageMutex = new();
         public int Length => StorageMutex.Execute(() => Storage.Count);
@@ -13,7 +14,7 @@ namespace DTLib.Reactive
 
         public void Add(T elem)
         {
-            StorageMutex.Execute(() => Storage.Add(elem));
+            StorageMutex.Execute(() => Storage.Add((DateTime.Now.Ticks, elem)));
             ElementAdded?.Invoke(this, elem);
         }
 

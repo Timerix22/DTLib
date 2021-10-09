@@ -442,7 +442,7 @@ namespace DTLib.Dtsod
                         break;
                     case ValueTypes.ULong:
                         outBuilder.Append(value.Value.ToString());
-                        outBuilder.Append("uk");
+                        outBuilder.Append("ul");
                         break;
                     case ValueTypes.Double:
                         outBuilder.Append(value.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
