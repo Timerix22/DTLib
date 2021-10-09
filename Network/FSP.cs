@@ -144,7 +144,7 @@ namespace DTLib.Network
             if(!dirOnServer.EndsWith("\\"))
                 dirOnServer+="\\";
             Debug("b", "downloading manifest <", "c", dirOnServer+"manifest.dtsod", "b", ">\n");
-            var manifest = new DtsodV22(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
+            var manifest = new Dtsod.DtsodV22(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach(string fileOnServer in manifest.Keys)

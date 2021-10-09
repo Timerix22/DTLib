@@ -36,7 +36,9 @@
     <Compile Include="Dtsod\DtsodV21.cs" />
     <Compile Include="Dtsod\DtsodV22.cs" />
     <Compile Include="cs9somefix.cs" />
-    <Compile Include="Dtsod\ValueTypes.cs" />
+    <Compile Include="Dtsod\V30\DtsodSerializableAttribute.cs" />
+    <Compile Include="Dtsod\V30\DtsodV30.cs" />
+    <Compile Include="Dtsod\V30\DtsodVersion.cs" />
     <Compile Include="EventHandlerAsync.cs" />
     <Compile Include="Filesystem\Directory.cs" />
     <Compile Include="Filesystem\File.cs" />

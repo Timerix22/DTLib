@@ -43,6 +43,23 @@ namespace DTLib.Dtsod
             }
         }
 
+        public enum ValueTypes
+        {
+            List,
+            Complex,
+            String,
+            Short,
+            Int,
+            Long,
+            UShort,
+            UInt,
+            ULong,
+            Double,
+            Null,
+            Bool,
+            Unknown
+        }
+
         public DtsodV22() { }
 
         public DtsodV22(string text)
@@ -50,7 +67,6 @@ namespace DTLib.Dtsod
             foreach(KeyValuePair<string, ValueStruct> pair in Parse(text))
                 Add(pair.Key, pair.Value);
         }
-
 
         public DtsodV22(Dictionary<string, DtsodV22.ValueStruct> dict)
         {
