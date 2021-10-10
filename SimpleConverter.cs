@@ -146,5 +146,11 @@ namespace DTLib
         }
 
         public static void Throw(this Exception ex) => throw ex;
+
+        public static void ForEach<T>(this IEnumerable<T> en, Action<T> act)
+        {
+            foreach(T elem in en)
+                act(elem);
+        }
     }
 }

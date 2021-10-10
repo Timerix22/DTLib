@@ -50,10 +50,6 @@
     <Compile Include="Network\OldNetwork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hasher.cs" />
-    <Compile Include="Reactive\ReactiveProvider.cs" />
-    <Compile Include="Reactive\ReactiveStream.cs" />
-    <Compile Include="Reactive\ReactiveListener.cs" />
-    <Compile Include="Reactive\ReactiveWorker.cs" />
     <Compile Include="SafeMutex.cs" />
     <Compile Include="SecureRandom.cs" />
     <Compile Include="SimpleConverter.cs" />
