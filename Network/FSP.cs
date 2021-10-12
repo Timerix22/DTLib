@@ -67,11 +67,11 @@ namespace DTLib.Network
             Mutex.Execute(() =>
             {
                 BytesDownloaded=0;
-                Filesize=SimpleConverter.ToString(MainSocket.GetPackage()).ToUInt();
+                Filesize=FrameworkFix.ToString(MainSocket.GetPackage()).ToUInt();
                 MainSocket.SendPackage("ready".ToBytes());
                 int packagesCount = 0;
                 byte[] buffer = new byte[5120];
-                int fullPackagesCount = SimpleConverter.Truncate(Filesize/buffer.Length);
+                int fullPackagesCount = FrameworkFix.Truncate(Filesize/buffer.Length);
                 // получение полных пакетов файла
                 for(byte n = 0; packagesCount<fullPackagesCount; packagesCount++)
                 {
@@ -115,7 +115,7 @@ namespace DTLib.Network
                 MainSocket.GetAnswer("ready");
                 byte[] buffer = new byte[5120];
                 int packagesCount = 0;
-                int fullPackagesCount = SimpleConverter.Truncate(Filesize/buffer.Length);
+                int fullPackagesCount = FrameworkFix.Truncate(Filesize/buffer.Length);
                 // отправка полных пакетов файла
                 for(; packagesCount<fullPackagesCount; packagesCount++)
                 {
@@ -144,7 +144,7 @@ namespace DTLib.Network
             if(!dirOnServer.EndsWith("\\"))
                 dirOnServer+="\\";
             Debug("b", "downloading manifest <", "c", dirOnServer+"manifest.dtsod", "b", ">\n");
-            var manifest = new Dtsod.DtsodV22(SimpleConverter.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
+            var manifest = new Dtsod.DtsodV22(FrameworkFix.ToString(DownloadFileToMemory(dirOnServer+"manifest.dtsod")));
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             var hasher = new Hasher();
             foreach(string fileOnServer in manifest.Keys)

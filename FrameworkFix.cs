@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
+
+// включает init и record из c# 9.0
+namespace System.Runtime.CompilerServices
+{
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class IsExternalInit { }
+}
 
 namespace DTLib
 {
     //
     // содержит методы расширения для различных операций и преобразований
     //
-    public static class SimpleConverter
+    public static class FrameworkFix
     {
 
         // эти методы работают как надо, в отличии от стандартных, которые иногда дуркуют
@@ -151,6 +160,28 @@ namespace DTLib
         {
             foreach(T elem in en)
                 act(elem);
+        }
+
+        // делает что надо в отличии от String.Split(), который не убирает char c из начала
+        public static List<string> SplitToList(this string s, char c)
+        {
+            var ar = s.ToCharArray();
+            StringBuilder b = new();
+            List<string> o = new();
+            if(ar[0]!=c)
+                b.Append(ar[0]);
+            for(int i = 1; i<ar.Length; i++)
+                if(ar[i]==c)
+                {
+                    if(b.Length>0)
+                        o.Add(b.ToString());
+                    b.Clear();
+                }
+                else
+                    b.Append(ar[i]);
+            if(b.Length>0)
+                o.Add(b.ToString());
+            return o;
         }
     }
 }

@@ -15,13 +15,14 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Build|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -35,7 +36,6 @@
     <Compile Include="CompressedArray.cs" />
     <Compile Include="Dtsod\DtsodV21.cs" />
     <Compile Include="Dtsod\DtsodV22.cs" />
-    <Compile Include="cs9somefix.cs" />
     <Compile Include="Dtsod\V30\DtsodSerializableAttribute.cs" />
     <Compile Include="Dtsod\V30\DtsodV30.cs" />
     <Compile Include="Dtsod\V30\DtsodVersion.cs" />
@@ -52,7 +52,7 @@
     <Compile Include="Hasher.cs" />
     <Compile Include="SafeMutex.cs" />
     <Compile Include="SecureRandom.cs" />
-    <Compile Include="SimpleConverter.cs" />
+    <Compile Include="FrameworkFix.cs" />
     <Compile Include="TImer.cs" />
     <Compile Include="XXHash.cs" />
   </ItemGroup>
