@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DTLib
 {
@@ -8,30 +9,34 @@ namespace DTLib
     //
     public class Timer
     {
-        Thread TimerThread;
+        Task TimerTask;
         bool Repeat;
+        CancellationTokenSource кансель = new();
 
         // таймер сразу запускается
         public Timer(bool repeat, int delay, Action method)
         {
             Repeat=repeat;
-            TimerThread=new Thread(() =>
-          {
-              do
-              {
-                  Thread.Sleep(delay);
-                  method();
-              } while(Repeat);
-          });
+            TimerTask=new Task(() =>
+            {
+                do
+                {
+                    if(кансель.Token.IsCancellationRequested)
+                        return;
+                    Task.Delay(delay).Wait();
+                    method();
+                } while(Repeat);
+            });
         }
 
-        public void Start() => TimerThread.Start();
+
+        public void Start() => TimerTask.Start();
 
         // завершение потока
         public void Stop()
         {
             Repeat=false;
-            TimerThread.Abort();
+            кансель.Cancel();
         }
     }
 }
