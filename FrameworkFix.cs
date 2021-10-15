@@ -125,16 +125,16 @@ namespace DTLib
                 builder.Append(parts[i].ToString());
             return builder.ToString();
         }
-        public static string MergeToString<T>(this ICollection<T> collection, string separator)
+        public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
         {
-            if(collection.Count==0)
-                return "";
             StringBuilder builder = new();
             foreach(T elem in collection)
             {
                 builder.Append(elem.ToString());
                 builder.Append(separator);
             }
+            if (builder.Length==0)
+                return "";
             builder.Remove(builder.Length-separator.Length, separator.Length);
             return builder.ToString();
         }
