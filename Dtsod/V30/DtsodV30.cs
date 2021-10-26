@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTLib.Dtsod
+﻿namespace DTLib.Dtsod
 {
-    static public class DtsodV30
+    public static class DtsodV30
     {
         /*
         public static DtsodV30 FromObject(object target)

@@ -16,17 +16,17 @@ namespace DTLib
         // таймер сразу запускается
         public Timer(bool repeat, int delay, Action method)
         {
-            Repeat=repeat;
-            TimerTask=new Task(() =>
-            {
-                do
-                {
-                    if(кансель.Token.IsCancellationRequested)
-                        return;
-                    Task.Delay(delay).Wait();
-                    method();
-                } while(Repeat);
-            });
+            Repeat = repeat;
+            TimerTask = new Task(() =>
+              {
+                  do
+                  {
+                      if (кансель.Token.IsCancellationRequested)
+                          return;
+                      Task.Delay(delay).Wait();
+                      method();
+                  } while (Repeat);
+              });
         }
 
 
@@ -35,7 +35,7 @@ namespace DTLib
         // завершение потока
         public void Stop()
         {
-            Repeat=false;
+            Repeat = false;
             кансель.Cancel();
         }
     }

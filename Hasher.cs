@@ -1,6 +1,6 @@
-﻿using DTLib.Filesystem;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Cryptography;
+using DTLib.Filesystem;
 
 namespace DTLib
 {
@@ -20,7 +20,7 @@ namespace DTLib
         // хеш из двух массивов
         public byte[] Hash(byte[] input, byte[] salt)
         {
-            var rez = new List<byte>();
+            List<byte> rez = new List<byte>();
             rez.AddRange(input);
             rez.AddRange(salt);
             return sha256.ComputeHash(rez.ToArray());
@@ -29,18 +29,18 @@ namespace DTLib
         // хеш двух массивов зацикленный
         public byte[] HashCycled(byte[] input, byte[] salt, ushort cycles)
         {
-            for(uint i = 0; i<cycles; i++)
+            for (uint i = 0; i < cycles; i++)
             {
-                input=Hash(input, salt);
+                input = Hash(input, salt);
             }
             return input;
         }
         // хеш зацикленный
         public byte[] HashCycled(byte[] input, ushort cycles)
         {
-            for(uint i = 0; i<cycles; i++)
+            for (uint i = 0; i < cycles; i++)
             {
-                input=Hash(input);
+                input = Hash(input);
             }
             return input;
         }

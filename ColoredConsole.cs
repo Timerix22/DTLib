@@ -36,27 +36,27 @@ namespace DTLib
         // вывод цветного текста
         public static void Write(params string[] input)
         {
-            if(input.Length==1)
+            if (input.Length == 1)
             {
-                if(Console.ForegroundColor!=ConsoleColor.Gray)
-                    Console.ForegroundColor=ConsoleColor.Gray;
+                if (Console.ForegroundColor != ConsoleColor.Gray)
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write(input[0]);
             }
-            else if(input.Length%2==0)
+            else if (input.Length % 2 == 0)
             {
                 StringBuilder strB = new();
-                for(ushort i = 0; i<input.Length; i++)
+                for (ushort i = 0; i < input.Length; i++)
                 {
                     ConsoleColor c = ParseColor(input[i]);
-                    if(Console.ForegroundColor!=c)
+                    if (Console.ForegroundColor != c)
                     {
                         Console.Write(strB.ToString());
-                        Console.ForegroundColor=c;
+                        Console.ForegroundColor = c;
                         strB.Clear();
                     }
                     strB.Append(input[++i]);
                 }
-                if(strB.Length>0)
+                if (strB.Length > 0)
                     Console.Write(strB.ToString());
             }
             else
@@ -67,8 +67,8 @@ namespace DTLib
         public static string Read(string color)
         {
             ConsoleColor c = ParseColor(color);
-            if(Console.ForegroundColor!=c)
-                Console.ForegroundColor=c;
+            if (Console.ForegroundColor != c)
+                Console.ForegroundColor = c;
             return Console.ReadLine();
         }
     }

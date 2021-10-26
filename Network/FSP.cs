@@ -1,7 +1,7 @@
-﻿using DTLib.Dtsod;
-using DTLib.Filesystem;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
+using DTLib.Dtsod;
+using DTLib.Filesystem;
 using static DTLib.PublicLog;
 
 namespace DTLib.Network
@@ -13,7 +13,7 @@ namespace DTLib.Network
     {
         Socket MainSocket { get; init; }
         public static bool debug = false;
-        public FSP(Socket _mainSocket) => MainSocket=_mainSocket;
+        public FSP(Socket _mainSocket) => MainSocket = _mainSocket;
 
         public uint BytesDownloaded = 0;
         public uint BytesUploaded = 0;
@@ -54,7 +54,7 @@ namespace DTLib.Network
 
         public byte[] DownloadFileToMemory()
         {
-            using var fileStream = new System.IO.MemoryStream();
+            using System.IO.MemoryStream fileStream = new System.IO.MemoryStream();
             Download_SharedCode(fileStream, false);
             byte[] output = fileStream.GetBuffer();
             fileStream.Close();
@@ -66,71 +66,71 @@ namespace DTLib.Network
         {
             Mutex.Execute(() =>
             {
-                BytesDownloaded=0;
-                Filesize=MainSocket.GetPackage().BytesToString().ToUInt();
+                BytesDownloaded = 0;
+                Filesize = MainSocket.GetPackage().BytesToString().ToUInt();
                 MainSocket.SendPackage("ready".ToBytes());
                 int packagesCount = 0;
                 byte[] buffer = new byte[5120];
-                int fullPackagesCount = FrameworkFix.Truncate(Filesize/buffer.Length);
+                int fullPackagesCount = FrameworkFix.Truncate(Filesize / buffer.Length);
                 // получение полных пакетов файла
-                for(byte n = 0; packagesCount<fullPackagesCount; packagesCount++)
+                for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
                 {
-                    buffer=MainSocket.GetPackage();
-                    BytesDownloaded+=(uint)buffer.Length;
+                    buffer = MainSocket.GetPackage();
+                    BytesDownloaded += (uint)buffer.Length;
                     fileStream.Write(buffer, 0, buffer.Length);
-                    if(requiresFlushing)
+                    if (requiresFlushing)
                     {
-                        if(n==100)
+                        if (n == 100)
                         {
                             fileStream.Flush();
-                            n=0;
+                            n = 0;
                         }
                         else
                             n++;
                     }
                 }
                 // получение остатка
-                if((Filesize-fileStream.Position)>0)
+                if ((Filesize - fileStream.Position) > 0)
                 {
                     MainSocket.SendPackage("remain request".ToBytes());
-                    buffer=MainSocket.GetPackage();
-                    BytesDownloaded+=(uint)buffer.Length;
+                    buffer = MainSocket.GetPackage();
+                    BytesDownloaded += (uint)buffer.Length;
                     fileStream.Write(buffer, 0, buffer.Length);
                 }
             });
-            if(requiresFlushing)
+            if (requiresFlushing)
                 fileStream.Flush();
         }
 
         // отдаёт файл с помощью FSP протокола
         public void UploadFile(string filePath)
         {
-            BytesUploaded=0;
+            BytesUploaded = 0;
             Debug("b", $"uploading file {filePath}\n");
             using System.IO.FileStream fileStream = File.OpenRead(filePath);
-            Filesize=File.GetSize(filePath).ToUInt();
+            Filesize = File.GetSize(filePath).ToUInt();
             Mutex.Execute(() =>
             {
                 MainSocket.SendPackage(Filesize.ToString().ToBytes());
                 MainSocket.GetAnswer("ready");
                 byte[] buffer = new byte[5120];
                 int packagesCount = 0;
-                int fullPackagesCount = FrameworkFix.Truncate(Filesize/buffer.Length);
+                int fullPackagesCount = FrameworkFix.Truncate(Filesize / buffer.Length);
                 // отправка полных пакетов файла
-                for(; packagesCount<fullPackagesCount; packagesCount++)
+                for (; packagesCount < fullPackagesCount; packagesCount++)
                 {
                     fileStream.Read(buffer, 0, buffer.Length);
                     MainSocket.SendPackage(buffer);
-                    BytesUploaded+=(uint)buffer.Length;
+                    BytesUploaded += (uint)buffer.Length;
                 }
                 // отправка остатка
-                if((Filesize-fileStream.Position)>0)
+                if ((Filesize - fileStream.Position) > 0)
                 {
                     MainSocket.GetAnswer("remain request");
-                    buffer=new byte[(Filesize-fileStream.Position).ToInt()];
+                    buffer = new byte[(Filesize - fileStream.Position).ToInt()];
                     fileStream.Read(buffer, 0, buffer.Length);
                     MainSocket.SendPackage(buffer);
-                    BytesUploaded+=(uint)buffer.Length;
+                    BytesUploaded += (uint)buffer.Length;
                 }
             });
             fileStream.Close();
@@ -139,37 +139,37 @@ namespace DTLib.Network
 
         public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
         {
-            if(!dirOnClient.EndsWith("\\"))
-                dirOnClient+="\\";
-            if(!dirOnServer.EndsWith("\\"))
-                dirOnServer+="\\";
-            Debug("b", "downloading manifest <", "c", dirOnServer+"manifest.dtsod", "b", ">\n");
-            var manifest = new Dtsod.DtsodV22(DownloadFileToMemory(dirOnServer+"manifest.dtsod").BytesToString());
+            if (!dirOnClient.EndsWith("\\"))
+                dirOnClient += "\\";
+            if (!dirOnServer.EndsWith("\\"))
+                dirOnServer += "\\";
+            Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
+            DtsodV22 manifest = new Dtsod.DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
-            var hasher = new Hasher();
-            foreach(string fileOnServer in manifest.Keys)
+            Hasher hasher = new Hasher();
+            foreach (string fileOnServer in manifest.Keys)
             {
-                string fileOnClient = dirOnClient+fileOnServer;
+                string fileOnClient = dirOnClient + fileOnServer;
                 Debug("b", "file <", "c", fileOnClient, "b", ">...  ");
-                if(!File.Exists(fileOnClient))
+                if (!File.Exists(fileOnClient))
                 {
                     DebugNoTime("y", "doesn't exist\n");
-                    DownloadFile(dirOnServer+fileOnServer, fileOnClient);
+                    DownloadFile(dirOnServer + fileOnServer, fileOnClient);
                 }
-                else if(overwrite&&hasher.HashFile(fileOnClient).HashToString()!=manifest[fileOnServer])
+                else if (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer])
                 {
                     DebugNoTime("y", "outdated\n");
-                    DownloadFile(dirOnServer+fileOnServer, fileOnClient);
+                    DownloadFile(dirOnServer + fileOnServer, fileOnClient);
                 }
                 else
                     DebugNoTime("g", "without changes\n");
             }
             // удаление лишних файлов
-            if(delete_excess)
+            if (delete_excess)
             {
-                foreach(string file in Directory.GetAllFiles(dirOnClient))
+                foreach (string file in Directory.GetAllFiles(dirOnClient))
                 {
-                    if(!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
+                    if (!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
                     {
                         Debug("y", $"deleting excess file: {file}\n");
                         File.Delete(file);
@@ -180,34 +180,34 @@ namespace DTLib.Network
 
         public static void CreateManifest(string dir)
         {
-            if(!dir.EndsWith("\\"))
-                dir+="\\";
+            if (!dir.EndsWith("\\"))
+                dir += "\\";
             Log($"b", $"creating manifest of {dir}\n");
             StringBuilder manifestBuilder = new();
             Hasher hasher = new();
-            if(Directory.GetFiles(dir).Contains(dir+"manifest.dtsod"))
-                File.Delete(dir+"manifest.dtsod");
-            foreach(string _file in Directory.GetAllFiles(dir))
+            if (Directory.GetFiles(dir).Contains(dir + "manifest.dtsod"))
+                File.Delete(dir + "manifest.dtsod");
+            foreach (string _file in Directory.GetAllFiles(dir))
             {
                 string file = _file.Remove(0, dir.Length);
                 manifestBuilder.Append(file);
                 manifestBuilder.Append(": \"");
-                byte[] hash = hasher.HashFile(dir+file);
+                byte[] hash = hasher.HashFile(dir + file);
                 manifestBuilder.Append(hash.HashToString());
                 manifestBuilder.Append("\";\n");
             }
             Debug($"g", $"   manifest of {dir} created\n");
-            File.WriteAllText(dir+"manifest.dtsod", manifestBuilder.ToString());
+            File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
         }
 
         static void Debug(params string[] msg)
         {
-            if(debug)
+            if (debug)
                 Log(msg);
         }
         static void DebugNoTime(params string[] msg)
         {
-            if(debug)
+            if (debug)
                 LogNoTime(msg);
         }
     }

@@ -11,11 +11,11 @@ namespace DTLib.Filesystem
         // если файл не существует, создаёт файл, создаёт папки из его пути
         public static void Create(string file, bool delete_old = false)
         {
-            if(delete_old&&File.Exists(file))
+            if (delete_old && File.Exists(file))
                 File.Delete(file);
-            if(!File.Exists(file))
+            if (!File.Exists(file))
             {
-                if(file.Contains("\\"))
+                if (file.Contains("\\"))
                     Directory.Create(file.Remove(file.LastIndexOf('\\')));
                 using System.IO.FileStream stream = System.IO.File.Create(file);
                 stream.Close();
@@ -24,7 +24,7 @@ namespace DTLib.Filesystem
 
         public static void Copy(string srcPath, string newPath, bool replace = false)
         {
-            if(!replace&&Exists(newPath))
+            if (!replace && Exists(newPath))
                 throw new Exception($"file <{newPath}> alredy exists");
             Create(newPath);
             WriteAllBytes(newPath, ReadAllBytes(srcPath));
@@ -62,12 +62,8 @@ namespace DTLib.Filesystem
 
         public static void AppendAllText(string file, string content) => AppendAllBytes(file, content.ToBytes());
 
-        public static System.IO.FileStream OpenRead(string file)
-        {
-            if(!Exists(file))
-                throw new Exception($"file not found: <{file}>");
-            return System.IO.File.OpenRead(file);
-        }
+        public static System.IO.FileStream OpenRead(string file) =>
+            Exists(file) ? System.IO.File.OpenRead(file) : throw new Exception($"file not found: <{file}>");
         public static System.IO.FileStream OpenWrite(string file)
         {
             File.Create(file, true);
