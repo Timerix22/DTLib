@@ -490,5 +490,7 @@ namespace DTLib.Dtsod
                 Add(pair.Key, pair.Value);
             return this;
         }
+
+        public void Add(KeyValuePair<string, ValueStruct> a) => Add(a.Key, a.Value);
     }
 }
