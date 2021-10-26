@@ -55,7 +55,7 @@ namespace DTLib.Network
         // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
         public static void GetAnswer(this Socket socket, string answer)
         {
-            string rec = FrameworkFix.ToString(socket.GetPackage());
+            string rec = socket.GetPackage().BytesToString();
             if(rec!=answer)
                 throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
         }

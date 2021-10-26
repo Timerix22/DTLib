@@ -105,7 +105,7 @@ namespace DTLib
 
         public static Encoding UTF8 = new UTF8Encoding(false);
         // байты в кодировке UTF8 в строку
-        public static string ToString(this byte[] bytes) => UTF8.GetString(bytes);
+        public static string BytesToString(this byte[] bytes) => UTF8.GetString(bytes);
 
         // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
         public static string HashToString(this byte[] hash)
@@ -133,7 +133,7 @@ namespace DTLib
                 builder.Append(elem.ToString());
                 builder.Append(separator);
             }
-            if (builder.Length==0)
+            if(builder.Length==0)
                 return "";
             builder.Remove(builder.Length-separator.Length, separator.Length);
             return builder.ToString();
@@ -182,6 +182,25 @@ namespace DTLib
             if(b.Length>0)
                 o.Add(b.ToString());
             return o;
+        }
+
+        // разбивает на части указанной длины
+        public static List<string> Split(this string s, int length)
+        {
+            List<string> parts = new();
+            int max = (s.Length/length).Truncate();
+            for(int i = 0; i<max; i++)
+                parts.Add(s.Substring(i*length, length));
+            if(max*length!=s.Length) parts.Add(s.Substring(max*length, s.Length-max*length));
+            return parts;
+        }
+
+        public static T If<T>(this T input, bool condition, Func<T,T> if_true, Func<T,T> if_false)
+        {
+            if(condition)
+                return if_true(input);
+            else
+                return if_false(input);
         }
     }
 }
