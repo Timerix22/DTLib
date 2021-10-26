@@ -196,5 +196,30 @@ namespace DTLib
 
         public static T If<T>(this T input, bool condition, Func<T, T> if_true, Func<T, T> if_false) =>
             condition ? if_true(input) : if_false(input);
+        public static void If<T>(this T input, bool condition, Action<T> if_true, Action<T> if_false)
+        {
+            if (condition) if_true(input);
+            else if_false(input);
+        }
+        public static T If<T>(this T input, bool condition, Func<T, T> if_true) =>
+            condition ? if_true(input) : input;
+        public static void If<T>(this T input, bool condition, Action<T> if_true)
+        {
+            if (condition) if_true(input);
+        }
+
+        public static T IfIsNull<T>(this T input, Func<T> if_true, Func<T> if_false) =>
+            input is null ? if_true() : if_false();
+        public static void IfIsNull<T>(this T input, Action if_true, Action if_false)
+        {
+            if (input is null) if_true();
+            else if_false();
+        }
+        public static T IfNull<T>(this T input, Func<T> if_true) =>
+            input is null ? if_true() : input;
+        public static void  IfIsNull<T>(this T input, Action if_true)
+        {
+            if (input is null) if_true();
+        }
     }
 }

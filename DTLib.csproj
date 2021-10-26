@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Color.cs" />
     <Compile Include="CompressedArray.cs" />
+    <Compile Include="DefaultLogger.cs" />
     <Compile Include="Dtsod\DtsodV21.cs" />
     <Compile Include="Dtsod\DtsodV22.cs" />
     <Compile Include="Dtsod\V30\DtsodSerializableAttribute.cs" />
