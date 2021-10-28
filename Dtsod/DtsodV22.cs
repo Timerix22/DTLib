@@ -68,7 +68,7 @@ namespace DTLib.Dtsod
                 Add(pair.Key, pair.Value);
         }
 
-        public DtsodV22(Dictionary<string, DtsodV22.ValueStruct> dict)
+        public DtsodV22(Dictionary<string, ValueStruct> dict)
         {
             foreach (KeyValuePair<string, ValueStruct> pair in dict)
                 Add(pair.Key, pair.Value);

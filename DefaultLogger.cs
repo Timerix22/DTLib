@@ -8,28 +8,29 @@ namespace DTLib
     public static class DefaultLogger
     {
         public static void SetLogfile(string dir, string programName)
-            => logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
+            => Logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
 
-        static string logfile;
-        static readonly SafeMutex LogMutex = new();
+        static public string Logfile { get; set; }
         public static void Log(params string[] msg)
         {
             if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString() + "]: " + msg[0];
             else msg[1] = "[" + DateTime.Now.ToString() + "]: " + msg[1];
             LogNoTime(msg);
         }
-        public static void LogNoTime(params string[] msg) =>
-            LogMutex.Execute(() =>
+        public static void LogNoTime(params string[] msg)
+        {
+            lock (Logfile)
             {
                 ColoredConsole.Write(msg);
-                if (msg.Length == 1) File.AppendAllText(logfile, msg[0]);
+                if (msg.Length == 1) File.AppendAllText(Logfile, msg[0]);
                 else
                 {
                     StringBuilder strB = new();
                     for (ushort i = 0; i < msg.Length; i++)
                         strB.Append(msg[++i]);
-                    File.AppendAllText(logfile, strB.ToString());
+                    File.AppendAllText(Logfile, strB.ToString());
                 }
-            });
+            }
+        }
     }
 }

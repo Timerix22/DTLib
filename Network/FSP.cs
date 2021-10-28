@@ -19,17 +19,15 @@ namespace DTLib.Network
         public uint BytesUploaded = 0;
         public uint Filesize = 0;
 
-        public SafeMutex Mutex = new();
-
         // скачивает файл с помощью FSP протокола
         public void DownloadFile(string filePath_server, string filePath_client)
         {
-            Mutex.Execute(() =>
+            lock (MainSocket)
             {
                 Debug("b", $"requesting file download: {filePath_server}\n");
                 MainSocket.SendPackage("requesting file download".ToBytes());
                 MainSocket.SendPackage(filePath_server.ToBytes());
-            });
+            }
             DownloadFile(filePath_client);
         }
 
@@ -38,17 +36,17 @@ namespace DTLib.Network
             using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
             Download_SharedCode(fileStream, true);
             fileStream.Close();
-            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
+            Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n");
         }
 
         public byte[] DownloadFileToMemory(string filePath_server)
         {
-            Mutex.Execute(() =>
+            lock (MainSocket)
             {
                 Debug("b", $"requesting file download: {filePath_server}\n");
                 MainSocket.SendPackage("requesting file download".ToBytes());
                 MainSocket.SendPackage(filePath_server.ToBytes());
-            });
+            }
             return DownloadFileToMemory();
         }
 
@@ -58,13 +56,13 @@ namespace DTLib.Network
             Download_SharedCode(fileStream, false);
             byte[] output = fileStream.GetBuffer();
             fileStream.Close();
-            Debug(new string[] { "g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n" });
+            Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n");
             return output;
         }
 
         void Download_SharedCode(System.IO.Stream fileStream, bool requiresFlushing)
         {
-            Mutex.Execute(() =>
+            lock (MainSocket)
             {
                 BytesDownloaded = 0;
                 Filesize = MainSocket.GetPackage().BytesToString().ToUInt();
@@ -97,7 +95,7 @@ namespace DTLib.Network
                     BytesDownloaded += (uint)buffer.Length;
                     fileStream.Write(buffer, 0, buffer.Length);
                 }
-            });
+            }
             if (requiresFlushing)
                 fileStream.Flush();
         }
@@ -109,7 +107,7 @@ namespace DTLib.Network
             Debug("b", $"uploading file {filePath}\n");
             using System.IO.FileStream fileStream = File.OpenRead(filePath);
             Filesize = File.GetSize(filePath).ToUInt();
-            Mutex.Execute(() =>
+            lock (MainSocket)
             {
                 MainSocket.SendPackage(Filesize.ToString().ToBytes());
                 MainSocket.GetAnswer("ready");
@@ -132,9 +130,9 @@ namespace DTLib.Network
                     MainSocket.SendPackage(buffer);
                     BytesUploaded += (uint)buffer.Length;
                 }
-            });
+            }
             fileStream.Close();
-            Debug(new string[] { "g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n" });
+            Debug("g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n");
         }
 
         public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
@@ -144,7 +142,7 @@ namespace DTLib.Network
             if (!dirOnServer.EndsWith("\\"))
                 dirOnServer += "\\";
             Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
-            DtsodV22 manifest = new Dtsod.DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
+            DtsodV22 manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
             Hasher hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
@@ -202,13 +200,11 @@ namespace DTLib.Network
 
         static void Debug(params string[] msg)
         {
-            if (debug)
-                Log(msg);
+            if (debug) Log(msg);
         }
         static void DebugNoTime(params string[] msg)
         {
-            if (debug)
-                LogNoTime(msg);
+            if (debug) LogNoTime(msg);
         }
     }
 }
