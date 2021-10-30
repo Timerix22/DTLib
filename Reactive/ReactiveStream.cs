@@ -1,25 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DTLib.Reactive
 {
     public class ReactiveStream<T>
     {
-        List<(long time, T value)> Storage = new();
-        public event EventHandlerAsync<T> ElementAdded;
-        SafeMutex StorageMutex = new();
-        public int Length => StorageMutex.Execute(() => Storage.Count);
-
         public ReactiveStream() { }
 
-        public void Add(T elem)
+        List<T> _storage = new();
+        List<T> Storage
         {
-            StorageMutex.Execute(() => Storage.Add((DateTime.Now.Ticks, elem)));
-            ElementAdded?.Invoke(this, elem);
+            get
+            { lock (Storage) return _storage; }
         }
 
-        public void Get(int index) => StorageMutex.Execute(() => Storage[index]);
+        public int Length
+        {
+            get
+            { lock (Storage) return Storage.Count; }
+        }
 
-        public void Clear() => StorageMutex.Execute(() => Storage.Clear());
+        public T this[int index]
+        {
+            get
+            { lock (Storage) return Storage[index]; }
+        }
+
+        internal event EventHandlerAsync<T> ElementAddedEvent;
+
+        internal void Add(T elem)
+        {
+            lock (Storage) Storage.Add(elem);
+            ElementAddedEvent?.Invoke(elem);
+        }
+
+        internal void Clear() { lock (Storage) Storage.Clear(); }
     }
 }
