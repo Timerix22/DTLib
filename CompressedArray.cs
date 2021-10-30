@@ -16,8 +16,8 @@ namespace DTLib
 
             public void CompressArray(T[] sourceArray)
             {
-                List<T> listMem = new List<T>();
-                List<byte> listDesc = new List<byte>();
+                var listMem = new List<T>();
+                var listDesc = new List<byte>();
                 T prevElement = sourceArray[0];
                 listMem.Add(sourceArray[0]);
                 listDesc.Add(1);

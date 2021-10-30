@@ -22,7 +22,7 @@ namespace DTLib.Filesystem
         public static void Copy(string source_dir, string new_dir, bool owerwrite = false)
         {
             Create(new_dir);
-            List<string> subdirs = new List<string>();
+            var subdirs = new List<string>();
             List<string> files = GetAllFiles(source_dir, ref subdirs);
             for (int i = 0; i < subdirs.Count; i++)
             {
@@ -40,7 +40,7 @@ namespace DTLib.Filesystem
         public static void Copy(string source_dir, string new_dir, out List<string> conflicts, bool owerwrite = false)
         {
             conflicts = new List<string>();
-            List<string> subdirs = new List<string>();
+            var subdirs = new List<string>();
             List<string> files = GetAllFiles(source_dir, ref subdirs);
             Create(new_dir);
             for (int i = 0; i < subdirs.Count; i++)
@@ -60,7 +60,7 @@ namespace DTLib.Filesystem
         // удаляет папку со всеми подпапками и файлами
         public static void Delete(string dir)
         {
-            List<string> subdirs = new List<string>();
+            var subdirs = new List<string>();
             List<string> files = GetAllFiles(dir, ref subdirs);
             for (int i = 0; i < files.Count; i++)
                 File.Delete(files[i]);
@@ -82,7 +82,7 @@ namespace DTLib.Filesystem
         // выдает список всех файлов
         public static List<string> GetAllFiles(string dir)
         {
-            List<string> all_files = new List<string>();
+            var all_files = new List<string>();
             string[] cur_files = Directory.GetFiles(dir);
             for (int i = 0; i < cur_files.Length; i++)
             {
@@ -101,7 +101,7 @@ namespace DTLib.Filesystem
         // выдает список всех файлов и подпапок в папке
         public static List<string> GetAllFiles(string dir, ref List<string> all_subdirs)
         {
-            List<string> all_files = new List<string>();
+            var all_files = new List<string>();
             string[] cur_files = Directory.GetFiles(dir);
             for (int i = 0; i < cur_files.Length; i++)
             {
@@ -122,7 +122,7 @@ namespace DTLib.Filesystem
 
         public static void GrantAccess(string fullPath)
         {
-            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(fullPath);
+            var dirInfo = new System.IO.DirectoryInfo(fullPath);
             System.Security.AccessControl.DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
             dirSecurity.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(
                 new System.Security.Principal.SecurityIdentifier(

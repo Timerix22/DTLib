@@ -20,7 +20,7 @@ namespace DTLib
         // хеш из двух массивов
         public byte[] Hash(byte[] input, byte[] salt)
         {
-            List<byte> rez = new List<byte>();
+            var rez = new List<byte>();
             rez.AddRange(input);
             rez.AddRange(salt);
             return sha256.ComputeHash(rez.ToArray());

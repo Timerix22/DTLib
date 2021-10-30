@@ -52,7 +52,7 @@ namespace DTLib.Network
 
         public byte[] DownloadFileToMemory()
         {
-            using System.IO.MemoryStream fileStream = new System.IO.MemoryStream();
+            using var fileStream = new System.IO.MemoryStream();
             Download_SharedCode(fileStream, false);
             byte[] output = fileStream.GetBuffer();
             fileStream.Close();
@@ -142,9 +142,9 @@ namespace DTLib.Network
             if (!dirOnServer.EndsWith("\\"))
                 dirOnServer += "\\";
             Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
-            DtsodV22 manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
+            var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
             Debug("g", $"found {manifest.Values.Count} files in manifest\n");
-            Hasher hasher = new Hasher();
+            var hasher = new Hasher();
             foreach (string fileOnServer in manifest.Keys)
             {
                 string fileOnClient = dirOnClient + fileOnServer;

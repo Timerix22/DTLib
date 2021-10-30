@@ -42,7 +42,7 @@ namespace DTLib.Network
                 throw new Exception($"SendPackage() error: package is too big ({data.Length} bytes)");
             if (data.Length == 0)
                 throw new Exception($"SendPackage() error: package has zero size");
-            List<byte> list = new List<byte>();
+            var list = new List<byte>();
             byte[] packageSize = data.Length.ToBytes();
             if (packageSize.Length == 1)
                 list.Add(0);

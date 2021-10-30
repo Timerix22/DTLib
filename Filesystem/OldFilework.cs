@@ -22,7 +22,7 @@ namespace DTLib.Filesystem
             lock (new object())
             {
                 key += ": ";
-                using System.IO.StreamReader reader = new System.IO.StreamReader(configfile);
+                using var reader = new System.IO.StreamReader(configfile);
                 while (!reader.EndOfStream)
                 {
                     string st = reader.ReadLine();
@@ -64,8 +64,5 @@ namespace DTLib.Filesystem
                 throw new Exception($"ReadFromConfig({configfile}, {key}) error: key not found");
             }
         }
-
-
-
     }
 }

@@ -46,7 +46,7 @@ namespace DTLib
         // массив в лист
         public static List<T> ToList<T>(this T[] input)
         {
-            List<T> list = new List<T>();
+            var list = new List<T>();
             list.AddRange(input);
             return list;
         }
@@ -54,7 +54,7 @@ namespace DTLib
         // удаление нескольких элементов массива
         public static T[] RemoveRange<T>(this T[] input, int startIndex, int count)
         {
-            List<T> list = input.ToList();
+            var list = input.ToList();
             list.RemoveRange(startIndex, count);
             return list.ToArray();
         }
@@ -109,7 +109,7 @@ namespace DTLib
         // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
         public static string HashToString(this byte[] hash)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)
             {
                 builder.Append(hash[i].ToString("x2"));
@@ -217,7 +217,7 @@ namespace DTLib
         }
         public static T IfNull<T>(this T input, Func<T> if_true) =>
             input is null ? if_true() : input;
-        public static void  IfIsNull<T>(this T input, Action if_true)
+        public static void IfIsNull<T>(this T input, Action if_true)
         {
             if (input is null) if_true();
         }

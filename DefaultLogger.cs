@@ -10,7 +10,7 @@ namespace DTLib
         public static void SetLogfile(string dir, string programName)
             => Logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
 
-        static public string Logfile { get; set; }
+        public static string Logfile { get; set; }
         public static void Log(params string[] msg)
         {
             if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString() + "]: " + msg[0];
