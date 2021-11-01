@@ -1,38 +1,74 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DTLib.Reactive
 {
-    public class ReactiveStream<T>
+    public class ReactiveStream<T> : IEnumerable<TimeSignedObject<T>>, IList<TimeSignedObject<T>>
     {
         public ReactiveStream() { }
 
-        List<T> _storage = new();
-        List<T> Storage
+        List<TimeSignedObject<T>> _storage = new();
+        List<TimeSignedObject<T>> Storage
         {
             get
-            { lock (Storage) return _storage; }
+            { lock (_storage) return _storage; }
         }
 
-        public int Length
+        public int Count => Storage.Count;
+
+        public TimeSignedObject<T> this[int index]
         {
-            get
-            { lock (Storage) return Storage.Count; }
+            get => Storage[index];
+            set => throw new NotImplementedException();
         }
 
-        public T this[int index]
+        public event Action<ReactiveStream<T>, TimeSignedObject<T>> ElementAddedEvent;
+        public void Add(TimeSignedObject<T> elem)
         {
-            get
-            { lock (Storage) return Storage[index]; }
+            Storage.Add(elem);
+            ElementAddedEvent?.Invoke(this, elem);
         }
+        public void Add(T elem) => Add(new TimeSignedObject<T>(elem));
 
-        internal event EventHandlerAsync<T> ElementAddedEvent;
+        public void Clear() => Storage.Clear();
+        public int IndexOf(TimeSignedObject<T> item) => Storage.IndexOf(item);
+        public bool Contains(TimeSignedObject<T> item) => Storage.Contains(item);
 
-        internal void Add(T elem)
+        public IEnumerator<TimeSignedObject<T>> GetEnumerator() => new Enumerator(Storage);
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(Storage);
+
+        struct Enumerator : IEnumerator<TimeSignedObject<T>>
         {
-            lock (Storage) Storage.Add(elem);
-            ElementAddedEvent?.Invoke(elem);
+            public Enumerator(List<TimeSignedObject<T>> storage)
+            {
+                _storage = storage;
+                _index = storage.Count - 1;
+            }
+
+            List<TimeSignedObject<T>> _storage;
+            int _index;
+            public TimeSignedObject<T> Current => _storage[_index];
+            object IEnumerator.Current => Current;
+
+            public void Dispose() => _storage = null;
+
+            public bool MoveNext()
+            {
+                if (_index < 0)
+                    return false;
+                _index--;
+                return true;
+            }
+
+            public void Reset() => _index = _storage.Count - 1;
         }
 
-        internal void Clear() { lock (Storage) Storage.Clear(); }
+        bool ICollection<TimeSignedObject<T>>.IsReadOnly { get; } = false;
+
+        public void Insert(int index, TimeSignedObject<T> item) => throw new NotImplementedException();
+        public void RemoveAt(int index) => throw new NotImplementedException();
+        public void CopyTo(TimeSignedObject<T>[] array, int arrayIndex) => throw new NotImplementedException();
+        public bool Remove(TimeSignedObject<T> item) => throw new NotImplementedException();
     }
 }

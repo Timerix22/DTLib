@@ -1,28 +1,35 @@
-﻿namespace DTLib.Reactive
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DTLib.Reactive
 {
     public abstract class ReactiveProvider<T>
     {
-        protected ReactiveStream<T> Stream
+        protected List<ReactiveStream<T>> Streams
         {
             get
-            { lock (_stream) return _stream; }
+            { lock (_streams) return _streams; }
             set
-            { lock (_stream) _stream = value; }
+            { lock (_streams) _streams = value; }
         }
-        protected ReactiveStream<T> _stream;
+        private List<ReactiveStream<T>> _streams = new();
 
         public ReactiveProvider() { }
-
-        public ReactiveProvider(ReactiveStream<T> stream) => Join(stream);
+        public ReactiveProvider(ReactiveStream<T> stream) => Streams.Add(stream);
+        public ReactiveProvider(ICollection<ReactiveStream<T>> streams) => Streams = streams.ToList();
 
         public virtual void Join(ReactiveStream<T> stream)
         {
-            lock (Stream) Stream = stream;
+            if (IsConnetcedTo(stream)) throw new Exception("ReactiveListener is already connected to the stream");
+            Streams.Add(stream);
         }
 
         public virtual void Leave(ReactiveStream<T> stream)
         {
-            lock (Stream) Stream = null;
+            if (!Streams.Remove(stream)) throw new Exception("ReactiveListener is not connected to the stream");
         }
+
+        public bool IsConnetcedTo(ReactiveStream<T> stream) => Streams.Contains(stream);
     }
 }

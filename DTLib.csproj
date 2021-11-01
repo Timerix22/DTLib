@@ -55,6 +55,7 @@
     <Compile Include="Reactive\ReactiveSender.cs" />
     <Compile Include="Reactive\ReactiveStream.cs" />
     <Compile Include="Reactive\ReactiveProvider.cs" />
+    <Compile Include="Reactive\TimeSignedObject.cs" />
     <Compile Include="SecureRandom.cs" />
     <Compile Include="FrameworkFix.cs" />
     <Compile Include="TImer.cs" />
@@ -62,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="DTLib.sln" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

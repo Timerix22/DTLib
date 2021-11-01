@@ -152,6 +152,13 @@ namespace DTLib
                 b.Append(input);
             return b.ToString();
         }
+        public static string Multiply(this char input, int howMany)
+        {
+            StringBuilder b = new();
+            for (int i = 0; i < howMany; i++)
+                b.Append(input);
+            return b.ToString();
+        }
 
         public static void Throw(this Exception ex) => throw ex;
 
@@ -220,6 +227,14 @@ namespace DTLib
         public static void IfIsNull<T>(this T input, Action if_true)
         {
             if (input is null) if_true();
+        }
+
+        public static string AddZeroes<T>(this T number, int length)
+        {
+            var str = number.ToString();
+            //var diff = str.Length -length ;
+            //if (diff > 0) 
+            return Multiply('0', str.Length - length) + str;
         }
     }
 }
