@@ -215,20 +215,6 @@ namespace DTLib
             if (condition) if_true(input);
         }
 
-        public static T IfIsNull<T>(this T input, Func<T> if_true, Func<T> if_false) =>
-            input is null ? if_true() : if_false();
-        public static void IfIsNull<T>(this T input, Action if_true, Action if_false)
-        {
-            if (input is null) if_true();
-            else if_false();
-        }
-        public static T IfNull<T>(this T input, Func<T> if_true) =>
-            input is null ? if_true() : input;
-        public static void IfIsNull<T>(this T input, Action if_true)
-        {
-            if (input is null) if_true();
-        }
-
         public static string AddZeroes<T>(this T number, int length)
         {
             var str = number.ToString();

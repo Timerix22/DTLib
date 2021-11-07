@@ -5,19 +5,25 @@ using DTLib.Filesystem;
 namespace DTLib
 {
     // вывод лога в консоль и файл
-    public static class DefaultLogger
+    public class DefaultLogger
     {
-        public static void SetLogfile(string dir, string programName)
+        public DefaultLogger() { }
+        public DefaultLogger(string logfile) => Logfile = logfile;
+        public DefaultLogger(string dir, string programName) => SetLogfile(dir, programName);
+
+        public void SetLogfile(string dir, string programName)
             => Logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
 
-        public static string Logfile { get; set; }
-        public static void Log(params string[] msg)
+        public string Logfile { get; set; }
+
+        public void Log(params string[] msg)
         {
             if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString() + "]: " + msg[0];
             else msg[1] = "[" + DateTime.Now.ToString() + "]: " + msg[1];
             LogNoTime(msg);
         }
-        public static void LogNoTime(params string[] msg)
+
+        public void LogNoTime(params string[] msg)
         {
             lock (Logfile)
             {
