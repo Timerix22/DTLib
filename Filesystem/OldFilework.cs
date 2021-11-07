@@ -8,13 +8,13 @@ namespace DTLib.Filesystem
     public static class OldFilework
     {
         // записывает текст в файл и закрывает файл
-        public static void LogToFile(string logfile, string msg)
+        /*public static void LogToFile(string logfile, string msg)
         {
             lock (new object())
             {
                 File.AppendAllText(logfile, msg);
             }
-        }
+        }*/
 
         // чтение параметров из конфига
         public static string ReadFromConfig(string configfile, string key)

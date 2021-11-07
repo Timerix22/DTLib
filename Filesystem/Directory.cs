@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DTLib.Filesystem
 {
@@ -133,6 +134,12 @@ namespace DTLib.Filesystem
                     System.Security.AccessControl.PropagationFlags.NoPropagateInherit,
                     System.Security.AccessControl.AccessControlType.Allow));
             dirInfo.SetAccessControl(dirSecurity);
+        }
+
+        public static void CreateSymlink(string symlinkName, string sourceName)
+        {
+            if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
+                throw new InvalidOperationException($"some error occured while creating symlink\nCreateSymlink({symlinkName}, {sourceName})");
         }
     }
 }

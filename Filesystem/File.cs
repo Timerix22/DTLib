@@ -74,5 +74,11 @@ namespace DTLib.Filesystem
             File.Create(file);
             return System.IO.File.Open(file, System.IO.FileMode.Append);
         }
+
+        public static void CreateSymlink(string symlinkName, string sourceName)
+        {
+            if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
+                throw new InvalidOperationException($"some error occured while creating symlink\nCreateSymlink({symlinkName}, {sourceName})");
+        }
     }
 }
