@@ -7,12 +7,8 @@ namespace DTLib
     // вывод лога в консоль и файл
     public class DefaultLogger
     {
-        public DefaultLogger() { }
         public DefaultLogger(string logfile) => Logfile = logfile;
-        public DefaultLogger(string dir, string programName) => SetLogfile(dir, programName);
-
-        public void SetLogfile(string dir, string programName)
-            => Logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
+        public DefaultLogger(string dir, string programName) => Logfile = $"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_');
 
         public string Logfile { get; set; }
 

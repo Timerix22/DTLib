@@ -39,6 +39,9 @@ namespace DTLib
             return true;
         }
 
+        public static bool StartsWith(this string s, char c) => s[0] == c;
+        public static bool EndsWith(this string s, char c) => s[s.Length-1] == c;
+
         // Math.Truncate принимает как decimal, так и doublе,
         // из-за чего вызов метода так: Math.Truncate(10/3) выдаст ошибку "неоднозначный вызов"
         public static int Truncate<T>(this T number) => Math.Truncate(number.ToDouble()).ToInt();
@@ -188,6 +191,37 @@ namespace DTLib
             if (b.Length > 0)
                 o.Add(b.ToString());
             return o;
+        }
+
+        // правильно реагирует на кавычки
+        public static List<string> SplitToList(this string s, char c, char quot)
+        {
+            List<string> output = new();
+            var list = s.SplitToList(c);
+            bool q_open = false;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var _s = list[i];
+                if (q_open)
+                {
+                    if (_s.EndsWith(quot))
+                    {
+                        q_open = false;
+                        _s=_s.Remove(_s.Length - 1);
+                    }
+                    output[output.Count - 1] += c + _s;
+                }
+                else
+                {
+                    if (_s.StartsWith(quot))
+                    {
+                        q_open = true;
+                        _s = _s.Remove(0, 1);
+                    }
+                    output.Add(_s);
+                }
+            }
+            return output;
         }
 
         // разбивает на части указанной длины
