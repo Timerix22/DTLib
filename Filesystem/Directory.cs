@@ -136,10 +136,24 @@ namespace DTLib.Filesystem
             dirInfo.SetAccessControl(dirSecurity);
         }
 
-        public static void CreateSymlink(string symlinkName, string sourceName)
+        public static void CreateSymlink(string sourceName, string symlinkName)
         {
+            if (symlinkName.Contains("\\"))
+                Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf('\\')));
             if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
-                throw new InvalidOperationException($"some error occured while creating symlink\nCreateSymlink({symlinkName}, {sourceName})");
+                throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
+        }
+
+        // copies directory with symlinks instead of files
+        public static int SymCopy(string srcdir, string newdir)
+        {
+            var files = Directory.GetAllFiles(srcdir);
+            if (!srcdir.EndsWith('\\')) srcdir += '\\';
+            if (!newdir.EndsWith('\\')) newdir += '\\';
+            int i = 0;
+            for (; i < files.Count; i++)
+                File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
+            return i;
         }
     }
 }

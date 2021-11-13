@@ -75,10 +75,12 @@ namespace DTLib.Filesystem
             return System.IO.File.Open(file, System.IO.FileMode.Append);
         }
 
-        public static void CreateSymlink(string symlinkName, string sourceName)
+        public static void CreateSymlink(string sourceName, string symlinkName)
         {
+            if (symlinkName.Contains("\\"))
+                Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf('\\')));
             if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
-                throw new InvalidOperationException($"some error occured while creating symlink\nCreateSymlink({symlinkName}, {sourceName})");
+                throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkName}, {sourceName})");
         }
     }
 }
