@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DTLib.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace DTLib.Filesystem
 {
-
     public static class Directory
     {
         public static bool Exists(string dir) => System.IO.Directory.Exists(dir);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTLib.Extensions;
+using System;
 
 namespace DTLib.Filesystem
 {

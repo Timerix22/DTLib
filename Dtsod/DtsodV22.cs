@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTLib.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,6 @@ namespace DTLib.Dtsod
                 Value = value;
                 Type = type;
                 IsList = isList;
-            }
-            public ValueStruct(ValueTypes type, dynamic value)
-            {
-                Value = value;
-                Type = type;
-                IsList = false;
             }
         }
 
@@ -122,14 +117,14 @@ namespace DTLib.Dtsod
             // СЛОМАНО
             /*void ReadCommentLine()
             {
-                for (; i < text.Length && text[i] != '\n'; i++) Debug("gray", text[i].ToString());
+                for (; i < text.Length && text[i] != '\n'; i++) Debug("h", text[i].ToString());
             }*/
 
             void ReadName()
             {
 
                 bool isListElem = false;
-                dynamic value = null;
+                dynamic value;
                 StringBuilder defaultNameBuilder = new();
 
                 DebugNoTime("m", "ReadName\n");
@@ -192,11 +187,11 @@ namespace DTLib.Dtsod
                     valueBuilder.Append('"');
                     for (; text[i] != '"' || text[i - 1] == '\\'; i++)
                     {
-                        DebugNoTime("gray", text[i].ToString());
+                        DebugNoTime("h", text[i].ToString());
                         valueBuilder.Append(text[i]);
                     }
                     valueBuilder.Append('"');
-                    DebugNoTime("gray", text[i].ToString());
+                    DebugNoTime("h", text[i].ToString());
                     type = ValueTypes.String;
                     return valueBuilder.ToString();
                 }
@@ -405,33 +400,34 @@ namespace DTLib.Dtsod
                 switch (value.Type)
                 {
                     case ValueTypes.List:
-                        outBuilder.Append("\"list deconstruction is'nt implemented yet\"");
+                        outBuilder.Append('[').Append(ToStringConverter.MergeToString((IEnumerable<object>)value.Value, ",")).Append(']');
+                        //outBuilder.Append("\"list deconstruction is'nt implemented yet\"");
                         break;
                     case ValueTypes.Complex:
-                        outBuilder.Append("\n");
+                        outBuilder.Append('\n');
                         outBuilder.Append('\t', tabCount);
                         outBuilder.Append("{\n");
                         tabCount++;
                         outBuilder.Append(Deconstruct(value.Value));
                         tabCount--;
                         outBuilder.Append('\t', tabCount);
-                        outBuilder.Append("}");
+                        outBuilder.Append('}');
                         break;
                     case ValueTypes.String:
-                        outBuilder.Append("\"");
+                        outBuilder.Append('\"');
                         outBuilder.Append(value.Value.ToString());
-                        outBuilder.Append("\"");
+                        outBuilder.Append('\"');
                         break;
                     case ValueTypes.Short:
                         outBuilder.Append(value.Value.ToString());
-                        outBuilder.Append("s");
+                        outBuilder.Append('s');
                         break;
                     case ValueTypes.Int:
                         outBuilder.Append(value.Value.ToString());
                         break;
                     case ValueTypes.Long:
                         outBuilder.Append(value.Value.ToString());
-                        outBuilder.Append("l");
+                        outBuilder.Append('l');
                         break;
                     case ValueTypes.UShort:
                         outBuilder.Append(value.Value.ToString());

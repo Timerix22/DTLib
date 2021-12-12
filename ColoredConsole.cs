@@ -26,8 +26,8 @@ namespace DTLib
             "b" => ConsoleColor.Blue,
             //case "cyan":
             "c" => ConsoleColor.Cyan,
-            //case "gray":
-            "gray" => ConsoleColor.Gray,
+            //case "h":
+            "h" or "gray" => ConsoleColor.Gray,
             //case "black":
             "black" => ConsoleColor.Black,
             _ => throw new Exception($"ColoredConsole.ParseColor({color}) error: incorrect color"),

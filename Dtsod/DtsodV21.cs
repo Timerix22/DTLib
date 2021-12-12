@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTLib.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,13 @@ namespace DTLib.Dtsod
             foreach (KeyValuePair<string, dynamic> pair in Parse(text))
                 Add(pair.Key, pair.Value);
         }
+        public DtsodV21(Dictionary<string, dynamic> rawDict)
+        {
+            Text = "";
+            foreach (KeyValuePair<string, dynamic> pair in rawDict)
+                Add(pair.Key, pair.Value);
+        }
+
 
         // выдаёт Exception
         public new dynamic this[string key]
@@ -89,14 +97,14 @@ namespace DTLib.Dtsod
             // СЛОМАНО
             /*void ReadCommentLine()
             {
-                for (; i < text.Length && text[i] != '\n'; i++) DebugNoTime("gray", text[i].ToString());
+                for (; i < text.Length && text[i] != '\n'; i++) DebugNoTime("h", text[i].ToString());
             }*/
 
             void ReadName()
             {
 
                 bool isListElem = false;
-                dynamic value = null;
+                dynamic value;
                 StringBuilder defaultNameBuilder = new();
 
                 DebugNoTime("m", "ReadName\n");
@@ -113,7 +121,8 @@ namespace DTLib.Dtsod
                             i++;
                             string name = defaultNameBuilder.ToString();
                             value = ReadValue();
-                            DebugNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
+                            // если value это null, эта строка выдавала ошибку
+                            //DebugNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
                             if (isListElem)
                             {
                                 if (!parsed.ContainsKey(name))
@@ -158,11 +167,11 @@ namespace DTLib.Dtsod
                     valueBuilder.Append('"');
                     for (; text[i] != '"' || text[i - 1] == '\\'; i++)
                     {
-                        DebugNoTime("gray", text[i].ToString());
+                        DebugNoTime("h", text[i].ToString());
                         valueBuilder.Append(text[i]);
                     }
                     valueBuilder.Append('"');
-                    DebugNoTime("gray", text[i].ToString());
+                    DebugNoTime("h", text[i].ToString());
                     type = ValueType.String;
                     return valueBuilder.ToString();
                 }
