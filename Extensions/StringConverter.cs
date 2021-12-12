@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DTLib.Extensions
 {
-    public static class ToStringConverter
+    public static class StringConverter
     {
         public static Encoding UTF8 = new UTF8Encoding(false);
         public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);

@@ -70,7 +70,7 @@ namespace DTLib.Network
                 MainSocket.SendPackage("ready".ToBytes());
                 int packagesCount = 0;
                 byte[] buffer = new byte[5120];
-                int fullPackagesCount = FrameworkFix.Truncate(Filesize / buffer.Length);
+                int fullPackagesCount = (Filesize / buffer.Length).Truncate();
                 // получение полных пакетов файла
                 for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
                 {
@@ -114,7 +114,7 @@ namespace DTLib.Network
                 MainSocket.GetAnswer("ready");
                 byte[] buffer = new byte[5120];
                 int packagesCount = 0;
-                int fullPackagesCount = FrameworkFix.Truncate(Filesize / buffer.Length);
+                int fullPackagesCount = (Filesize / buffer.Length).Truncate();
                 // отправка полных пакетов файла
                 for (; packagesCount < fullPackagesCount; packagesCount++)
                 {

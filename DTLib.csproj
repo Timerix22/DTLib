@@ -36,7 +36,8 @@
     <Compile Include="DefaultLogger.cs" />
     <Compile Include="Extensions\Collections.cs" />
     <Compile Include="Extensions\BaseConverter.cs" />
-    <Compile Include="Extensions\ToStringConverter.cs" />
+    <Compile Include="Extensions\IfMethod.cs" />
+    <Compile Include="Extensions\StringConverter.cs" />
     <Compile Include="Filesystem\Symlink.cs" />
     <Compile Include="MyDict.cs" />
     <Compile Include="Dtsod\DtsodV21.cs" />

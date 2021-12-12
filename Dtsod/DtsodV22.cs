@@ -400,7 +400,7 @@ namespace DTLib.Dtsod
                 switch (value.Type)
                 {
                     case ValueTypes.List:
-                        outBuilder.Append('[').Append(ToStringConverter.MergeToString((IEnumerable<object>)value.Value, ",")).Append(']');
+                        outBuilder.Append('[').Append(StringConverter.MergeToString((IEnumerable<object>)value.Value, ",")).Append(']');
                         //outBuilder.Append("\"list deconstruction is'nt implemented yet\"");
                         break;
                     case ValueTypes.Complex:
