@@ -2,10 +2,8 @@
 using System.Security.Cryptography;
 namespace DTLib
 {
-    //
     // честно взятый с гитхаба алгоритм хеширования
     // выдаёт хеш в виде массива четырёх байтов
-    //
     sealed class XXHash32 : HashAlgorithm
     {
         private const uint PRIME32_1 = 2654435761U;
@@ -58,23 +56,23 @@ namespace DTLib
             }
         }
 
-        // Creates an instance of <see cref="XXHash32"/> class by default seed(0).
-        // <returns></returns>
+        /// Creates an instance of <see cref="XXHash32"/> class by default seed(0).
+        /// <returns></returns>
         public static new XXHash32 Create() => new();
 
-        // Initializes a new instance of the <see cref="XXHash32"/> class by default seed(0).
+        /// Initializes a new instance of the <see cref="XXHash32"/> class by default seed(0).
         public XXHash32() => Initialize(0);
 
-        // Initializes a new instance of the <see cref="XXHash32"/> class, and sets the <see cref="Seed"/> to the specified value.
-        // <param name="seed">Represent the seed to be used for xxHash32 computing.</param>
+        /// Initializes a new instance of the <see cref="XXHash32"/> class, and sets the <see cref="Seed"/> to the specified value.
+        /// <param name="seed">Represent the seed to be used for xxHash32 computing.</param>
         public XXHash32(uint seed) => Initialize(seed);
 
-        // Gets the <see cref="uint"/> value of the computed hash code.
-        // <exception cref="InvalidOperationException">Hash computation has not yet completed.</exception>
+        /// Gets the <see cref="uint"/> value of the computed hash code.
+        /// <exception cref="InvalidOperationException">Hash computation has not yet completed.</exception>
         public uint HashUInt32 => State == 0 ? _Hash32 : throw new InvalidOperationException("Hash computation has not yet completed.");
 
-        // Gets or sets the value of seed used by xxHash32 algorithm.
-        // <exception cref="InvalidOperationException">Hash computation has not yet completed.</exception>
+        /// Gets or sets the value of seed used by xxHash32 algorithm.
+        /// <exception cref="InvalidOperationException">Hash computation has not yet completed.</exception>
         public uint Seed
         {
             get => _Seed32;
@@ -90,7 +88,7 @@ namespace DTLib
             }
         }
 
-        // Initializes this instance for new hash computing.
+        /// Initializes this instance for new hash computing.
         public override void Initialize()
         {
             _ACC32_1 = _Seed32 + PRIME32_1 + PRIME32_2;
@@ -99,10 +97,10 @@ namespace DTLib
             _ACC32_4 = _Seed32 - PRIME32_1;
         }
 
-        // Routes data written to the object into the hash algorithm for computing the hash.
-        // <param name="array">The input to compute the hash code for.</param>
-        // <param name="ibStart">The offset into the byte array from which to begin using data.</param>
-        // <param name="cbSize">The number of bytes in the byte array to use as data.</param>
+        /// Routes data written to the object into the hash algorithm for computing the hash.
+        /// <param name="array">The input to compute the hash code for.</param>
+        /// <param name="ibStart">The offset into the byte array from which to begin using data.</param>
+        /// <param name="cbSize">The number of bytes in the byte array to use as data.</param>
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
             if (State != 1)
@@ -132,8 +130,8 @@ namespace DTLib
             }
         }
 
-        // Finalizes the hash computation after the last data is processed by the cryptographic stream object.
-        // <returns>The computed hash code.</returns>
+        /// Finalizes the hash computation after the last data is processed by the cryptographic stream object.
+        /// <returns>The computed hash code.</returns>
         protected override byte[] HashFinal()
         {
             _Hash32 = _TotalLength >= 16
