@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace DTLib.Dtsod;
 
-namespace DTLib.Dtsod
+public class DtsodSerializableAttribute : Attribute
 {
-    public class DtsodSerializableAttribute : Attribute
-    {
-        public DtsodVersion Version;
-        public DtsodSerializableAttribute(DtsodVersion ver) => Version = ver;
-    }
+    public DtsodVersion Version;
+    public DtsodSerializableAttribute(DtsodVersion ver) => Version = ver;
 }
