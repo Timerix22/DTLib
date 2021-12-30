@@ -2,7 +2,7 @@
 
 public static class TypeHelper
 {
-    static public readonly Dictionary<Type, Func<string, dynamic>> BaseTypeConstructors = new()
+    public static readonly Dictionary<Type, Func<string, dynamic>> BaseTypeConstructors = new()
     {
         { typeof(bool), (inp) => inp.ToBool() },
         { typeof(char), (inp) => inp.ToChar() },
@@ -20,7 +20,7 @@ public static class TypeHelper
         { typeof(decimal), (inp) => inp.ToDecimal() }
     };
 
-    static public Dictionary<Type, string> BaseTypeNames = new()
+    public static Dictionary<Type, string> BaseTypeNames = new()
     {
         { typeof(bool), "bool" },
         { typeof(char), "char" },
@@ -38,12 +38,12 @@ public static class TypeHelper
         { typeof(decimal), "decimal" }
     };
 
-    static public string TypeToString(Type t) =>
-        BaseTypeNames.TryGetValue(t, out var name)
+    public static string TypeToString(Type t) =>
+        BaseTypeNames.TryGetValue(t, out string name)
             ? name
             : t.AssemblyQualifiedName;
 
-    static public Type TypeFromString(string str) => str switch
+    public static Type TypeFromString(string str) => str switch
     {
         "bool" => typeof(bool),
         "char" => typeof(char),

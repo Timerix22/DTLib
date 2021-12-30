@@ -11,7 +11,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
 
     public DtsodV30() : base() => UpdateLazy();
     public DtsodV30(IDictionary<string, dynamic> dict) : base(dict) => UpdateLazy();
-    public DtsodV30(string serialized) : this() { Append(Deserialize(serialized)); }
+    public DtsodV30(string serialized) : this() => Append(Deserialize(serialized));
 
 #if DEBUG
     static void DebugLog(params string[] msg) => PublicLog.Log(msg);
@@ -180,7 +180,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                         break;
                     case ';': // один параметр
                     case ',': // для листов
-                        var str = b.ToString();
+                        string str = b.ToString();
                         b.Clear();
                         // hardcoded "null" value
                         return str == "null" ? (new object[] { null }) : (new object[] { str });
@@ -220,7 +220,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
 
         object CreateInstance(Type type, object[] ctor_args)
         {
-            if (TypeHelper.BaseTypeConstructors.TryGetValue(type, out var ctor))
+            if (TypeHelper.BaseTypeConstructors.TryGetValue(type, out Func<string, dynamic> ctor))
                 return (object)ctor.Invoke((string)ctor_args[0]);
             else if (type.CustomAttributes.Any(a => a.AttributeType == typeof(DtsodSerializableAttribute)))
                 return Activator.CreateInstance(type, ctor_args);
@@ -243,22 +243,14 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
         return output;
     }
 
-    public override void Append(ICollection<KeyValuePair<string, dynamic>> anotherDtsod)
-    {
-        base.Append(anotherDtsod);
-        //UpdateLazy();
-    }
+    public override void Append(ICollection<KeyValuePair<string, dynamic>> anotherDtsod) => base.Append(anotherDtsod);//UpdateLazy();
 
-    public override void Add(string key, dynamic value)
-    {
-        base.Add(key, (object)value);
-        //UpdateLazy();
-    }
+    public override void Add(string key, dynamic value) => base.Add(key, (object)value);//UpdateLazy();
 
     protected static string Serialize(IDictionary<string, dynamic> dtsod, ushort tabsCount = 0)
     {
         StringBuilder b = new();
-        foreach (var pair in dtsod)
+        foreach (KeyValuePair<string, dynamic> pair in dtsod)
         {
             Type type = pair.Value.GetType();
             b.Append(TypeHelper.TypeToString(type)).Append(':')

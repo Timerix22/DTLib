@@ -128,7 +128,7 @@ public static class Directory
     // copies directory with symlinks instead of files
     public static int SymCopy(string srcdir, string newdir)
     {
-        var files = Directory.GetAllFiles(srcdir);
+        List<string> files = Directory.GetAllFiles(srcdir);
         if (!srcdir.EndsWith('\\')) srcdir += '\\';
         if (!newdir.EndsWith('\\')) newdir += '\\';
         int i = 0;

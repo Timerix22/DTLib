@@ -8,7 +8,7 @@ public abstract class BaseLogger
 
 
     public bool IsEnabled { get; private set; } = false;
-    readonly protected object statelocker = new();
+    protected readonly object statelocker = new();
     public void Disable() { lock (statelocker) IsEnabled = false; }
     public void Enable() { lock (statelocker) IsEnabled = true; }
 

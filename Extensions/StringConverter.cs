@@ -110,11 +110,11 @@ public static class StringConverter
     public static List<string> SplitToList(this string s, char c, char quot)
     {
         List<string> output = new();
-        var list = s.SplitToList(c);
+        List<string> list = s.SplitToList(c);
         bool q_open = false;
         for (int i = 0; i < list.Count; i++)
         {
-            var _s = list[i];
+            string _s = list[i];
             if (q_open)
             {
                 if (_s.EndsWith(quot))
@@ -147,7 +147,7 @@ public static class StringConverter
 
     public static string AddZeroes<T>(this T number, int length)
     {
-        var str = number.ToString();
+        string str = number.ToString();
         return new string('0', str.Length - length) + str;
     }
 }

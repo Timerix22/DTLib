@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace DTLib.Dtsod;
+﻿namespace DTLib.Dtsod;
 
 public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>
 {
@@ -33,7 +31,7 @@ public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>
     }
     public virtual void Append(ICollection<KeyValuePair<TKey, TVal>> anotherDtsod)
     {
-        foreach (var pair in anotherDtsod)
+        foreach (KeyValuePair<TKey, TVal> pair in anotherDtsod)
             Add(pair.Key, pair.Value);
     }
 
@@ -44,8 +42,8 @@ public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>
 
 
     public int Count => baseDict.Count;
-    public ICollection<TKey> Keys { get => baseDict.Keys; }
-    public ICollection<TVal> Values { get => baseDict.Values; }
+    public ICollection<TKey> Keys => baseDict.Keys;
+    public ICollection<TVal> Values => baseDict.Values;
     public bool IsReadOnly { get; } = false;
 
     public virtual void Clear() => baseDict.Clear();

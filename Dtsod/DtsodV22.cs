@@ -489,7 +489,7 @@ public class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>, IDtsod
     }
 
 #if DEBUG
-    void Debug(params string[] msg) => PublicLog.Log(msg);
-    void DebugNoTime(params string[] msg) => PublicLog.LogNoTime(msg);
+    static void Debug(params string[] msg) => PublicLog.Log(msg);
+    static void DebugNoTime(params string[] msg) => PublicLog.LogNoTime(msg);
 #endif
 }
