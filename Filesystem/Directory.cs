@@ -1,159 +1,139 @@
-﻿using DTLib.Extensions;
-using System;
-using System.Collections.Generic;
+﻿namespace DTLib.Filesystem;
 
-namespace DTLib.Filesystem
+public static class Directory
 {
-    public static class Directory
+    public static bool Exists(string dir) => System.IO.Directory.Exists(dir);
+
+    // создает папку, если её не существует
+    public static void Create(string dir)
     {
-        public static bool Exists(string dir) => System.IO.Directory.Exists(dir);
-
-        // создает папку, если её не существует
-        public static void Create(string dir)
+        if (!Directory.Exists(dir))
         {
-            if (!Directory.Exists(dir))
-            {
-                // проверяет существование папки, в которой нужно создать dir
-                if (dir.Contains("\\") && !Directory.Exists(dir.Remove(dir.LastIndexOf('\\'))))
-                    Create(dir.Remove(dir.LastIndexOf('\\')));
-                System.IO.Directory.CreateDirectory(dir);
-            }
+            // проверяет существование папки, в которой нужно создать dir
+            if (dir.Contains("\\") && !Directory.Exists(dir.Remove(dir.LastIndexOf('\\'))))
+                Create(dir.Remove(dir.LastIndexOf('\\')));
+            System.IO.Directory.CreateDirectory(dir);
         }
-        // копирует все файлы и папки
-        public static void Copy(string source_dir, string new_dir, bool owerwrite = false)
+    }
+    // копирует все файлы и папки
+    public static void Copy(string source_dir, string new_dir, bool owerwrite = false)
+    {
+        Create(new_dir);
+        var subdirs = new List<string>();
+        List<string> files = GetAllFiles(source_dir, ref subdirs);
+        for (int i = 0; i < subdirs.Count; i++)
         {
-            Create(new_dir);
-            var subdirs = new List<string>();
-            List<string> files = GetAllFiles(source_dir, ref subdirs);
-            for (int i = 0; i < subdirs.Count; i++)
-            {
-                Create(subdirs[i].Replace(source_dir, new_dir));
-            }
-            for (int i = 0; i < files.Count; i++)
-            {
-                string f = files[i].Replace(source_dir, new_dir);
-                File.Copy(files[i], f, owerwrite);
-                //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
-            }
+            Create(subdirs[i].Replace(source_dir, new_dir));
         }
-
-        // копирует все файлы и папки и выдаёт список конфликтующих файлов
-        public static void Copy(string source_dir, string new_dir, out List<string> conflicts, bool owerwrite = false)
+        for (int i = 0; i < files.Count; i++)
         {
-            conflicts = new List<string>();
-            var subdirs = new List<string>();
-            List<string> files = GetAllFiles(source_dir, ref subdirs);
-            Create(new_dir);
-            for (int i = 0; i < subdirs.Count; i++)
-            {
-                Create(subdirs[i].Replace(source_dir, new_dir));
-            }
-            for (int i = 0; i < files.Count; i++)
-            {
-                string newfile = files[i].Replace(source_dir, new_dir);
-                if (File.Exists(newfile))
-                    conflicts.Add(newfile);
-                File.Copy(files[i], newfile, owerwrite);
-                //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
-            }
+            string f = files[i].Replace(source_dir, new_dir);
+            File.Copy(files[i], f, owerwrite);
+            //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
         }
+    }
 
-        // удаляет папку со всеми подпапками и файлами
-        public static void Delete(string dir)
+    // копирует все файлы и папки и выдаёт список конфликтующих файлов
+    public static void Copy(string source_dir, string new_dir, out List<string> conflicts, bool owerwrite = false)
+    {
+        conflicts = new List<string>();
+        var subdirs = new List<string>();
+        List<string> files = GetAllFiles(source_dir, ref subdirs);
+        Create(new_dir);
+        for (int i = 0; i < subdirs.Count; i++)
         {
-            var subdirs = new List<string>();
-            List<string> files = GetAllFiles(dir, ref subdirs);
-            for (int i = 0; i < files.Count; i++)
-                File.Delete(files[i]);
-            for (int i = subdirs.Count - 1; i >= 0; i--)
-            {
-                PublicLog.Log($"deleting {subdirs[i]}\n");
-                if (Directory.Exists(subdirs[i]))
-                    System.IO.Directory.Delete(subdirs[i], true);
-            }
-            PublicLog.Log($"deleting {dir}\n");
-            if (Directory.Exists(dir))
-                System.IO.Directory.Delete(dir, true);
+            Create(subdirs[i].Replace(source_dir, new_dir));
         }
-
-        public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(dir);
-        public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(dir, searchPattern);
-        public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(dir);
-
-        // выдает список всех файлов
-        public static List<string> GetAllFiles(string dir)
+        for (int i = 0; i < files.Count; i++)
         {
-            var all_files = new List<string>();
-            string[] cur_files = Directory.GetFiles(dir);
-            for (int i = 0; i < cur_files.Length; i++)
-            {
-                all_files.Add(cur_files[i]);
-                //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
-            }
-            string[] cur_subdirs = Directory.GetDirectories(dir);
-            for (int i = 0; i < cur_subdirs.Length; i++)
-            {
-                //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
-                all_files.AddRange(GetAllFiles(cur_subdirs[i]));
-            }
-            return all_files;
+            string newfile = files[i].Replace(source_dir, new_dir);
+            if (File.Exists(newfile))
+                conflicts.Add(newfile);
+            File.Copy(files[i], newfile, owerwrite);
+            //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
         }
+    }
 
-        // выдает список всех файлов и подпапок в папке
-        public static List<string> GetAllFiles(string dir, ref List<string> all_subdirs)
+    // удаляет папку со всеми подпапками и файлами
+    public static void Delete(string dir)
+    {
+        var subdirs = new List<string>();
+        List<string> files = GetAllFiles(dir, ref subdirs);
+        for (int i = 0; i < files.Count; i++)
+            File.Delete(files[i]);
+        for (int i = subdirs.Count - 1; i >= 0; i--)
         {
-            var all_files = new List<string>();
-            string[] cur_files = Directory.GetFiles(dir);
-            for (int i = 0; i < cur_files.Length; i++)
-            {
-                all_files.Add(cur_files[i]);
-                //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
-            }
-            string[] cur_subdirs = Directory.GetDirectories(dir);
-            for (int i = 0; i < cur_subdirs.Length; i++)
-            {
-                all_subdirs.Add(cur_subdirs[i]);
-                //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
-                all_files.AddRange(GetAllFiles(cur_subdirs[i], ref all_subdirs));
-            }
-            return all_files;
+            PublicLog.Log($"deleting {subdirs[i]}\n");
+            if (Directory.Exists(subdirs[i]))
+                System.IO.Directory.Delete(subdirs[i], true);
         }
+        PublicLog.Log($"deleting {dir}\n");
+        if (Directory.Exists(dir))
+            System.IO.Directory.Delete(dir, true);
+    }
 
-        public static string GetCurrent() => System.IO.Directory.GetCurrentDirectory();
+    public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(dir);
+    public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(dir, searchPattern);
+    public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(dir);
 
-        public static void GrantAccess(string fullPath)
+    // выдает список всех файлов
+    public static List<string> GetAllFiles(string dir)
+    {
+        var all_files = new List<string>();
+        string[] cur_files = Directory.GetFiles(dir);
+        for (int i = 0; i < cur_files.Length; i++)
         {
-            var dirInfo = new System.IO.DirectoryInfo(fullPath);
-            System.Security.AccessControl.DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
-            dirSecurity.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(
-                new System.Security.Principal.SecurityIdentifier(
-                    System.Security.Principal.WellKnownSidType.WorldSid, null),
-                    System.Security.AccessControl.FileSystemRights.FullControl,
-                    System.Security.AccessControl.InheritanceFlags.ObjectInherit |
-                    System.Security.AccessControl.InheritanceFlags.ContainerInherit,
-                    System.Security.AccessControl.PropagationFlags.NoPropagateInherit,
-                    System.Security.AccessControl.AccessControlType.Allow));
-            dirInfo.SetAccessControl(dirSecurity);
+            all_files.Add(cur_files[i]);
+            //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
         }
-
-        public static void CreateSymlink(string sourceName, string symlinkName)
+        string[] cur_subdirs = Directory.GetDirectories(dir);
+        for (int i = 0; i < cur_subdirs.Length; i++)
         {
-            if (symlinkName.Contains("\\"))
-                Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf('\\')));
-            if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
-                throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
+            //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
+            all_files.AddRange(GetAllFiles(cur_subdirs[i]));
         }
+        return all_files;
+    }
 
-        // copies directory with symlinks instead of files
-        public static int SymCopy(string srcdir, string newdir)
+    // выдает список всех файлов и подпапок в папке
+    public static List<string> GetAllFiles(string dir, ref List<string> all_subdirs)
+    {
+        var all_files = new List<string>();
+        string[] cur_files = Directory.GetFiles(dir);
+        for (int i = 0; i < cur_files.Length; i++)
         {
-            var files = Directory.GetAllFiles(srcdir);
-            if (!srcdir.EndsWith('\\')) srcdir += '\\';
-            if (!newdir.EndsWith('\\')) newdir += '\\';
-            int i = 0;
-            for (; i < files.Count; i++)
-                File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
-            return i;
+            all_files.Add(cur_files[i]);
+            //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
         }
+        string[] cur_subdirs = Directory.GetDirectories(dir);
+        for (int i = 0; i < cur_subdirs.Length; i++)
+        {
+            all_subdirs.Add(cur_subdirs[i]);
+            //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
+            all_files.AddRange(GetAllFiles(cur_subdirs[i], ref all_subdirs));
+        }
+        return all_files;
+    }
+
+    public static string GetCurrent() => System.IO.Directory.GetCurrentDirectory();
+
+    public static void CreateSymlink(string sourceName, string symlinkName)
+    {
+        if (symlinkName.Contains("\\"))
+            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf('\\')));
+        if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
+            throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
+    }
+
+    // copies directory with symlinks instead of files
+    public static int SymCopy(string srcdir, string newdir)
+    {
+        var files = Directory.GetAllFiles(srcdir);
+        if (!srcdir.EndsWith('\\')) srcdir += '\\';
+        if (!newdir.EndsWith('\\')) newdir += '\\';
+        int i = 0;
+        for (; i < files.Count; i++)
+            File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
+        return i;
     }
 }
