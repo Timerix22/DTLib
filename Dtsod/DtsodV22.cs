@@ -345,7 +345,7 @@ public class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>, IDtsod
                                     break;
                                 default:
                                     type = ValueTypes.Int;
-                                    value = stringValue.ToShort();
+                                    value = stringValue.ToInt();
                                     break;
                             }
                         break;

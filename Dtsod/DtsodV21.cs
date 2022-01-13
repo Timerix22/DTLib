@@ -310,7 +310,7 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                                     value = stringValue.Remove(stringValue.Length - 1).ToLong();
                                     break;
                                 default:
-                                    value = stringValue.ToShort();
+                                    value = stringValue.ToInt();
                                     break;
                             }
                         break;

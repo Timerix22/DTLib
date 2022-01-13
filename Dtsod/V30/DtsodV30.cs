@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Linq;
 
 namespace DTLib.Dtsod;
 
@@ -13,10 +12,6 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
     public DtsodV30(IDictionary<string, dynamic> dict) : base(dict) => UpdateLazy();
     public DtsodV30(string serialized) : this() => Append(Deserialize(serialized));
 
-#if DEBUG
-    static void DebugLog(params string[] msg) => PublicLog.Log(msg);
-#endif
-
     static IDictionary<string, dynamic> Deserialize(string text)
     {
         char c;
@@ -27,7 +22,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
         Type ReadType()
         {
 
-            while (i < text.Length)
+            while (i < text.Length - 1)
             {
                 c = text[++i];
                 switch (c)
@@ -43,9 +38,10 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                     case ':':
                         string _type = b.ToString();
                         b.Clear();
-                        return TypeHelper.TypeFromString(_type);
+                        return TypeHelper.Instance.TypeFromString(_type);
                     case '=':
                     case '"':
+                    case '\'':
                     case ';':
                     case '[':
                     case ']':
@@ -63,7 +59,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
 
         string ReadName()
         {
-            while (i < text.Length)
+            while (i < text.Length - 1)
             {
                 c = text[++i];
                 switch (c)
@@ -82,6 +78,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                         return _name;
                     case ':':
                     case '"':
+                    case '\'':
                     case ';':
                     case '[':
                     case ']':
@@ -97,12 +94,12 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
             throw new Exception("DtsodV30.Deserialize.ReadName() error: end of text\ntext:\n" + text);
         }
 
-        object[] ReadValue()
+        object ReadValue(ref bool endoflist)
         {
             void ReadString()
             {
                 c = text[++i];    //пропускает начальный символ '"'
-                while (c != '"' || (text[i - 1] == '\\' && text[i - 2] != '\\'))
+                while ((c != '"' && c != '\'') || (text[i - 1] == '\\' && text[i - 2] != '\\'))
                 {
                     b.Append(c);
                     if (++i >= text.Length) throw new Exception("DtsodV30.Deserialize() error: end of text\ntext:\n" + text);
@@ -110,13 +107,13 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                 }
             }
 
-            bool endoflist = false;  // выставляется в цикле в ReadValue()
             List<object> ReadList()
             {
-                List<dynamic> list = new();
-                while (!endoflist)
-                    list.Add(CreateInstance(ReadType(), ReadValue()));
-                endoflist = false;
+                List<object> list = new();
+                bool _endoflist = false;
+                while (!_endoflist)
+                    list.Add(CreateInstance(ReadType(), ReadValue(ref _endoflist)));
+                b.Clear();
                 return list;
             }
 
@@ -146,6 +143,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                                 b.Append(c);
                             break;
                         case '"':
+                        case '\'':
                             b.Append('"');
                             ReadString();
                             b.Append('"');
@@ -159,10 +157,11 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                     c = text[i];
                 }
 
+                b.Clear();
                 return Deserialize(b.ToString());
             }
 
-            while (i < text.Length)
+            while (i < text.Length-1)
             {
                 c = text[++i];
                 switch (c)
@@ -176,29 +175,21 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                         SkipComment();
                         break;
                     case '"':
+                    case '\'':
                         ReadString();
                         break;
                     case ';': // один параметр
                     case ',': // для листов
                         string str = b.ToString();
                         b.Clear();
-                        // hardcoded "null" value
-                        return str == "null" ? (new object[] { null }) : (new object[] { str });
+                        return str == "null" ? null : str;
                     case '[':
-                        {
-                            object[] _value = ReadList().ToArray();
-                            b.Clear();
-                            return _value;
-                        }
+                        return ReadList();
                     case ']':
                         endoflist = true;
                         goto case ',';
                     case '{':
-                        {
-                            object[] _value = new object[] { ReadDictionary() };
-                            b.Clear();
-                            return _value;
-                        }
+                        return ReadDictionary();
                     case '=':
                     case ':':
                     case '}':
@@ -218,25 +209,42 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
                 if (++i >= text.Length) throw new Exception("DtsodV30.Deserialize() error: end of text\ntext:\n" + text);
         }
 
-        object CreateInstance(Type type, object[] ctor_args)
+        object CreateInstance(Type type, object ctor_arg)
         {
-            if (TypeHelper.BaseTypeConstructors.TryGetValue(type, out Func<string, dynamic> ctor))
-                return (object)ctor.Invoke((string)ctor_args[0]);
+            if (TypeHelper.Instance.BaseTypeConstructors.TryGetValue(type, out Func<string, dynamic> ctor))
+                return (object)ctor.Invoke((string)ctor_arg);
             else if (type.CustomAttributes.Any(a => a.AttributeType == typeof(DtsodSerializableAttribute)))
-                return Activator.CreateInstance(type, ctor_args);
-            else throw new Exception($"type {type.AssemblyQualifiedName} doesn't have DtsodSerializableAttribute");
+                return Activator.CreateInstance(type, ((IDictionary<string, object>)ctor_arg).Values.ToArray());
+            else if (typeof(ICollection).IsAssignableFrom(type))
+            {
+                var method_As = typeof(TypeHelper).GetMethod("As", 
+                    System.Reflection.BindingFlags.Static |
+                    System.Reflection.BindingFlags.NonPublic)
+                    .MakeGenericMethod(type.GetGenericArguments()[0]);
+                object collection = type.GetConstructor(Type.EmptyTypes).Invoke(null);
+                var method_Add = type.GetMethod("Add");
+                Log(method_Add.Name);
+                foreach (object el in (IEnumerable)ctor_arg)
+                {
+                    var pel = method_As.Invoke(null, new object[] { el });
+                    method_Add.Invoke(collection, new object[] { pel });
+                }
+                return collection;
+            }
+            else throw new Exception($"can't create instance of {type.FullName}");
         }
 
         Dictionary<string, dynamic> output = new();
         Type type;
         string name;
-        object[] value;
+        object value;
 
         for (; i < text.Length; i++)
         {
             type = ReadType();
             name = ReadName();
-            value = ReadValue();
+            bool _ = false;
+            value = ReadValue(ref _);
             output.Add(name, CreateInstance(type, value));
         }
 
@@ -252,22 +260,32 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
         StringBuilder b = new();
         foreach (KeyValuePair<string, dynamic> pair in dtsod)
         {
-            Type type = pair.Value.GetType();
-            b.Append(TypeHelper.TypeToString(type)).Append(':')
-                .Append(pair.Key).Append('=');
-            if (TypeHelper.BaseTypeNames.ContainsKey(type))
+
+        }
+
+        void SerializeObject(string name, dynamic inst)
+        {
+            Type type = inst.GetType();
+            b.Append(TypeHelper.Instance.TypeToString(type)).Append(':')
+                .Append(name).Append('=');
+            if (TypeHelper.Instance.BaseTypeNames.ContainsKey(type))
             {
                 if (type == typeof(decimal) || type == typeof(double) || type == typeof(float))
-                    b.Append(pair.Value.ToString(CultureInfo.InvariantCulture));
-                else b.Append(pair.Value.ToString());
+                    b.Append(inst.ToString(CultureInfo.InvariantCulture));
+                else b.Append(inst.ToString());
             }
             else if (typeof(IDictionary<string, dynamic>).IsAssignableFrom(type))
-                b.Append("\n{\n").Append(Serialize(pair.Value, tabsCount++)).Append("};\n");
-            else
+                b.Append("\n{\n").Append(Serialize(inst, tabsCount++)).Append("};\n");
+            else if (type.CustomAttributes.Any(a => a.AttributeType == typeof(DtsodSerializableAttribute)))
             {
-                type.GetProperties().Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(DtsodSerializableAttribute)));
+                var props = type.GetProperties().Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(DtsodSerializableAttribute)));
+                foreach (var prop in props)
+                {
+                    var propval = prop.GetValue(inst);
 
+                }
             }
+            else throw new Exception($"can't serialize type {type.FullName}");
         }
 
         return b.ToString();
