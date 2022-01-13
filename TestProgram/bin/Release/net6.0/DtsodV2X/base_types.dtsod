@@ -1,0 +1,14 @@
+bool: false;
+char: 'v';
+byte: 255b;
+sbyte: -125sb;
+short: 14003s;
+ushort: 32025us;
+int: -2515;
+uint: 0u;
+long: -29863854396l;
+ulong: 87659057946ul;
+float: 39.944f;
+double: 965.557;
+decimal: -84.20de;
+string: "_$\"\\\\'''\n\ta ûûû000;2;=:%d;```";

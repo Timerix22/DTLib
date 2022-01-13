@@ -1,0 +1,14 @@
+bool:b=false;
+char:c='v';
+string:s="hello";
+byte:by=255;
+sbyte:sb=-125;
+short:sh=14003;
+ushort:us=32025;
+int:i=-2515;
+uint:ui=0;
+long:l=-29863854396;
+ulong:ul=87659057946;
+float:f=39.944;
+double:do=965.557;
+decimal:de=-84.20;
