@@ -30,7 +30,7 @@ public static class Package
             else
                 Thread.Sleep(5);
         }
-        throw new Exception($"GetPackage() error: timeout. socket.Available={socket.Available}\n");
+        throw new Exception($"GetPackage() error: timeout. socket.Available={socket.Available}");
     }
 
     // отправляет пакет

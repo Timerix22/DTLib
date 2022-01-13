@@ -3,6 +3,7 @@
 // вывод лога в консоль и файл
 public class DefaultLogger : BaseLogger
 {
+    public DefaultLogger() => Logfile = "";
     public DefaultLogger(string logfile) : base(logfile) { }
 
     public DefaultLogger(string dir, string programName) : base(dir, programName) { }
@@ -18,15 +19,19 @@ public class DefaultLogger : BaseLogger
     public void LogNoTime(params string[] msg)
     {
         lock (Logfile) if (!IsEnabled) return;
+        msg[msg.Length - 1] += '\n';
         ColoredConsole.Write(msg);
-        if (msg.Length == 1)
-            lock (Logfile) File.AppendAllText(Logfile, msg[0]);
-        else
+        if (WriteToFile)
         {
-            StringBuilder strB = new();
-            for (ushort i = 0; i < msg.Length; i++)
-                strB.Append(msg[++i]);
-            lock (Logfile) File.AppendAllText(Logfile, strB.ToString());
+            if (msg.Length == 1)
+                lock (Logfile) File.AppendAllText(Logfile, msg[0]);
+            else
+            {
+                StringBuilder strB = new();
+                for (ushort i = 0; i < msg.Length; i++)
+                    strB.Append(msg[++i]);
+                lock (Logfile) File.AppendAllText(Logfile, strB.ToString());
+            }
         }
     }
 }

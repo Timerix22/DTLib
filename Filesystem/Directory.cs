@@ -10,7 +10,7 @@ public static class Directory
         if (!Directory.Exists(dir))
         {
             // проверяет существование папки, в которой нужно создать dir
-            if (dir.Contains("\\") && !Directory.Exists(dir.Remove(dir.LastIndexOf('\\'))))
+            if (dir.Contains('\\') && !Directory.Exists(dir.Remove(dir.LastIndexOf('\\'))))
                 Create(dir.Remove(dir.LastIndexOf('\\')));
             System.IO.Directory.CreateDirectory(dir);
         }
@@ -22,15 +22,9 @@ public static class Directory
         var subdirs = new List<string>();
         List<string> files = GetAllFiles(source_dir, ref subdirs);
         for (int i = 0; i < subdirs.Count; i++)
-        {
             Create(subdirs[i].Replace(source_dir, new_dir));
-        }
         for (int i = 0; i < files.Count; i++)
-        {
-            string f = files[i].Replace(source_dir, new_dir);
-            File.Copy(files[i], f, owerwrite);
-            //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
-        }
+            File.Copy(files[i], files[i].Replace(source_dir, new_dir), owerwrite);
     }
 
     // копирует все файлы и папки и выдаёт список конфликтующих файлов
@@ -41,16 +35,13 @@ public static class Directory
         List<string> files = GetAllFiles(source_dir, ref subdirs);
         Create(new_dir);
         for (int i = 0; i < subdirs.Count; i++)
-        {
             Create(subdirs[i].Replace(source_dir, new_dir));
-        }
         for (int i = 0; i < files.Count; i++)
         {
             string newfile = files[i].Replace(source_dir, new_dir);
             if (File.Exists(newfile))
                 conflicts.Add(newfile);
             File.Copy(files[i], newfile, owerwrite);
-            //PublicLog.Log(new string[] {"g", $"file <", "c", files[i], "b", "> have copied to <", "c", newfile, "b", ">\n'" });
         }
     }
 
@@ -63,11 +54,11 @@ public static class Directory
             File.Delete(files[i]);
         for (int i = subdirs.Count - 1; i >= 0; i--)
         {
-            PublicLog.Log($"deleting {subdirs[i]}\n");
+            PublicLog.Log($"deleting {subdirs[i]}");
             if (Directory.Exists(subdirs[i]))
                 System.IO.Directory.Delete(subdirs[i], true);
         }
-        PublicLog.Log($"deleting {dir}\n");
+        PublicLog.Log($"deleting {dir}");
         if (Directory.Exists(dir))
             System.IO.Directory.Delete(dir, true);
     }
@@ -82,16 +73,10 @@ public static class Directory
         var all_files = new List<string>();
         string[] cur_files = Directory.GetFiles(dir);
         for (int i = 0; i < cur_files.Length; i++)
-        {
             all_files.Add(cur_files[i]);
-            //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
-        }
         string[] cur_subdirs = Directory.GetDirectories(dir);
         for (int i = 0; i < cur_subdirs.Length; i++)
-        {
-            //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
             all_files.AddRange(GetAllFiles(cur_subdirs[i]));
-        }
         return all_files;
     }
 
@@ -101,15 +86,11 @@ public static class Directory
         var all_files = new List<string>();
         string[] cur_files = Directory.GetFiles(dir);
         for (int i = 0; i < cur_files.Length; i++)
-        {
             all_files.Add(cur_files[i]);
-            //PublicLog.Log(new string[] { "b", "file found: <", "c", cur_files[i], "b", ">\n" });
-        }
         string[] cur_subdirs = Directory.GetDirectories(dir);
         for (int i = 0; i < cur_subdirs.Length; i++)
         {
             all_subdirs.Add(cur_subdirs[i]);
-            //PublicLog.Log(new string[] { "b", "subdir found: <", "c", cur_subdirs[i], "b", ">\n" });
             all_files.AddRange(GetAllFiles(cur_subdirs[i], ref all_subdirs));
         }
         return all_files;

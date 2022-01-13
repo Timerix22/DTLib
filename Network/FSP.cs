@@ -21,7 +21,7 @@ public class FSP
     {
         lock (MainSocket)
         {
-            Debug("b", $"requesting file download: {filePath_server}\n");
+            Debug("b", $"requesting file download: {filePath_server}");
             MainSocket.SendPackage("requesting file download".ToBytes());
             MainSocket.SendPackage(filePath_server.ToBytes());
         }
@@ -33,14 +33,14 @@ public class FSP
         using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
         Download_SharedCode(fileStream, true);
         fileStream.Close();
-        Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n");
+        Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes");
     }
 
     public byte[] DownloadFileToMemory(string filePath_server)
     {
         lock (MainSocket)
         {
-            Debug("b", $"requesting file download: {filePath_server}\n");
+            Debug("b", $"requesting file download: {filePath_server}");
             MainSocket.SendPackage("requesting file download".ToBytes());
             MainSocket.SendPackage(filePath_server.ToBytes());
         }
@@ -53,7 +53,7 @@ public class FSP
         Download_SharedCode(fileStream, false);
         byte[] output = fileStream.GetBuffer();
         fileStream.Close();
-        Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes\n");
+        Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes");
         return output;
     }
 
@@ -101,7 +101,7 @@ public class FSP
     public void UploadFile(string filePath)
     {
         BytesUploaded = 0;
-        Debug("b", $"uploading file {filePath}\n");
+        Debug("b", $"uploading file {filePath}");
         using System.IO.FileStream fileStream = File.OpenRead(filePath);
         Filesize = File.GetSize(filePath).ToUInt();
         lock (MainSocket)
@@ -129,7 +129,7 @@ public class FSP
             }
         }
         fileStream.Close();
-        Debug("g", $"   uploaded {BytesUploaded} of {Filesize} bytes\n");
+        Debug("g", $"   uploaded {BytesUploaded} of {Filesize} bytes");
     }
 
     public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
@@ -138,9 +138,9 @@ public class FSP
             dirOnClient += "\\";
         if (!dirOnServer.EndsWith("\\"))
             dirOnServer += "\\";
-        Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">\n");
+        Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">");
         var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
-        Debug("g", $"found {manifest.Values.Count} files in manifest\n");
+        Debug("g", $"found {manifest.Values.Count} files in manifest");
         var hasher = new Hasher();
         foreach (string fileOnServer in manifest.Keys)
         {
@@ -148,16 +148,16 @@ public class FSP
             Debug("b", "file <", "c", fileOnClient, "b", ">...  ");
             if (!File.Exists(fileOnClient))
             {
-                DebugNoTime("y", "doesn't exist\n");
+                DebugNoTime("y", "doesn't exist");
                 DownloadFile(dirOnServer + fileOnServer, fileOnClient);
             }
             else if (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer])
             {
-                DebugNoTime("y", "outdated\n");
+                DebugNoTime("y", "outdated");
                 DownloadFile(dirOnServer + fileOnServer, fileOnClient);
             }
             else
-                DebugNoTime("g", "without changes\n");
+                DebugNoTime("g", "without changes");
         }
         // удаление лишних файлов
         if (delete_excess)
@@ -166,7 +166,7 @@ public class FSP
             {
                 if (!manifest.ContainsKey(file.Remove(0, dirOnClient.Length)))
                 {
-                    Debug("y", $"deleting excess file: {file}\n");
+                    Debug("y", $"deleting excess file: {file}");
                     File.Delete(file);
                 }
             }
@@ -177,7 +177,7 @@ public class FSP
     {
         if (!dir.EndsWith("\\"))
             dir += "\\";
-        Log($"b", $"creating manifest of {dir}\n");
+        Log($"b", $"creating manifest of {dir}");
         StringBuilder manifestBuilder = new();
         Hasher hasher = new();
         if (Directory.GetFiles(dir).Contains(dir + "manifest.dtsod"))
@@ -191,7 +191,7 @@ public class FSP
             manifestBuilder.Append(hash.HashToString());
             manifestBuilder.Append("\";\n");
         }
-        Debug($"g", $"   manifest of {dir} created\n");
+        Debug($"g", $"   manifest of {dir} created");
         File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
     }
 

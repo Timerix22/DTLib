@@ -7,10 +7,14 @@
 		<AssemblyName>DTLib</AssemblyName>
 		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Experimental\**" />
 	  <EmbeddedResource Remove="Experimental\**" />
 	  <None Remove="Experimental\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Include="Experimental\Tester.cs" />
 	</ItemGroup>
 </Project>

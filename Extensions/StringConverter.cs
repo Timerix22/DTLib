@@ -144,10 +144,4 @@ public static class StringConverter
         if (max * length != s.Length) parts.Add(s.Substring(max * length, s.Length - max * length));
         return parts;
     }
-
-    public static string AddZeroes<T>(this T number, int length)
-    {
-        string str = number.ToString();
-        return new string('0', str.Length - length) + str;
-    }
 }
