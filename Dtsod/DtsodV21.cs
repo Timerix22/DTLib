@@ -81,9 +81,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
         int i = 0;
         for (; i < text.Length; i++)
             ReadName();
-#if DEBUG
-        DebugNoTime("g", $"Parse returns {parsed.Keys.Count} keys\n");
-#endif
         return parsed;
 
         // СЛОМАНО
@@ -99,9 +96,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
             dynamic value;
             StringBuilder defaultNameBuilder = new();
 
-#if DEBUG
-            DebugNoTime("m", "ReadName\n");
-#endif
             for (; i < text.Length; i++)
             {
                 switch (text[i])
@@ -116,7 +110,7 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                         string name = defaultNameBuilder.ToString();
                         value = ReadValue();
                         // если value это null, эта строка выдавала ошибку
-                        //DebugNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })\n");
+                        //DebugNoTime("c", $"parsed.Add({name}, {value} { value.GetType() })");
                         if (isListElem)
                         {
                             if (!parsed.ContainsKey(name))
@@ -134,9 +128,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                         throw new Exception("Parse.ReadName() error: unexpected '}' at " + i + " char");
                     // если $ перед названием параметра поставить, значение value добавится в лист с названием name
                     case '$':
-#if DEBUG
-                        DebugNoTime("w", text[i].ToString());
-#endif
                         if (defaultNameBuilder.ToString().Length != 0)
                             throw new Exception("Parse.ReadName() error: unexpected '$' at " + i + " char");
                         isListElem = true;
@@ -144,9 +135,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                     case ';':
                         throw new Exception("Parse.ReadName() error: unexpected ';' at " + i + " char");
                     default:
-#if DEBUG
-                        DebugNoTime("w", text[i].ToString());
-#endif
                         defaultNameBuilder.Append(text[i]);
                         break;
                 }
@@ -165,15 +153,9 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                 valueBuilder.Append('"');
                 for (; text[i] != '"' || text[i - 1] == '\\'; i++)
                 {
-#if DEBUG
-                    DebugNoTime("h", text[i].ToString());
-#endif
                     valueBuilder.Append(text[i]);
                 }
                 valueBuilder.Append('"');
-#if DEBUG
-                DebugNoTime("h", text[i].ToString());
-#endif
                 type = ValueType.String;
                 return valueBuilder.ToString();
             }
@@ -185,9 +167,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                 StringBuilder valueBuilder = new();
                 for (; text[i] != ']'; i++)
                 {
-#if DEBUG
-                    DebugNoTime("c", text[i].ToString());
-#endif
                     switch (text[i])
                     {
                         case ' ':
@@ -210,9 +189,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                     ParseValueToRightType(valueBuilder.ToString());
                     output.Add(value);
                 }
-#if DEBUG
-                DebugNoTime("c", text[i].ToString());
-#endif
                 type = ValueType.List;
                 return output;
             }
@@ -224,9 +200,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                 i++;
                 for (; balance != 0; i++)
                 {
-#if DEBUG
-                    DebugNoTime("y", text[i].ToString());
-#endif
                     switch (text[i])
                     {
                         case '"':
@@ -234,17 +207,11 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                             break;
                         case '}':
                             balance--;
-#if DEBUG
-                            DebugNoTime("b", $"\nbalance -- = {balance}\n");
-#endif
                             if (balance != 0)
                                 valueBuilder.Append(text[i]);
                             break;
                         case '{':
                             balance++;
-#if DEBUG
-                            DebugNoTime("b", $"\nbalance ++ = {balance}\n");
-#endif
                             valueBuilder.Append(text[i]);
                             break;
                         default:
@@ -260,9 +227,6 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
             void ParseValueToRightType(string stringValue)
             {
 
-#if DEBUG
-                DebugNoTime("b", $"\nParseValueToRightType({stringValue})\n");
-#endif
                 switch (stringValue)
                 {
 
@@ -318,14 +282,8 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
             }
 
             StringBuilder defaultValueBuilder = new();
-#if DEBUG
-            DebugNoTime("m", "\nReadValue\n");
-#endif
             for (; i < text.Length; i++)
             {
-#if DEBUG
-                DebugNoTime("b", text[i].ToString());
-#endif
                 switch (text[i])
                 {
                     case ' ':
@@ -365,10 +323,5 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
             throw new Exception("Dtsod.Parse.ReadValue error: wtf it's the end of function");
         }
     }
-
-#if DEBUG
-    static void Debug(params string[] msg) => PublicLog.Log(msg);
-    static void DebugNoTime(params string[] msg) => PublicLog.LogNoTime(msg);
-#endif
 }
 

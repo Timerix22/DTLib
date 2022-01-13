@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.IO;
+using System.Linq.Expressions;
 
 namespace DTLib.Dtsod;
 
@@ -13,20 +15,22 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
     public DtsodVersion Version { get; } = DtsodVersion.V30;
     public IDictionary<string, dynamic> ToDictionary() => this;
 
-    public DtsodV23() : base() => UpdateLazy();
-    public DtsodV23(IDictionary<string, dynamic> dict) : base(dict) => UpdateLazy();
-    public DtsodV23(string serialized) : this() => Append(Deserialize(serialized));
+    public DtsodV23() : base() {}
+    public DtsodV23(IDictionary<string, dynamic> dict) : base(dict) {}
+    public DtsodV23(string serialized) => Append(Deserialize(serialized));
 
-    static DtsodV23 Deserialize(string text)
+    static DtsodV23 Deserialize(string _text)
     {
+        char[] text = _text.ToArray();
         char c;
         int i = -1; // ++i в ReadName
         StringBuilder b = new();
         Dictionary<string, dynamic> output = new();
         bool partOfDollarList = false;
-        for (; i < text.Length; i++)
+        while (i < text.Length)
         {
             string name = ReadName();
+            if (name == "") goto end;
             dynamic value = ReadValue(out bool _);
             if (partOfDollarList)
             {
@@ -39,7 +43,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
             }
             else output.Add(name, value);
         }
-        return new DtsodV23(output);
+    end:return new DtsodV23(output);
 
         string ReadName()
         {
@@ -78,7 +82,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 }
             }
 
-            throw new Exception("DtsodV23.Deserialize.ReadName() error: end of text\ntext:\n" + text);
+            return b.Length == 0
+                ? ""
+                : throw new Exception("DtsodV23.Deserialize.ReadName() error: end of text\ntext:\n" + text);
         }
 
         dynamic ReadValue(out bool endOfList)
@@ -87,8 +93,12 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
 
             void ReadString()
             {
-                while ((c != '"' && c != '\'') || (text[i - 1] == '\\' && text[i - 2] != '\\'))
+                bool prevIsBackslash = false;
+                b.Append('"');
+                c = text[++i];
+                while (c != '"' || prevIsBackslash)
                 {
+                    prevIsBackslash = c == '\\' && !prevIsBackslash;
                     b.Append(c);
                     if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + text);
                     c = text[i];
@@ -122,7 +132,6 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                                 b.Append(c);
                             break;
                         case '"':
-                        case '\'':
                             ReadString();
                             break;
                         default:
@@ -134,8 +143,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                     c = text[i];
                 }
 
+                var __text = b.ToString();
                 b.Clear();
-                return Deserialize(b.ToString());
+                return Deserialize(__text);
             }
 
             List<dynamic> ReadList()
@@ -162,40 +172,48 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                         return null;
                     default:
                         if (value_str.Contains('"'))
-                            return value_str.Substring(1, value_str.Length - 2);
+                            return value_str.Substring(1, value_str.Length - 2).Replace("\\\\","\\").Replace("\\\"","\"");
                         else if (value_str.Contains('\''))
                             return value_str[1];
                         else switch (value_str[value_str.Length - 1])
-                            {
-                                case 's':
-                                    return value_str[value_str.Length - 2] == 'u'
-                                        ? value_str.Remove(value_str.Length - 2).ToUShort()
-                                        : value_str.Remove(value_str.Length - 1).ToShort();
-                                case 'u':
-                                    return value_str.Remove(value_str.Length - 1).ToUInt();
-                                case 'i':
-                                    return value_str[value_str.Length - 2] == 'u'
-                                        ? value_str.Remove(value_str.Length - 2).ToUInt()
-                                        : value_str.Remove(value_str.Length - 1).ToInt();
-                                case 'l':
-                                    return value_str[value_str.Length - 2] == 'u'
-                                        ? value_str.Remove(value_str.Length - 2).ToULong()
-                                        : value_str.Remove(value_str.Length - 1).ToLong();
-                                case 'b':
-                                    return value_str[value_str.Length - 2] == 's'
-                                        ? value_str.Remove(value_str.Length - 2).ToSByte()
-                                        : value_str.Remove(value_str.Length - 1).ToByte();
-                                case 'f':
-                                    return value_str.Remove(value_str.Length - 1).ToFloat();
-                                case 'e':
-                                    return value_str[value_str.Length - 2] == 'd'
-                                        ? value_str.Remove(value_str.Length - 2).ToDecimal()
-                                        : throw new Exception("can't parse value:" + value_str);
-                                default:
-                                    return value_str.Contains('.')
-                                        ? value_str.ToDouble()
-                                        : value_str.ToInt();
-                            }
+                        {
+                            case 's':
+                                return value_str[value_str.Length - 2] == 'u'
+                                    ? value_str.Remove(value_str.Length - 2).ToUShort()
+                                    : value_str.Remove(value_str.Length - 1).ToShort();
+                            case 'u':
+                                return value_str.Remove(value_str.Length - 1).ToUInt();
+                            case 'i':
+                                return value_str[value_str.Length - 2] == 'u'
+                                    ? value_str.Remove(value_str.Length - 2).ToUInt()
+                                    : value_str.Remove(value_str.Length - 1).ToInt();
+                            case 'l':
+                                return value_str[value_str.Length - 2] == 'u'
+                                    ? value_str.Remove(value_str.Length - 2).ToULong()
+                                    : value_str.Remove(value_str.Length - 1).ToLong();
+                            case 'b':
+                                return value_str[value_str.Length - 2] == 's'
+                                    ? value_str.Remove(value_str.Length - 2).ToSByte()
+                                    : value_str.Remove(value_str.Length - 1).ToByte();
+                            case 'f':
+                                return value_str.Remove(value_str.Length - 1).ToFloat();
+                            case 'e':
+                                return value_str[value_str.Length - 2] == 'd'
+                                    ? value_str.Remove(value_str.Length - 2).ToDecimal()
+                                    : throw new Exception("can't parse value:" + value_str);
+                            default:
+                                if (value_str.Contains('.'))
+                                    return (object)(value_str.ToDouble());
+                                else
+                                {
+                                    try { return (object)(value_str.ToInt()); }
+                                    catch (FormatException)
+                                    {
+                                        Log("r", $"can't parse value: {value_str}");
+                                        return null;
+                                    }
+                                }
+                        }
                 };
             }
 
@@ -213,8 +231,13 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                         SkipComment();
                         break;
                     case '"':
-                    case '\'':
                         ReadString();
+                        break;
+                    case '\'':
+                        b.Append(c).Append(text[++i]);
+                        c = text[++i];
+                        if (c != '\'') throw new Exception("after <\'> should be char");
+                        else b.Append(c);
                         break;
                     case ';':
                     case ',':
@@ -253,7 +276,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
     {
         { typeof(bool), (val, b) => b.Append(val.ToString()) },
         { typeof(char), (val, b) => b.Append('\'').Append(val).Append('\'') },
-        { typeof(string), (val, b) => b.Append('"').Append(val).Append('"') },
+        { typeof(string), (val, b) => b.Append('"').Append(val.Replace("\\","\\\\").Replace("\"", "\\\"")).Append('"') },
         { typeof(byte), (val, b) => b.Append(val.ToString()).Append('b') },
         { typeof(sbyte), (val, b) => b.Append(val.ToString()).Append("sb") },
         { typeof(short), (val, b) => b.Append(val.ToString()).Append('s') },
@@ -267,7 +290,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
         { typeof(decimal), (val, b) => b.Append(val.ToString(CultureInfo.InvariantCulture)).Append("de") }
     };
     short tabscount = -1;
-    protected StringBuilder Serialize(IDictionary<string, dynamic> dtsod, StringBuilder b = null)
+    protected StringBuilder Serialize(DtsodV23 dtsod, StringBuilder b = null)
     {
         tabscount++;
         if (b is null) b = new StringBuilder();
@@ -279,7 +302,8 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
 
             void SerializeType(dynamic value)
             {
-                if (value is IList _list)
+                if (value is null) b.Append("null");
+                else if (value is IList _list)
                 {
                     b.Append('[');
                     foreach (object el in _list)
@@ -289,20 +313,18 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                     }
                     b.Remove(b.Length - 1, 1).Append(']');
                 }
-                else if (value is IDictionary _dict)
+                else if (value is DtsodV23 _dtsod)
                 {
-                    b.Append('{');
-                    Serialize(value, b);
+                    b.Append("{\n");
+                    Serialize(_dtsod, b);
                     b.Append('}');
                 }
-                else b.Append(TypeSerializeFuncs[value.GetType()].Invoke(value, b));
+                else TypeSerializeFuncs[value.GetType()].Invoke(value, b);
             }
         }
         tabscount--;
         return b;
     }
-
-    protected Lazy<string> serialized;
-    protected void UpdateLazy() => serialized = new(() => Serialize(this).ToString());
-    public override string ToString() => serialized.Value;
+    
+    public override string ToString() => Serialize(this).ToString();
 }
