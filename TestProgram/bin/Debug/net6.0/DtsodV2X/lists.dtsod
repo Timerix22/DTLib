@@ -1,4 +1,0 @@
-chars: ['a','b','c'];
-uints: [10,20,30,0,0];
-floats: [8.2,5.225,-0.9993];
-strings:["aaa","bbb","ccc"];

@@ -7,4 +7,4 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TestProgram
-build_property.ProjectDir = C:\projects\c#\DTLib\TestProgram\
+build_property.ProjectDir = C:\projects\DTLib\TestProgram\
