@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.h": "c",
+        "cstdint": "c",
+        "limits": "c",
+        "cstdio": "c",
+        "cwchar": "c"
+    },
+    "C_Cpp.default.defines": [],
+    "C_Cpp.intelliSenseCacheSize": 10
+}
