@@ -1,10 +1,6 @@
-#ifndef STDLIB
-    #include "../../cosmopolitan/cosmopolitan.h"
-#else
-    #include <stdint.h>
-#endif
+#include "../!headers.h"
 #include "../strict_types.h"
-#include "../err_t.h"
+#include "../errors.h"
 
 typedef struct Autoarr{
     void** values;

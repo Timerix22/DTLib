@@ -1,10 +1,6 @@
-#ifndef STDLIB
-    #include "../cosmopolitan/cosmopolitan.h"
-#else
-    #include "stdint.h"
-#endif
+#include "!headers.h"
 #include "strict_types.h"
-#include "err_t.h"
+#include "errors.h"
 
 int8 GetTypeSize(strict_type type){
     int8 type_size=0;

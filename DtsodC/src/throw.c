@@ -1,10 +1,5 @@
-#ifndef STDLIB
-    #include "../cosmopolitan/cosmopolitan.h"
-#else
-    #include <stdio.h>
-    #include <stdlib.h>
-#endif
-#include "err_t.h"
+#include "!headers.h"
+#include "errors.h"
 
 void throwstr(const char* errmesg){
     printf("\e[31mthrowed error: %s\e[0m\n",errmesg);

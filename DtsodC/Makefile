@@ -31,7 +31,7 @@ std_test: std_build_test
 # using cosmopolitan
 COSMARGS_PRE=-g -O -static -fno-pie -no-pie -mno-red-zone -nostdlib -nostdinc -D COSMOPOLITAN 
 COSMARGS_POST=-Wl,--oformat=binary -Wl,--gc-sections -Wl,-z,max-page-size=0x1000 -fuse-ld=bfd -Wl,-T,cosmopolitan/ape.lds \
-	-include cosmopolitan/cosmopolitan.h cosmopolitan/crt.o ./cosmopolitan/ape-no-modify-self.o cosmopolitan/cosmopolitan.a
+	-include cosmopolitan/cosmopolitan.h cosmopolitan/crt.o ./cosmopolitan/ape.o cosmopolitan/cosmopolitan.a
 
 build: build_test
 

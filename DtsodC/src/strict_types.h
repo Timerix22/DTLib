@@ -1,9 +1,5 @@
-#ifndef STDLIB
-    #include "../cosmopolitan/cosmopolitan.h"
-#else
-    #include "stdint.h"
-#endif
-#include "err_t.h"
+#include "!headers.h"
+#include "errors.h"
 
 typedef int8_t int8;
 typedef uint8_t uint8;
