@@ -7,14 +7,12 @@ public static class File
     public static bool Exists(string file) => System.IO.File.Exists(file);
 
     // если файл не существует, создаёт файл, создаёт папки из его пути
-    public static void Create(string file, bool delete_old = false)
+    public static void Create(string file)
     {
-        if (delete_old && File.Exists(file))
-            File.Delete(file);
         if (!File.Exists(file))
         {
-            if (file.Contains("\\"))
-                Directory.Create(file.Remove(file.LastIndexOf('\\')));
+            if (file.Contains(Path.Sep))
+                Directory.Create(file.Remove(file.LastIndexOf(Path.Sep)));
             using System.IO.FileStream stream = System.IO.File.Create(file);
             stream.Close();
         }
@@ -64,7 +62,9 @@ public static class File
         Exists(file) ? System.IO.File.OpenRead(file) : throw new Exception($"file not found: <{file}>");
     public static System.IO.FileStream OpenWrite(string file)
     {
-        File.Create(file, true);
+        if (File.Exists(file))
+            File.Delete(file);
+        File.Create(file);
         return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate);
     }
     public static System.IO.FileStream OpenAppend(string file)
@@ -75,8 +75,8 @@ public static class File
 
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
-        if (symlinkName.Contains("\\"))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf('\\')));
+        if (symlinkName.Contains(Path.Sep))
+            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
             throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkName}, {sourceName})");
     }

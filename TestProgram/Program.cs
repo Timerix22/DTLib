@@ -27,6 +27,7 @@ static class Program
         Console.Title="tester";
         try
         {
+            Info.Log("g","-------[DTLib tester]-------");
             TestDtsodV23.TestAll();
         }
         catch (Exception ex)

@@ -20,7 +20,7 @@ public static class TestDtsodV23
     public static void TestBaseTypes()
     {
         Info.Log("b", "[TestDtsodV23/TestBaseTypes]");
-        DtsodV23 dtsod = new(File.ReadAllText("DtsodV2X\\base_types.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText($"DtsodV2X{Path.Sep}base_types.dtsod"));
         foreach (var pair in dtsod)
             Info.LogNoTime("b", pair.Value.GetType().Name + ' ', "w", pair.Key + ' ', "c", pair.Value.ToString());
         Info.Log("g", "[test completed]");
@@ -28,7 +28,7 @@ public static class TestDtsodV23
     public static void TestLists()
     {
         Info.Log("b", "[TestDtsodV23/TestLists]");
-        DtsodV23 dtsod = new(File.ReadAllText("DtsodV2X\\lists.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText($"DtsodV2X{Path.Sep}lists.dtsod"));
         foreach (var pair in dtsod)
         {
             Info.LogNoTime("b",  pair.Value.GetType().Name + ' ', "w", pair.Key, "c",
@@ -42,7 +42,7 @@ public static class TestDtsodV23
     public static void TestComplexes()
     {
         Info.Log("b", "[TestDtsodV23/TestComplexes]");
-        DtsodV23 dtsod = new(File.ReadAllText("DtsodV2X\\complexes.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText($"DtsodV2X{Path.Sep}complexes.dtsod"));
         foreach (var pair in dtsod)
         {
             Info.LogNoTime("b", pair.Value.GetType().Name + ' ', "w", pair.Key, 
@@ -56,7 +56,7 @@ public static class TestDtsodV23
     {
         Info.Log("b", "[TestDtsodV23/TestReSerialization]");
         DtsodV23 dtsod = new DtsodV23(new DtsodV23(new DtsodV23(
-            new DtsodV23(File.ReadAllText("DtsodV2X\\complexes.dtsod")).ToString()).ToString()).ToString());
+            new DtsodV23(File.ReadAllText($"DtsodV2X{Path.Sep}complexes.dtsod")).ToString()).ToString()).ToString());
         Info.Log("y", dtsod.ToString());
         Info.Log("g", "[test completed]");
     }
@@ -65,7 +65,7 @@ public static class TestDtsodV23
     {
         Info.Log("b", "[TestDtsodV23/TestSpeed]");
         IDtsod dtsod=null;
-        string text = File.ReadAllText("DtsodV2X\\messages.dtsod");
+        string text = File.ReadAllText($"DtsodV2X{Path.Sep}messages.dtsod");
         Tester.LogOperationTime("V21 deserialization",100,()=>dtsod=new DtsodV21(text));
         Tester.LogOperationTime("V21 serialization", 100, () => _=dtsod.ToString());
         Tester.LogOperationTime("V23 deserialization", 100, () => dtsod = new DtsodV23(text));
@@ -76,7 +76,7 @@ public static class TestDtsodV23
     public static void TestMemoryConsumption()
     {
         Info.Log("b", "[TestDtsodV23/TestMemoryConsumption]");
-        string text = File.ReadAllText("DtsodV2X\\messages.dtsod");
+        string text = File.ReadAllText($"DtsodV2X{Path.Sep}messages.dtsod");
         var a = GC.GetTotalMemory(true);
         DtsodV23[] dtsods = new DtsodV23[100];
         for (int i = 0; i < dtsods.Length; i++)

@@ -2,15 +2,16 @@ namespace DTLib.Filesystem;
 
 static public class Path
 {
+    static public readonly char Sep = OperatingSystem.IsWindows() ? '\\' : '/';
 
     public static string CorrectSeparator(string path)
     {
-        if (System.IO.Path.PathSeparator == '\\')
+        if (Sep == '\\')
         {
             if (path.Contains('/'))
                 path = path.Replace('/', '\\');
         }
-        else if (System.IO.Path.PathSeparator == '/')
+        else if (Sep == '/')
         {
             if (path.Contains('\\'))
                 path = path.Replace('\\', '/');
