@@ -1,12 +1,11 @@
-#include "!headers.h"
-#include "strict_types.h"
+#pragma once
 
-#ifndef __NSLEEP_DEFINED
-#define __NSLEEP_DEFINED
+#include "std.h"
+#include "base_types.h"
+
 void nsleep(uint8 sec, uint8 milisec){
     if (sec>0)
         sleep(sec);
     if (milisec>0)
         usleep(milisec*1000);
 }
-#endif

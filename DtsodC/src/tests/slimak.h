@@ -1,4 +1,6 @@
-#include "!headers.h"
+#pragma once
+
+#include "std.h"
 
 const wchar_t* slimak = 
 U"   ▄▄▄              \n"
