@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "*.h": "c"
+        "*.h": "c",
+        "type_traits": "c",
+        "*.tcc": "c",
+        "functional": "c",
+        "istream": "c",
+        "ranges": "c",
+        "streambuf": "c"
     }
 }

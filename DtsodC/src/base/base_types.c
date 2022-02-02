@@ -13,7 +13,7 @@ const char* typename(base_type t){
         case UInt32: return "UInt32";
         case Int64: return "Int64";
         case UInt64: return "UInt64";
-        default: throw(ERR_WRONGTYPE); break;
+        default: throw(ERR_WRONGTYPE); return "EEEEEE";
     }
 }
 

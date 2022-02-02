@@ -144,7 +144,7 @@ void Autoarr_set_uint64(Autoarr *ar, uint32 index, uint64 element){
     *(*((uint64**)ar->values+d.quot)+d.rem)=element;
 }
 
-void Autoarr_free(Autoarr* ar){
+void Autoarr_clear(Autoarr* ar){
     switch (ar->type) {   
         case Int8:
             for(uint16 i = 0; i < ar->curr_block_count-1;i++)

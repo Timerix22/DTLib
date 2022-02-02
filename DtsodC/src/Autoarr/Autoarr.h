@@ -1,10 +1,8 @@
 #pragma once
 
-#include "std.h"
-#include "base_types.h"
-#include "errors.h"
+#include "../base/base.h"
 
-typedef struct Autoarr{
+typedef struct Autoarr{         // a collection with dynamic memory allocation
     base_type type;             // type of data
     uint16 max_block_count;     // max amount of blocks
     uint16 curr_block_count;    // amount of blocks
@@ -16,6 +14,7 @@ typedef struct Autoarr{
 } Autoarr;
 
 Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, base_type _type);
+void Autoarr_clear(Autoarr* ar);
 
 void Autoarr_add_int8(Autoarr *ar, int8 element);
 void Autoarr_add_uint8(Autoarr *ar, uint8 element);
@@ -43,5 +42,3 @@ void Autoarr_set_int32(Autoarr *ar, uint32 index, int32 element);
 void Autoarr_set_uint32(Autoarr *ar, uint32 index, uint32 element);
 void Autoarr_set_int64(Autoarr *ar, uint32 index, int64 element);
 void Autoarr_set_uint64(Autoarr *ar, uint32 index, uint64 element);
-
-void Autoarr_free(Autoarr* ar);

@@ -20,5 +20,5 @@ make build
 
 If you see the `run-detectors: unable to find an interpreter` error, just execute this command:
 ```bash
-sudo sh -c "echo ':APE:M::MZqFpD::/bin/sh:' >/proc/sys/fs/binfmt_misc/register"
+sudo echo ':APE:M::MZqFpD::/bin/sh:' >/proc/sys/fs/binfmt_misc/register
 ```
