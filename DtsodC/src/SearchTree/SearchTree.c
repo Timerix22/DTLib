@@ -1,16 +1,16 @@
 #include "SearchTree.h"
+    #include "../tests/tests.h"
 
 STNode* STNode_create(){
     STNode* node=malloc(sizeof(STNode));
     node->branches=NULL;
-    node->value.ptr=NULL;
     node->value.type=Null;
+    node->value.UInt64=0;
     return node;
 }
 
-
 void STNode_free(STNode* node){
-    ifNthrow(node);
+    if (!node) throw(ERR_NULLPTR);
     if(node->branches!=NULL){
         for(uint8 n32 = 0;n32<8;n32++){
             STNode*** ptrn32=(STNode***)node->branches[n32];
@@ -33,7 +33,8 @@ void STNode_free(STNode* node){
         }
         free(node->branches);
     }
-    free(node->value.ptr);
+    if(node->value.type==UInt8Ptr|Int8Ptr)
+    free(node->value.VoidPtr);
     free(node);
 }
 
@@ -51,22 +52,65 @@ uint8 combinei3(indexes3 i3){
     return i3.n32*32+i3.n4*8;
 }
 
-
-// returns NULL or *STNode corresponding to the character
-STNode* getcnode(STNode* node, uint8 c){
-    indexes3 i3=splitindex(c);
-    ifNretN(node->branches);
-    STNode*** ptrn32=(STNode***)node->branches[i3.n32];
-    ifNretN(ptrn32);
-    STNode** ptrn4=ptrn32[i3.n4];
-    ifNretN(ptrn4);
-    return ptrn4[i3.rem];
-}
-
-void ST_push(STNode* node, const char* key, Unitype value){
+int16 globytes=0;
+void ST_push(STNode* node_first, const char* key, Unitype value){
+    if (!node_first) throw(ERR_NULLPTR);
+    int16 bytes=sizeof(Unitype);
     char c = *key;
+    STNode* node_last=node_first;
     for (uint16 i=0;c!='\0';){
-        printf("[%u]%c ",i,c);
+        indexes3 i3=splitindex((uint8)c);
+        if(!node_last->branches){
+            node_last->branches=(STNode****)malloc(8*sizeof(STNode*));
+            bytes+=sizeof(void*)*8;
+            for(uint8 i=0;i<8;i++)
+                node_last->branches[i]=(STNode***)NULL;
+        }
+        STNode*** ptrn32=(STNode***)node_last->branches[i3.n32];
+        if(!ptrn32){
+            ptrn32=(STNode***)malloc(8*sizeof(STNode*));
+            bytes+=sizeof(void*)*8;
+            for(uint8 i=0;i<8;i++)
+                ptrn32[i]=(STNode**)NULL;
+            node_last->branches[i3.n32]=ptrn32;
+        }
+        STNode** ptrn4=ptrn32[i3.n4];
+        if(!ptrn4){
+            ptrn4=(STNode**)malloc(4*sizeof(STNode*));
+            bytes+=sizeof(void*)*4;
+            for(uint8 i=0;i<4;i++)
+                ptrn4[i]=(STNode*)NULL;
+            ptrn32[i3.n4]=ptrn4;
+        }
+        node_last=ptrn4[i3.rem];
+        if(!node_last){
+            node_last=STNode_create();
+            bytes+=sizeof(STNode);
+            ptrn4[i3.rem]=node_last;
+        }
         c=*(key+(++i));
     }
+    node_last->value=value;
+    globytes+=bytes;
+    dbg(globytes);
+}
+
+const Unitype UnitypeNull={Null,.VoidPtr=NULL};
+
+Unitype ST_pull(STNode* node_first, const char* key){
+    if (!node_first) throw(ERR_NULLPTR);
+    char c = *key;
+    STNode* node_last=node_first;
+    for (uint16 i=0;c!='\0';){
+        indexes3 i3=splitindex((uint8)c);
+        if(!node_last->branches) return UnitypeNull;
+        STNode*** ptrn32=(STNode***)node_last->branches[i3.n32];
+        if(!ptrn32) return UnitypeNull;
+        STNode** ptrn4=ptrn32[i3.n4];
+        if(!ptrn4) return UnitypeNull;
+        node_last=ptrn4[i3.rem];
+        if(!node_last) return UnitypeNull;
+        c=*(key+(++i));
+    }
+    return node_last->value;
 }

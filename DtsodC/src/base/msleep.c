@@ -1,7 +1,6 @@
-#include "std.h"
-#include "base_types.h"
+#include "base.h"
 
-void nsleep(uint8 sec, uint8 milisec){
+void msleep(uint8 sec, uint16 milisec){
     if (sec>0)
         sleep(sec);
     if (milisec>0)

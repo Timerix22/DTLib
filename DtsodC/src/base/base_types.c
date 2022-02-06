@@ -5,6 +5,10 @@
 const char* typename(base_type t){
     switch (t) {
         case Null: return "Null";
+        case Double: return "Double";
+        case Float: return "Float";
+        case Bool: return "Bool";
+        case Char: return "Char";
         case Int8: return "Int8";
         case UInt8: return "UInt8";
         case Int16: return "Int16";
@@ -13,6 +17,14 @@ const char* typename(base_type t){
         case UInt32: return "UInt32";
         case Int64: return "Int64";
         case UInt64: return "UInt64";
+        case Int8Ptr: return "Int8Ptr";
+        case UInt8Ptr: return "UInt8Ptr";
+        case Int16Ptr: return "Int16Ptr";
+        case UInt16Ptr: return "UInt16Ptr";
+        case Int32Ptr: return "Int32Ptr";
+        case UInt32Ptr: return "UInt32Ptr";
+        case Int64Ptr: return "Int64Ptr";
+        case UInt64Ptr: return "UInt64Ptr";
         default: throw(ERR_WRONGTYPE); return "EEEEEE";
     }
 }

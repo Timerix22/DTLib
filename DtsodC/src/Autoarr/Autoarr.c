@@ -18,9 +18,7 @@ Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, base_t
 // creates new block if the current one is filled
 void __Autoarr_create_block(Autoarr *ar){
     if (ar->curr_block_count>=ar->max_block_count) throw(ERR_MAXLENGTH);
-    //if (ar->curr_block_length==ar->max_block_length) 
-        ar->curr_block_length=0;
-    //else throw("current block isn't filled");
+    ar->curr_block_length=0;
     *(ar->values+ar->curr_block_count)=malloc(ar->max_block_length*typesize(ar->type));
     ar->curr_block_count++;
 }

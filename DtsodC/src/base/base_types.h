@@ -12,7 +12,9 @@ typedef uint32_t uint32;
 typedef int64_t int64;
 typedef uint64_t uint64;
 typedef enum base_type{
-    Null, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Char, Bool  
+    Null, Float, Double, Char, Bool,
+    UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, 
+    UInt8Ptr, Int8Ptr, UInt16Ptr, Int16Ptr, UInt32Ptr, Int32Ptr, UInt64Ptr, Int64Ptr
 } __attribute__ ((__packed__)) base_type;
 
 const char* typename(base_type t);

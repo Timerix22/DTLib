@@ -14,7 +14,3 @@ void _throwstr(const char* errmesg, const char* srcfile, int line, const char* f
     CHOOSE(IFTYPE(E,int), _throwint(E,__FILE__,__LINE__,__func__), \
     CHOOSE(IFTYPE(E,char[]), _throwstr(E,__FILE__,__LINE__,__func__), \
     printf("\e[31m[%s:%d/%s] UNKNOWN ERROR\n",__FILE__,__LINE__,__func__)))
-
-#define ifNthrow(PTR) if (!PTR) throw(ERR_NULLPTR)
-#define ifNretN(PTR) if (!PTR) return NULL
-#define ifNret(PTR) if (!PTR) return
