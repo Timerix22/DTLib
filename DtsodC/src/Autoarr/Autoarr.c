@@ -1,6 +1,6 @@
 #include "Autoarr.h"
 
-Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, base_type _type){
+Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, my_type _type){
     Autoarr ar={
         .type=_type,
         .max_block_count=_max_block_count,
@@ -23,7 +23,7 @@ void __Autoarr_create_block(Autoarr *ar){
     ar->curr_block_count++;
 }
 
-void __Autoarr_add_pre(Autoarr* ar, base_type t){
+void __Autoarr_add_pre(Autoarr* ar, my_type t){
     if(ar->type!=t) throw(ERR_WRONGTYPE);
     if(ar->curr_length>=ar->max_length)  throw(ERR_MAXLENGTH);
     if (ar->curr_block_length==ar->max_block_length)
@@ -64,10 +64,14 @@ void Autoarr_add_uint64(Autoarr *ar, uint64 element){
     __Autoarr_add_pre(ar,UInt64);
     *(*((uint64**)ar->values+ar->curr_block_count-1)+ar->curr_block_length-1)=element;
 }
+void Autoarr_add_uni(Autoarr *ar, Unitype element){
+    __Autoarr_add_pre(ar,UniversalType);
+    *(*((Unitype**)ar->values+ar->curr_block_count-1)+ar->curr_block_length-1)=element;
+}
 
 // calculates a block number and element position in the block
 // also verifies type of array
-div_t __Autoarr_div_index(Autoarr* ar, uint32 i, base_type t){
+div_t __Autoarr_div_index(Autoarr* ar, uint32 i, my_type t){
     if(ar->type!=t) throw(ERR_WRONGTYPE);
     if(i>=ar->curr_length) throw(ERR_WRONGINDEX);
     return (div_t){
@@ -108,6 +112,10 @@ uint64 Autoarr_get_uint64(Autoarr *ar, uint32 index){
     div_t d = __Autoarr_div_index(ar, index, UInt64);
     return *(*((uint64**)ar->values+d.quot)+d.rem);
 }
+Unitype Autoarr_get_uni(Autoarr *ar, uint32 index){
+    div_t d = __Autoarr_div_index(ar, index, UniversalType);
+    return *(*((Unitype**)ar->values+d.quot)+d.rem);
+}
 
 void Autoarr_set_int8(Autoarr *ar, uint32 index, int8 element){
     div_t d =__Autoarr_div_index(ar, index, Int8);
@@ -140,6 +148,10 @@ void Autoarr_set_int64(Autoarr *ar, uint32 index, int64 element){
 void Autoarr_set_uint64(Autoarr *ar, uint32 index, uint64 element){
     div_t d =__Autoarr_div_index(ar, index, UInt64);
     *(*((uint64**)ar->values+d.quot)+d.rem)=element;
+}
+void Autoarr_set_uni(Autoarr *ar, uint32 index, Unitype element){
+    div_t d =__Autoarr_div_index(ar, index, UniversalType);
+    *(*((Unitype**)ar->values+d.quot)+d.rem)=element;
 }
 
 void Autoarr_clear(Autoarr* ar){

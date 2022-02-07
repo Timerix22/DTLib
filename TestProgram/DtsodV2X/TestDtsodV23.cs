@@ -20,7 +20,7 @@ public static class TestDtsodV23
     public static void TestBaseTypes()
     {
         Info.Log("b", "[TestDtsodV23/TestBaseTypes]");
-        DtsodV23 dtsod = new(File.ReadAllText($"DtsodV2X{Path.Sep}base_types.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText($"DtsodV2X{Path.Sep}my_types.dtsod"));
         foreach (var pair in dtsod)
             Info.LogNoTime("b", pair.Value.GetType().Name + ' ', "w", pair.Key + ' ', "c", pair.Value.ToString());
         Info.Log("g", "[test completed]");
