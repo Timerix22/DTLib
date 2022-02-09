@@ -38,6 +38,7 @@ void test_autoarr(){
     printallval(&ar);
     printf("\n\e[92mautoarr filled up\n");
     printautoarr(&ar);
+    printf("%p %p\n",ar.values, *ar.values);
     Autoarr_clear(&ar);
     printf("\e[92mautoarr cleared\n");
 }

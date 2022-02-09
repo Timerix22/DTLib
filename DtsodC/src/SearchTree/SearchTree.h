@@ -8,7 +8,6 @@ typedef struct SearchTreeNode{
 } STNode;
 
 STNode* STNode_create(void);
-//doesn't work!
 void STNode_free(STNode* node);
 
 void ST_push(STNode* node, const char* key, Unitype value);

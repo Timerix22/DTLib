@@ -11,7 +11,8 @@ Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, my_typ
         .curr_length=0,
         .values=malloc(_max_block_count*typesize(_type))
     };
-    *ar.values=malloc(ar.max_block_length*typesize(ar.type));
+    *ar.values=malloc(_max_block_length*typesize(ar.type));
+    printf("%p %p\n",ar.values, *ar.values);
     return ar;
 }
 
@@ -157,37 +158,31 @@ void Autoarr_set_uni(Autoarr *ar, uint32 index, Unitype element){
 void Autoarr_clear(Autoarr* ar){
     switch (ar->type) {   
         case Int8:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((int8**)ar->values+i)); break;
         case UInt8:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((uint8**)ar->values+i)); break;
         case Int16:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((int16**)ar->values+i)); break;
         case UInt16:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((uint16**)ar->values+i)); break;
         case Int32:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((int32**)ar->values+i)); break;
         case UInt32:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((uint32**)ar->values+i)); break;
         case Int64:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((int64**)ar->values+i)); break;
         case UInt64:
-            for(uint16 i = 0; i < ar->curr_block_count-1;i++)
+            for(uint16 i = 0; i < ar->curr_block_count;i++)
                 free(*((uint64**)ar->values+i)); break;
         default: throw(ERR_WRONGTYPE); break;
     }
     free(ar->values);
-    ar->type=0;
-    ar->max_block_count=0;
-    ar->max_block_length=0;
-    ar->curr_block_count=0;
-    ar->curr_block_length=0;
-    ar->max_length=0;
-    ar->curr_length=0;
+    ar->type=Null;
 }

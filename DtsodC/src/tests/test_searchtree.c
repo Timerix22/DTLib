@@ -37,9 +37,10 @@ void printstnode(STNode* node){
         printf("    \e[90m[%u]=%p\n",i,node->branches[i]);
         for (uint8 ii = 0; ii < 8; ii++){
                 if(node->branches[i]){
-                    printf("      \e[90m[%u][%u]=%p\n",i,ii,node->branches[i][ii]);
+                    printf("       \e[90m[%u]=%p\n",ii,node->branches[i][ii]);
                     for (uint8 iii = 0; iii < 4; iii++)
-                        if(node->branches[i][ii]) printf("        \e[90m[%u][%u][%u]=%p\n",i,ii,iii,node->branches[i][ii][iii]);
+                        if(node->branches[i][ii]) 
+                            printf("          \e[90m[%u]=%p\n",iii,node->branches[i][ii][iii]);
                 }
         }
     }
@@ -49,6 +50,14 @@ void test_searchtree(){
     printf("\e[96m-----------[test_searchtree]-----------\n");
     STNode* node=STNode_create();
     printf("\e[92mnode created\n");
+    Unitype v={.type=Double,.Double=-9.22003};
+    ST_push(node, "key_aa",v);
+    printuni(v);
+    printf(" -> push(key_aa)");
+    v =ST_pull(node,"key_aa");
+    printf("\npull(key_aa) -> ");
+    printuni(v);
+    printf("\n");
     printstnode(node);
     STNode_free(node);
     printf("\e[92mnode deleted\n");
