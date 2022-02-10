@@ -13,5 +13,3 @@ typedef struct Hashtable{
 Hashtable Hashtable_create(uint16 height,my_type type);
 
 void Hashtable_clear(Hashtable* ht);
-
-void Hashtable_add_uni(Hashtable* ht,hash_t hash, Unitype val);

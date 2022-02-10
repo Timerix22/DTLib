@@ -2,7 +2,7 @@
 
 #include "../base/base.h"
 
-typedef uint32 hash_t;
-
 //djb2 hash function from http://www.cse.yorku.ca/~oz/hash.html
-hash_t dhash(char *str);
+uint32 ihash(char *str);
+//sdbm hash function
+uint64 lhash(char* str);

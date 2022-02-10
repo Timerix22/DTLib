@@ -18,7 +18,7 @@ void Hashtable_clear(Hashtable* ht){
     ht->type=Null;
 } 
 
-void Hashtable_add_uni(Hashtable* ht,hash_t hash, Unitype val){
+void Hashtable_add_uni(Hashtable* ht,uint32 hash, Unitype val){
     
 }
 

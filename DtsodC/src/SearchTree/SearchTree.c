@@ -9,7 +9,8 @@ STNode* STNode_create(){
     return node;
 }
 
-void STNode_free(STNode* node){
+uint8 nodn=0;
+void STNode_free(STNode* node){dbg(0);nodn++;
     if (!node) throw(ERR_NULLPTR);
     if(node->branches){
         for(uint8 n32 = 0;n32<8;n32++){
@@ -30,11 +31,12 @@ void STNode_free(STNode* node){
             }
         }
         free(node->branches);
-    }
+    }dbg(1);
     //if value is not freed ptr
     if(node->value.type>12 && node->value.type<21 && node->value.VoidPtr) 
-        free(node->value.VoidPtr);
-    free(node);
+        free(node->value.VoidPtr);dbg(2);printf("nodn %u\n",nodn);
+    printstnode(node);
+    free(node);dbg(3);nodn--;
 }
 
 typedef struct {uint8 n32, n4, rem;} indexes3;
@@ -47,51 +49,34 @@ indexes3 splitindex(uint8 i){
     };
 }
 
-uint8 combinei3(indexes3 i3){
-    return i3.n32*32+i3.n4*8;
-}
-
-//int16 globytes=0;
 void ST_push(STNode* node_first, const char* key, Unitype value){
     if (!node_first) throw(ERR_NULLPTR);
-    //int16 bytes=sizeof(Unitype);
-    char c = *key;
+    char c=*(key++);
     STNode* node_last=node_first;
-    for (uint16 i=0;c!='\0';){
+    while(c){
         indexes3 i3=splitindex((uint8)c);
         if(!node_last->branches){
             node_last->branches=(STNode****)malloc(8*sizeof(STNode*));
-            //bytes+=sizeof(void*)*8;
             for(uint8 i=0;i<8;i++)
                 node_last->branches[i]=(STNode***)NULL;
         }
-        STNode*** ptrn32=(STNode***)node_last->branches[i3.n32];
-        if(!ptrn32){
-            ptrn32=(STNode***)malloc(8*sizeof(STNode*));
-            //bytes+=sizeof(void*)*8;
+        if(!node_last->branches[i3.n32]){
+            node_last->branches[i3.n32]=(STNode***)malloc(8*sizeof(STNode*));
             for(uint8 i=0;i<8;i++)
-                ptrn32[i]=(STNode**)NULL;
-            node_last->branches[i3.n32]=ptrn32;
+                node_last->branches[i3.n32][i]=(STNode**)NULL;
         }
-        STNode** ptrn4=ptrn32[i3.n4];
-        if(!ptrn4){
-            ptrn4=(STNode**)malloc(4*sizeof(STNode*));
-            //bytes+=sizeof(void*)*4;
+        if(!node_last->branches[i3.n32][i3.n4]){
+            node_last->branches[i3.n32][i3.n4]=(STNode**)malloc(4*sizeof(STNode*));
             for(uint8 i=0;i<4;i++)
-                ptrn4[i]=(STNode*)NULL;
-            ptrn32[i3.n4]=ptrn4;
+                node_last->branches[i3.n32][i3.n4][i]=(STNode*)NULL;
+            node_last->branches[i3.n32][i3.n4]=node_last->branches[i3.n32][i3.n4];
         }
-        node_last=ptrn4[i3.rem];
-        if(!node_last){
-            node_last=STNode_create();
-            //bytes+=sizeof(STNode);
-            ptrn4[i3.rem]=node_last;
-        }
-        c=*(key+(++i));
+        if(!node_last->branches[i3.n32][i3.n4][i3.rem])
+            node_last->branches[i3.n32][i3.n4][i3.rem]=STNode_create();
+        node_last=node_last->branches[i3.n32][i3.n4][i3.rem];
+        c=*(key++);
     }
     node_last->value=value;
-    //globytes+=bytes;
-    //dbg(globytes);
 }
 
 const Unitype UnitypeNull={Null,.VoidPtr=NULL};
