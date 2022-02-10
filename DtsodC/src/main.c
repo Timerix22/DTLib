@@ -9,7 +9,7 @@ int main(){
     setlocale(LC_ALL, "en-US.Unicode");
     printf("\e[92mdtsod parser in c language!\e[97m\n");
     test_all();
-    /*Unitype a={Double,.Double=9};
+    Unitype a={Double,.Double=9};
     STNode* node=STNode_create();
     ST_push(node,"type", a);
     ST_push(node,"time", a);
@@ -18,10 +18,12 @@ int main(){
     ST_push(node,"message_id", a);
     ST_push(node,"text", a);
     ST_push(node,"files", a);
-    a=ST_pull(node,"");*/
+    a=ST_pull(node,"");
     //STNode_free(node);
     printf("%u\n", hash("000"));
     printf("%u\n", hash("0000"));
     printf("%u\n", hash("1111"));
+
+    
     return 0;
 }
