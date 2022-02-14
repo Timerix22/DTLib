@@ -1,24 +1,26 @@
 #include "Hashtable.h"
 
-Hashtable Hashtable_create(uint16 height,my_type type){
+Hashtable Hashtable_create(uint16 height){
     Hashtable h={
-        .type=type,
         .height=height,
-        .rows=malloc(height*sizeof(Autoarr))
+        .rows=malloc(height*sizeof(Autoarr*))
     };
-    for(uint16 i=0;i<height;i++)
-        h.rows[i]=Autoarr_create(100,8,type);
     return h;
 }
 
 void Hashtable_clear(Hashtable* ht){
     for(uint16 i=0;i<ht->height;i++)
-        Autoarr_clear((Autoarr*)(ht->rows+i));
+        Autoarr_clear(ht->rows[i]);
     free(ht->rows);
-    ht->type=Null;
 } 
 
-void Hashtable_add_uni(Hashtable* ht,uint32 hash, Unitype val){
-    
+void Hashtable_add_kvpair(Hashtable* ht, KeyValuePair pair){
+    uint16 i=ht->height%ihash(pair.key);
+    if(!ht->rows[i])
+        ht->rows[i]=Autoarr_create(100,4,ht->type);
+    Autoarr_add_kvpair(ht->rows[i],pair);
 }
 
+void Hashtable_add(Hashtable* ht, char* key, Unitype value){
+    Hashtable_add_kvpair(ht,(KeyValuePair){key,value});
+}
