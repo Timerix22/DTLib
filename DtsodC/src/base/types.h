@@ -15,7 +15,7 @@ typedef enum my_type{
     Null, Float, Double, Char, Bool,
     UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, 
     UInt8Ptr, Int8Ptr, UInt16Ptr, Int16Ptr, UInt32Ptr, Int32Ptr, UInt64Ptr, Int64Ptr,
-    UniversalType
+    UniversalType, AutoarrPtr, STNodePtr
 } __attribute__ ((__packed__)) my_type;
 
 //returns type name

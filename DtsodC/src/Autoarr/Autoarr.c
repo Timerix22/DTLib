@@ -9,7 +9,7 @@ Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, my_typ
         .curr_block_length=0,
         .max_length=_max_block_count*_max_block_length,
         .curr_length=0,
-        .values=malloc(_max_block_count*typesize(_type))
+        .values=malloc(_max_block_count*sizeof(void*))
     };
     *ar.values=malloc(_max_block_length*typesize(ar.type));
     printf("%p %p\n",ar.values, *ar.values);
@@ -20,7 +20,7 @@ Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, my_typ
 void __Autoarr_create_block(Autoarr *ar){
     if (ar->curr_block_count>=ar->max_block_count) throw(ERR_MAXLENGTH);
     ar->curr_block_length=0;
-    *(ar->values+ar->curr_block_count)=malloc(ar->max_block_length*typesize(ar->type));
+    ar->values[ar->curr_block_count]=malloc(ar->max_block_length*typesize(ar->type));
     ar->curr_block_count++;
 }
 
@@ -159,29 +159,39 @@ void Autoarr_clear(Autoarr* ar){
     switch (ar->type) {   
         case Int8:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((int8**)ar->values+i)); break;
+                free((int8*)ar->values[i]); 
+            break;
         case UInt8:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((uint8**)ar->values+i)); break;
+                free((uint8*)ar->values[i]); 
+            break;
         case Int16:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((int16**)ar->values+i)); break;
+                free((int16*)ar->values[i]); 
+            break;
         case UInt16:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((uint16**)ar->values+i)); break;
+                free((uint16*)ar->values[i]); 
+            break;
         case Int32:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((int32**)ar->values+i)); break;
+                free((int32*)ar->values[i]); 
+            break;
         case UInt32:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((uint32**)ar->values+i)); break;
+                free((uint32*)ar->values[i]); 
+            break;
         case Int64:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((int64**)ar->values+i)); break;
+                free((int64*)ar->values[i]); 
+            break;
         case UInt64:
             for(uint16 i = 0; i < ar->curr_block_count;i++)
-                free(*((uint64**)ar->values+i)); break;
-        default: throw(ERR_WRONGTYPE); break;
+                free((uint64*)ar->values[i]); 
+            break;
+        default: 
+            throw(ERR_WRONGTYPE); 
+            break;
     }
     free(ar->values);
     ar->type=Null;

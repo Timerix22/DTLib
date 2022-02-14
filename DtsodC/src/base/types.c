@@ -26,7 +26,7 @@ const char* typename(my_type t){
         case Int64Ptr: return "Int64Ptr";
         case UInt64Ptr: return "UInt64Ptr";
         case UniversalType: return "Unitype";
-        default: throw(ERR_WRONGTYPE);
+        default: throw(ERR_WRONGTYPE); return "ERROR";
     }
 }
 
@@ -35,7 +35,7 @@ int8 typesize(my_type type){
         case Null: return 0;
         case Double: return sizeof(double);
         case Float: return sizeof(float);
-        case Bool: sizeof(bool);
+        case Bool: return sizeof(bool);
         case Char:
         case Int8: 
         case UInt8: return 1;
@@ -54,6 +54,6 @@ int8 typesize(my_type type){
         case Int64Ptr: 
         case UInt64Ptr: return sizeof(void*);
         case UniversalType: return "Unitype";
-        default: throw(ERR_WRONGTYPE);
+        default: throw(ERR_WRONGTYPE); return -1;
     }
 }

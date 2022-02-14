@@ -1,6 +1,6 @@
 SRC=$(wildcard src/*c) $(wildcard src/**/*.c)
 OUTDIR=bin/
-OUTFILE=dtsodc.com
+OUTFILE=$(OUTDIR)dtsodc.com
 CMP=gcc
 all: clear_c build test
 
@@ -14,10 +14,13 @@ clear_bin:
 clang: CMP=clang
 clang: all
 
-CMPARGS=-O -static
+CMPARGS=-O0 -g -Wall -Werror
 build: 
 	@echo "\e[36m-------------[build]---------------\e[0m"
-	$(CMP) $(CMPARGS) $(SRC) -o $(OUTDIR)$(OUTFILE)
+	$(CMP) $(CMPARGS) $(SRC) -o $(OUTFILE)
 test:
 	@echo "\e[36m-------------[test]----------------\e[0m"
-	$(OUTDIR)$(OUTFILE)
+	$(OUTFILE)
+valgrind: clear_c build
+	@echo "\e[36m-----------[valgrind]--------------\e[0m"
+	valgrind -s --read-var-info=yes --fullpath-after=DtsodC/ $(OUTFILE)
