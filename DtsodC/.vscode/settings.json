@@ -4,7 +4,9 @@
         "cstdint": "c",
         "limits": "c",
         "cstdio": "c",
-        "cwchar": "c"
+        "cwchar": "c",
+        "compare": "c",
+        "type_traits": "c"
     },
     "C_Cpp.default.defines": [],
     "C_Cpp.intelliSenseCacheSize": 10

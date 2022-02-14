@@ -1,4 +1,5 @@
 #include "SearchTree.h"
+#include "../Autoarr/Autoarr.h"
 
 STNode* STNode_create(){
     STNode* node=malloc(sizeof(STNode));
