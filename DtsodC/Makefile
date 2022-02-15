@@ -17,7 +17,7 @@ clang: all
 CMPARGS= -Wall $(SRC) -o $(OUTFILE)
 build: 
 	@echo "\e[36m-------------[build]---------------\e[0m"
-	$(CMP) -O2 $(CMPARGS)
+	$(CMP) -O1 -flto  $(CMPARGS)
 build_dbg: 
 	@echo "\e[36m-------------[build_dbg]---------------\e[0m"
 	$(CMP) -O0 $(CMPARGS).dbg
