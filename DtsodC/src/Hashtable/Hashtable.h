@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../base/base.h"
-#include "../Autoarr/Autoarr.h"
+#include "../Autoarr/Autoarr2.h"
 #include "hash.h"
 
 typedef struct Hashtable{
     uint16 height;    // amount of rows
-    Autoarr* rows;    // Autoarr[height]s
+    Autoarr2(Unitype)* rows;    // Autoarr[height]s
 } Hashtable;
 
 Hashtable Hashtable_create(uint16 height);

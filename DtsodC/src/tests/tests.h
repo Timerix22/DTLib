@@ -4,9 +4,8 @@
 
 void printuni(Unitype v);
 
-void test_autoarr(void);
-void test_searchtree(void);
 void test_all(void);
+void test_searchtree(void);
 void test_autoarr2(void);
 
 // executes codeblock and prints execution time

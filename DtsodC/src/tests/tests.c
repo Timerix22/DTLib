@@ -30,7 +30,6 @@ void printuni(Unitype v){
 
 void test_all(void){
     test_searchtree();
-    test_autoarr();
     test_autoarr2();
     printf("\e[96m---------------------------------------\n");
 }
