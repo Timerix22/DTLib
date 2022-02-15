@@ -1,14 +1,10 @@
 #pragma once
 
-#include "../base/std.h"
-#include "../SearchTree/SearchTree.h"
-#include "../Autoarr/Autoarr.h"
+#include "../base/base.h"
 
-void test_autoarr(void);
-void printautoarr(Autoarr* ar);
-
-void test_searchtree(void);
-void printstnode(STNode* node);
 void printuni(Unitype v);
 
+void test_autoarr(void);
+void test_searchtree(void);
 void test_all(void);
+void test_new(void);
