@@ -6,9 +6,7 @@
 #include <locale.h>
 #include <uchar.h>
 #include <wchar.h>
-#include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
 
 #define CHOOSE(B, Y, N) __builtin_choose_expr(B, Y, N)
 

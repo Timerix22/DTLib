@@ -12,7 +12,6 @@ Autoarr Autoarr_create(uint16 _max_block_count, uint16 _max_block_length, my_typ
         .values=malloc(_max_block_count*sizeof(void*))
     };
     *ar.values=malloc(_max_block_length*typesize(ar.type));
-    printf("%p %p\n",ar.values, *ar.values);
     return ar;
 }
 

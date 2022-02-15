@@ -14,13 +14,16 @@ clear_bin:
 clang: CMP=clang
 clang: all
 
-CMPARGS=-O0 -g -Wall -Werror
+CMPARGS= -Wall $(SRC) -o $(OUTFILE)
 build: 
 	@echo "\e[36m-------------[build]---------------\e[0m"
-	$(CMP) $(CMPARGS) $(SRC) -o $(OUTFILE)
+	$(CMP) -O2 $(CMPARGS)
+build_dbg: 
+	@echo "\e[36m-------------[build_dbg]---------------\e[0m"
+	$(CMP) -O0 $(CMPARGS).dbg
 test:
 	@echo "\e[36m-------------[test]----------------\e[0m"
 	$(OUTFILE)
-valgrind: clear_c build
+valgrind: clear_c build_dbg
 	@echo "\e[36m-----------[valgrind]--------------\e[0m"
-	valgrind -s --read-var-info=yes --fullpath-after=DtsodC/ $(OUTFILE)
+	valgrind -s --read-var-info=yes --fullpath-after=DtsodC/ $(OUTFILE).dbg

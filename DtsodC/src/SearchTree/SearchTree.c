@@ -39,10 +39,10 @@ void STNode_free(STNode* node){
             case Int64Ptr: case UInt64Ptr:
                 free(node->value.VoidPtr);
                 break;
-            case AutoarrPtr:
+            /*case AutoarrPtr:
                 Autoarr_clear((Autoarr*)node->value.VoidPtr);
                 free(node->value.VoidPtr);
-                break;
+                break;*/
             case STNodePtr:
                 STNode_free((STNode*)node->value.VoidPtr);
                 break;
