@@ -3,7 +3,7 @@
 uint32 ihash(char *str){
     uint32 hash=5381;
     for (char c=*str;c;c=*(++str))
-        hash=((hash<<5)+hash)+c; //hash=hash*33^c
+        hash=((hash<<5)+hash)+c;
     return hash;
 }
 

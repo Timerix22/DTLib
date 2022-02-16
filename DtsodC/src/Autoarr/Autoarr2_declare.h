@@ -9,6 +9,7 @@ struct Autoarr2_##type;\
 typedef struct {\
     void (*add)(struct Autoarr2_##type* ar, type element);\
     type (*get)(struct Autoarr2_##type* ar, uint32 index);\
+    type* (*getptr)(struct Autoarr2_##type* ar, uint32 index);\
     void (*set)(struct Autoarr2_##type* ar, uint32 index, type element);\
     void (*clear)(struct Autoarr2_##type* ar);\
 } __functions_list_t_##type;\
@@ -24,6 +25,7 @@ typedef struct Autoarr2_##type{\
 \
 void __Autoarr2_add_##type(Autoarr2_##type* ar, type element);\
 type __Autoarr2_get_##type(Autoarr2_##type* ar, uint32 index);\
+type* __Autoarr2_getptr_##type(Autoarr2_##type* ar, uint32 index);\
 void __Autoarr2_set_##type(Autoarr2_##type* ar, uint32 index, type element);\
 void __Autoarr2_clear_##type(Autoarr2_##type* ar);\
 Autoarr2_##type __Autoarr2_create_##type(uint16 max_blocks_count, uint16 max_block_length);
@@ -34,6 +36,8 @@ Autoarr2_##type __Autoarr2_create_##type(uint16 max_blocks_count, uint16 max_blo
     autoarr->functions->add(autoarr, element)
 #define Autoarr2_get(autoarr, index)\
     autoarr->functions->get(autoarr,index)
+#define Autoarr2_getptr(autoarr, index)\
+    autoarr->functions->getptr(autoarr,index)
 #define Autoarr2_set(autoarr, index, element)\
     autoarr->functions->set(autoarr, index, element)
 #define Autoarr2_clear(autoarr)\

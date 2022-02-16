@@ -40,3 +40,5 @@ typedef struct Unitype{
         void* VoidPtr;
     };
 } Unitype;
+
+#define Uni(TYPE,VAL) (Unitype){.type=TYPE,.TYPE=VAL}

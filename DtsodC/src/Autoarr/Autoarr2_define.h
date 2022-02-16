@@ -25,6 +25,11 @@ type __Autoarr2_get_##type(Autoarr2_##type* ar, uint32 index){\
     return ar->values[index/ar->max_block_length][index%ar->max_block_length];\
 }\
 \
+type* __Autoarr2_getptr_##type(Autoarr2_##type* ar, uint32 index){\
+    if(index>=Autoarr2_length(ar)) throw(ERR_WRONGINDEX);\
+    return ar->values[index/ar->max_block_length]+(index%ar->max_block_length);\
+}\
+\
 void __Autoarr2_set_##type(Autoarr2_##type* ar, uint32 index, type element){\
     if(index>=Autoarr2_length(ar)) throw(ERR_WRONGINDEX);\
     ar->values[index/ar->max_block_length][index%ar->max_block_length]=element;\
@@ -42,6 +47,7 @@ void __Autoarr2_clear_##type(Autoarr2_##type* ar){\
 __functions_list_t_##type __functions_list_##type={\
     &__Autoarr2_add_##type,\
     &__Autoarr2_get_##type,\
+    &__Autoarr2_getptr_##type,\
     &__Autoarr2_set_##type,\
     &__Autoarr2_clear_##type\
 };\

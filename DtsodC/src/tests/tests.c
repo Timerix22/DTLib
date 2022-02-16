@@ -29,7 +29,8 @@ void printuni(Unitype v){
 }
 
 void test_all(void){
-    optime({test_searchtree();});
-    optime({test_autoarr2();});
-    printf("\e[96m---------------------------------------\n");
+    test_searchtree();
+    test_autoarr2();
+    test_hashtable();
+    printf("\e[96m---------------------------------------\e[0m\n");
 }

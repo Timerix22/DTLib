@@ -7,7 +7,7 @@ all: clear_c build test
 clear_c:
 	clear
 clear_bin:
-	@echo -e "\e[36m-------------[clear_bin]---------------\e[0m"
+	@echo -e '\e[96m--------------[clear_bin]--------------\e[0m'
 	touch $(OUTDIR)_.com
 	rm $(OUTDIR)*.com
 
@@ -15,15 +15,16 @@ clang: CMP=clang
 clang: all
 
 CMPARGS= -Wall $(SRC) -o $(OUTFILE)
-build: 
-	@echo -e "\e[36m-------------[build]---------------\e[0m"
+build:
+	@echo -e '\n\e[96m----------------[build]----------------\e[0m'
 	$(CMP) -O1 -flto  $(CMPARGS)
 build_dbg: 
-	@echo -e "\e[36m-------------[build_dbg]---------------\e[0m"
-	$(CMP) -O0 $(CMPARGS).dbg
+	@echo -e '\n\e[96m--------------[build_dbg]--------------\e[0m'
+	$(CMP) -O0 -g $(CMPARGS).dbg
 test:
-	@echo -e "\e[36m-------------[test]----------------\e[0m"
+	@echo -e '\n\e[96m----------------[test]-----------------\e[0m'
 	$(OUTFILE)
 valgrind: clear_c build_dbg
-	@echo -e "\e[36m-----------[valgrind]--------------\e[0m"
-	valgrind -s --read-var-info=yes --fullpath-after=DtsodC/ $(OUTFILE).dbg
+	@echo -e '\n\e[96m--------------[valgrind]---------------\e[0m'
+	valgrind -s --read-var-info=yes --track-origins=yes --fullpath-after=DtsodC/ \
+	--leak-check=full --show-leak-kinds=all $(OUTFILE).dbg

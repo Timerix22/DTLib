@@ -2,7 +2,7 @@
 #include "../Autoarr/Autoarr2.h"
 
 static void printautoarr(Autoarr2(uint16)* ar){
-    printf("\e[94mAUTOARR:%lu\n"
+    printf("\e[94mAutoarr2(uint16): %lu\n"
         "  max_blocks_count: %u\n"
         "  blocks_count: %u\n"
         "  max_block_length: %u\n"
@@ -35,16 +35,18 @@ static void printallval(Autoarr2(uint16)* ar){
 }
 
 void test_autoarr2(){
-    printf("\e[96m------------[test_autoarr2]-------------\n");
-    Autoarr2(uint16) ar=Autoarr2_create(uint16,10,16);
-    printf("\e[92mautoarr created\n");
-    fillar(&ar);
-    printf("\e[92mautoarr filled up\n");
-    printautoarr(&ar);
-    printallval(&ar);
-    resetar(&ar);
-    printf("\e[92mautoarr values reset\n");
-    printallval(&ar);
-    Autoarr2_clear(((&ar)));
-    printf("\e[92mautoarr cleared\n");
+    optime("test_autoarr2",1,({
+        printf("\e[96m------------[test_autoarr2]------------\n");
+        Autoarr2(uint16) ar=Autoarr2_create(uint16,10,16);
+        printf("\e[92mautoarr created\n");
+        fillar(&ar);
+        printf("\e[92mautoarr filled up\n");
+        printautoarr(&ar);
+        printallval(&ar);
+        resetar(&ar);
+        printf("\e[92mautoarr values reset\n");
+        printallval(&ar);
+        Autoarr2_clear(((&ar)));
+        printf("\e[92mautoarr cleared\n");
+    }));
 }
