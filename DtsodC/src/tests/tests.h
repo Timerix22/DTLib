@@ -14,5 +14,5 @@ void test_autoarr2(void);
     clock_t start=clock();\
     (codeblock);\
     clock_t stop=clock();\
-    printf("\e[96m%li\n",(stop-start));\
+    printf("\e[93m%li\n",(stop-start));\
 })
