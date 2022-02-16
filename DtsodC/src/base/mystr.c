@@ -9,11 +9,10 @@ uint32 mystrlen(char* str){
 
 //allocates new char[] and copies src there
 char* mystrcpy(char* src){
-    uint32 len=mystrlen(src);dbg(len);
+    uint32 len=mystrlen(src);
     char* dst=malloc(len*sizeof(char));
     while(len-->0)
         dst[len]=src[len];
-    printf("dst: %s\n",dst);
     return dst;
 }
 

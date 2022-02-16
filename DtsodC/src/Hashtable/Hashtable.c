@@ -28,14 +28,27 @@ void Hashtable_free(Hashtable* ht){
 
 uint32 Hashtable_height(Hashtable* ht){ return HT_HEIGHTS[ht->hein]; }
 
-Autoarr2(KeyValuePair)* getrow(Hashtable* ht, char* key){
 
-    uint16 rown=HT_HEIGHTS[ht->hein]%ihash(key);
-    if(rown>=HT_HEIGHTS[ht->hein]){
-        ht->rows=realloc(ht->rows,HT_HEIGHTS[++ht->hein]*sizeof(Autoarr2(KeyValuePair)));
-        for(uint16 i=HT_HEIGHTS[ht->hein-1];i<HT_HEIGHTS[ht->hein];i++)
-            ht->rows[i]=Autoarr2_create(KeyValuePair,4,16);
+void Hashtable_resize(Hashtable* ht){
+    Autoarr2(KeyValuePair)* newrows=malloc(HT_HEIGHTS[++ht->hein]*sizeof(Autoarr2(KeyValuePair)));
+    for(uint16 i=0;i<HT_HEIGHTS[ht->hein];i++)
+        ht->rows[i]=Autoarr2_create(KeyValuePair,4,16);
+    for(uint16 i=0;i<HT_HEIGHTS[ht->hein-1];i++){
+        Autoarr2(KeyValuePair)* ar=ht->rows+i;
+        for(uint16 k=0;k<Autoarr2_length(ar);k++){
+            KeyValuePair p=Autoarr2_get(ar,k);
+            uint16 newrown=ihash(p.key)%HT_HEIGHTS[ht->hein];
+            Autoarr2(KeyValuePair)* newar=newrows+newrown;
+            Autoarr2_add(newar,p);
+        }
     }
+    ht->rows=newrows;
+}
+
+Autoarr2(KeyValuePair)* getrow(Hashtable* ht, char* key){
+    uint16 rown=ihash(key)%HT_HEIGHTS[ht->hein];
+    if(rown>=HT_HEIGHTS[ht->hein])
+        Hashtable_resize(ht);
     return ht->rows+rown;
 }
 

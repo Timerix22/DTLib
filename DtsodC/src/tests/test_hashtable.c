@@ -14,7 +14,7 @@ void print_hashtable(Hashtable* ht){
 
 void hashtable_fill(Hashtable* ht){
     char* key=malloc(20);
-    for(uint32 i=0;i<255;i++){
+    for(uint32 i=0;i<100;i++){
         sprintf(key,"key__%u",i);
         Hashtable_add(ht,key,Uni(UInt32,i));
     }
@@ -23,7 +23,7 @@ void hashtable_fill(Hashtable* ht){
 
 void hashtable_printval(Hashtable* ht){
     char* key=malloc(20);
-    for(uint32 i=0;i<255;i++){
+    for(uint32 i=0;i<100;i++){
         sprintf(key,"key__%u",i);
         printuni(Hashtable_get(ht,key));
         printf("  ");
