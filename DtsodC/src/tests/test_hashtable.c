@@ -14,26 +14,28 @@ void print_hashtable(Hashtable* ht){
 
 void hashtable_fill(Hashtable* ht){
     char* key=malloc(20);
-    for(uint32 i=0;i<100;i++){
+    for(uint32 i=0;i<100000;i++){
         sprintf(key,"key__%u",i);
         Hashtable_add(ht,key,Uni(UInt32,i));
     }
     free(key);
 }
 
-void hashtable_printval(Hashtable* ht){
+Unitype hashtable_printval(Hashtable* ht){
     char* key=malloc(20);
-    for(uint32 i=0;i<100;i++){
+    Unitype u;
+    for(uint32 i=0;i<100000;i++){
         sprintf(key,"key__%u",i);
-        printuni(Hashtable_get(ht,key));
-        printf("  ");
+        u=Hashtable_get(ht,key);
+        //printuni(u); printf("  ");
     }
     free(key);
+    return u;
 }
 
 
 void test_hashtable(void){
-    optime("test_hashtable",1,({
+    /* optime("test_hashtable",1,({
         printf("\e[96m-----------[test_hashtable]------------\n");
         Hashtable* ht=Hashtable_create();
         print_hashtable(ht);
@@ -42,5 +44,10 @@ void test_hashtable(void){
         hashtable_printval(ht);
         Hashtable_free(ht);
         printf("\n\e[92mhashtable freed\n");
-    }));
+    })); */
+    printf("\e[96m-----------[test_hashtable]------------\n");
+    Hashtable* ht=Hashtable_create();
+    optime("fill",1,hashtable_fill(ht));
+    optime("get",1,hashtable_printval(ht));
+    Hashtable_free(ht);
 }

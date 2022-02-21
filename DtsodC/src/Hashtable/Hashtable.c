@@ -5,13 +5,16 @@ define_Autoarr2(KeyValuePair)
 // amount of rows
 static const uint16 HT_HEIGHTS[]={61,631,3889,19441,65521};
 
+#define ARR_BC 16
+#define ARR_BL 128
 
 Hashtable* Hashtable_create(){
     Hashtable* ht=malloc(sizeof(Hashtable));
-    ht->hein=0;
-    ht->rows=malloc(HT_HEIGHTS[0]*sizeof(Autoarr2(KeyValuePair)));
-    for(uint16 i=0;i<HT_HEIGHTS[0];i++)
-        ht->rows[i]=Autoarr2_create(KeyValuePair,4,16);
+    //ht->hein=0;//    
+    ht->hein=1;
+    ht->rows=malloc(HT_HEIGHTS[ht->hein]*sizeof(Autoarr2(KeyValuePair)));
+    for(uint16 i=0;i<HT_HEIGHTS[ht->hein];i++)
+        ht->rows[i]=Autoarr2_create(KeyValuePair,ARR_BC,ARR_BL);
     return ht;
 }
 
@@ -29,10 +32,10 @@ void Hashtable_free(Hashtable* ht){
 uint32 Hashtable_height(Hashtable* ht){ return HT_HEIGHTS[ht->hein]; }
 
 
-void Hashtable_resize(Hashtable* ht){
+void Hashtable_resize(Hashtable* ht){printf("RESIZE\n");
     Autoarr2(KeyValuePair)* newrows=malloc(HT_HEIGHTS[++ht->hein]*sizeof(Autoarr2(KeyValuePair)));
     for(uint16 i=0;i<HT_HEIGHTS[ht->hein];i++)
-        ht->rows[i]=Autoarr2_create(KeyValuePair,4,16);
+        ht->rows[i]=Autoarr2_create(KeyValuePair,ARR_BC,ARR_BL);
     for(uint16 i=0;i<HT_HEIGHTS[ht->hein-1];i++){
         Autoarr2(KeyValuePair)* ar=ht->rows+i;
         for(uint16 k=0;k<Autoarr2_length(ar);k++){
@@ -47,8 +50,8 @@ void Hashtable_resize(Hashtable* ht){
 
 Autoarr2(KeyValuePair)* getrow(Hashtable* ht, char* key){
     uint16 rown=ihash(key)%HT_HEIGHTS[ht->hein];
-    if(rown>=HT_HEIGHTS[ht->hein])
-        Hashtable_resize(ht);
+    //if(rown>=HT_HEIGHTS[ht->hein])
+    //    Hashtable_resize(ht);
     return ht->rows+rown;
 }
 

@@ -11,6 +11,7 @@ public static class Tester
         for (int i = 0; i < repeats; i++)
             operation();
         clock.Stop();
-        LogNoTime("c",$"operation {op_name} took {clock.ElapsedTicks / repeats} ticks");
+        double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
+        LogNoTime("c",$"operation {op_name} took {time} seconds");
     }
 }

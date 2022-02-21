@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using DTLib.Dtsod;
-using DTLib.Experimental;
-using static TestProgram.Program;
+﻿using static TestProgram.Program;
 
 namespace TestProgram.DtsodV2X;
 
