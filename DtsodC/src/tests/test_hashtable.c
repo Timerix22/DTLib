@@ -1,6 +1,12 @@
 #include "tests.h"
 #include "../Hashtable/Hashtable.h"
 
+void printkvp(KeyValuePair p){
+    printf("{\"%s\", ",p.key);
+    printuni(p.value);
+    printf("}");
+}
+
 void print_hashtable(Hashtable* ht){
     printf("\e[94mHashtable:%lu\n"
         "  hein: %u\n"
@@ -12,7 +18,30 @@ void print_hashtable(Hashtable* ht){
         ht->rows);
 }
 
-void hashtable_fill(Hashtable* ht){
+void printrowgraph(Hashtable* ht){
+    printf("\e[94mrow length graph:\n");
+    uint16 lgs_l=1000;
+    uint32 lgs[lgs_l];
+     for(uint32 i=0; i<lgs_l; i++)
+        lgs[i]=0; 
+    for(uint16 h=0;h<Hashtable_height(ht);h++){
+        Autoarr2(KeyValuePair)* ar=ht->rows+h;
+        uint32 l=Autoarr2_length(ar);
+        lgs[l]++;
+    }
+    for(uint32 i=0; i<lgs_l; i++)
+        if(lgs[i]>0) {
+            char* str0=mystrmtpl(' ',i>=100?0:(i>=10?1:2));
+            char* str1=mystrmtpl(' ',lgs[i]>=100?0:(lgs[i]>=10?1:2));
+            char* str2=mystrmtpl('#',lgs[i]/100);
+            printf("\e[94m  length: \e[96m%u %s \e[94mfrequency: \e[96m%u %s \e[90m%s\n",i,str0,lgs[i],str1,str2);
+            free(str0);
+            free(str1);
+            free(str2);
+        }
+}
+
+void fill(Hashtable* ht){
     char* key=malloc(20);
     for(uint32 i=0;i<100000;i++){
         sprintf(key,"key__%u",i);
@@ -21,7 +50,7 @@ void hashtable_fill(Hashtable* ht){
     free(key);
 }
 
-Unitype hashtable_printval(Hashtable* ht){
+Unitype gett(Hashtable* ht){
     char* key=malloc(20);
     Unitype u;
     for(uint32 i=0;i<100000;i++){
@@ -35,19 +64,16 @@ Unitype hashtable_printval(Hashtable* ht){
 
 
 void test_hashtable(void){
-    /* optime("test_hashtable",1,({
+    optime("test_hashtable",1,({
         printf("\e[96m-----------[test_hashtable]------------\n");
         Hashtable* ht=Hashtable_create();
+        printf("\e[92mhashtable created\n");
         print_hashtable(ht);
-        hashtable_fill(ht);
-        printf("\e[92mhashtable filled\n\e[90m");
-        hashtable_printval(ht);
+        optime("fill",1,fill(ht));
+        optime("get",1,gett(ht));
+        printrowgraph(ht);
+        print_hashtable(ht);
         Hashtable_free(ht);
-        printf("\n\e[92mhashtable freed\n");
-    })); */
-    printf("\e[96m-----------[test_hashtable]------------\n");
-    Hashtable* ht=Hashtable_create();
-    optime("fill",1,hashtable_fill(ht));
-    optime("get",1,hashtable_printval(ht));
-    Hashtable_free(ht);
+        printf("\e[92mhashtable freed\n");
+    }));
 }

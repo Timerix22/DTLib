@@ -27,3 +27,12 @@ bool mystrcmp(char* key0, char* key1){
     }
     return 1;
 }
+
+//multiplies char n times
+char* mystrmtpl(char c, uint32 n){
+    char* rez=malloc(n+1);
+    rez[n]=0;
+    while(n>0)
+        rez[--n]=c;
+    return rez;
+}

@@ -17,5 +17,5 @@ void test_hashtable(void);
         (codeblock);\
     clock_t stop=clock();\
     double t=(double)(stop-start)/CLOCKS_PER_SEC/repeats;\
-    printf("\e[93moperation %s took \e[94m%lf \e[93mseconds\n",opname,t);\
+    printf("\e[93moperation \e[94m%s\e[93m took \e[94m%lf \e[93mseconds\n",opname,t);\
 })
