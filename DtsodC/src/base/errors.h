@@ -2,12 +2,12 @@
 
 typedef enum err_t {
     SUCCESS, //not an error 
-    ERR_MAXLENGTH, ERR_WRONGTYPE, ERR_WRONGINDEX, ERR_NOTIMPLEMENTED, ERR_NULLPTR
+    ERR_MAXLENGTH, ERR_WRONGTYPE, ERR_WRONGINDEX, ERR_NOTIMPLEMENTED, ERR_NULLPTR, ERR_ENDOFSTR
 } err_t;
 
 const char* errname(err_t err);
 
-void _throwint(int err, const char* srcfile, int line, const char* funcname);
+void _throwint(int err, const char* srcfile, int line, const char* funcname) ;
 void _throwstr(const char* errmesg, const char* srcfile, int line, const char* funcname);
 #pragma GCC diagnostic ignored "-Wint-conversion"
 #define throw(E) \

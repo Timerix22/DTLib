@@ -14,7 +14,10 @@ typedef enum my_type{
     Null, Float, Double, Char, Bool,
     UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, 
     UInt8Ptr, Int8Ptr, UInt16Ptr, Int16Ptr, UInt32Ptr, Int32Ptr, UInt64Ptr, Int64Ptr,
-    UniversalType, STNodePtr
+    UniversalType, STNodePtr, 
+    AutoarrInt8Ptr, AutoarrUInt8Ptr, AutoarrInt16Ptr, AutoarrUInt16Ptr, 
+    AutoarrInt32Ptr, AutoarrUInt32Ptr, AutoarrInt64Ptr, AutoarrUInt64Ptr,
+    AutoarrUnitypePtr, AutoarrKVPairPtr
 } __attribute__ ((__packed__)) my_type;
 
 //returns type name
@@ -42,3 +45,5 @@ typedef struct Unitype{
 } Unitype;
 
 #define Uni(TYPE,VAL) (Unitype){.type=TYPE,.TYPE=VAL}
+#define UniF(TYPE,FIELD,VAL) (Unitype){.type=TYPE,.FIELD=VAL}
+#define UniNull (Unitype){Null,.VoidPtr=NULL}

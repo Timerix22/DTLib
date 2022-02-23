@@ -88,7 +88,7 @@ Unitype Hashtable_get(Hashtable* ht, char* key){
         KeyValuePair p=Autoarr2_get(ar,i);
         if(mystrcmp(key,p.key)) return p.value;
     }
-    return (Unitype){.type=Null,.VoidPtr=NULL};
+    return UniNull;
 }
 KeyValuePair Hashtable_get_pair(Hashtable* ht, char* key){
     return cpair(key,Hashtable_get(ht,key));

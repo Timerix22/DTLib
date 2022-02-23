@@ -89,20 +89,18 @@ void ST_push(STNode* node_first, const char* key, Unitype value){
     node_last->value=value;
 }
 
-const Unitype UnitypeNull={.type=Null,.VoidPtr=NULL};
-
 Unitype ST_pull(STNode* node_first, const char* key){
     if (!node_first) throw(ERR_NULLPTR);
     STNode* node_last=node_first;
     while (*key){
         indexes3 i3=splitindex((uint8)*key);
-        if(!node_last->branches) return UnitypeNull;
+        if(!node_last->branches) return UniNull;
         STNode*** ptrn32=(STNode***)node_last->branches[i3.n32];
-        if(!ptrn32) return UnitypeNull;
+        if(!ptrn32) return UniNull;
         STNode** ptrn4=ptrn32[i3.n4];
-        if(!ptrn4) return UnitypeNull;
+        if(!ptrn4) return UniNull;
         node_last=ptrn4[i3.rem];
-        if(!node_last) return UnitypeNull;
+        if(!node_last) return UniNull;
         key++;
     }
     return node_last->value;

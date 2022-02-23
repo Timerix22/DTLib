@@ -9,6 +9,7 @@ const char* errname(err_t err){
         case ERR_WRONGINDEX: return "ERR_WRONGINDEX";
         case ERR_NOTIMPLEMENTED: return "ERR_NOTIMPLEMENTED";
         case ERR_NULLPTR: return "ERR_NULLPTR";
+        case ERR_ENDOFSTR: return "ERR_ENDOFSTR";
         default: return "UNKNOWN_ERROR";
     }
 }
