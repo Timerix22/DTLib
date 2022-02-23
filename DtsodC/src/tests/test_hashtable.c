@@ -42,21 +42,19 @@ void printrowgraph(Hashtable* ht){
 }
 
 void fill(Hashtable* ht){
-    char* key=malloc(20);
     for(uint32 i=0;i<100000;i++){
+        char* key=malloc(12);
         sprintf(key,"key__%u",i);
         Hashtable_add(ht,key,Uni(UInt32,i));
     }
-    free(key);
 }
 
 Unitype gett(Hashtable* ht){
-    char* key=malloc(20);
+    char* key=malloc(12);
     Unitype u;
     for(uint32 i=0;i<100000;i++){
         sprintf(key,"key__%u",i);
         u=Hashtable_get(ht,key);
-        //printuni(u); printf("  ");
     }
     free(key);
     return u;

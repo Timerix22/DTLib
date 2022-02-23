@@ -62,11 +62,6 @@ Autoarr2(KeyValuePair)* getrow(Hashtable* ht, char* key, bool can_expand){
     return ar;
 }
 
-//copies string and value to new KeyValuePair
-KeyValuePair cpair(char* key, Unitype value){
-    return (KeyValuePair){.key=mystrcpy(key),.value=value};
-}
-
 
 void Hashtable_add_pair(Hashtable* ht, KeyValuePair p){
     Autoarr2_add(getrow(ht,p.key,true),p);
@@ -104,9 +99,9 @@ bool Hashtable_try_get(Hashtable* ht, char* key, Unitype* output){
     return u.type==Null;
 }
 
-void Hashtable_set_pair(Hashtable* ht, KeyValuePair p){
+/* void Hashtable_set_pair(Hashtable* ht, KeyValuePair p){
     if(Hashtable_try_get(ht,p.key, NULL)){
 
     }
 }
-void Hashtable_set(Hashtable* ht, char* key, Unitype u){ Hashtable_set_pair(ht,cpair(key,u)); }
+void Hashtable_set(Hashtable* ht, char* key, Unitype u){ Hashtable_set_pair(ht,cpair(key,u)); } */
