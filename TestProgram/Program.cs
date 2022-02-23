@@ -29,7 +29,7 @@ static class Program
         Console.Title="tester";
         try
         {
-            Info.Log("g","-------[DTLib tester]-------");
+            Info.Log("c", "-------------[TestProgram]-------------");
             //TestDtsodV23.TestAll();
             DictTest.Test();
         }

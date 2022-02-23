@@ -12,6 +12,6 @@ public static class Tester
             operation();
         clock.Stop();
         double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
-        LogNoTime("c",$"operation {op_name} took {time} seconds");
+        LogNoTime("y",$"operation ","b",op_name,"y"," took ","b",time.ToString(),"y"," seconds");
     }
 }
