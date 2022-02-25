@@ -17,7 +17,7 @@ clang: all
 CMPARGS= -Wall $(SRC) -o $(OUTFILE)
 build:
 	@echo -e '\n\e[96m----------------[build]----------------\e[0m'
-	$(CMP) -O1 -flto  $(CMPARGS)
+	$(CMP) -O1 -flto -Wno-discarded-qualifiers $(CMPARGS)
 build_dbg: 
 	@echo -e '\n\e[96m--------------[build_dbg]--------------\e[0m'
 	$(CMP) -O0 -g $(CMPARGS).dbg

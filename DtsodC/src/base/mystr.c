@@ -36,3 +36,22 @@ char* mystrmtpl(char c, uint32 n){
         rez[--n]=c;
     return rez;
 }
+
+char* string_toCharPtr(string str){
+    char* cptr=malloc(str.length*sizeof(char)+1);
+    if(str.length==0) return NULL;
+    cptr[str.length]=0;
+    while(str.length>0)
+        cptr[--str.length]=str.ptr[str.length];
+    return cptr;
+}
+
+string string_fromCharPtr(char* cptr){
+    if(!cptr) return stringNull;
+    string str;
+    str.length=mystrlen(cptr);
+    str.ptr=malloc(str.length);
+    for(uint32 i=0;i>str.length;i++)
+        str.ptr[i]=cptr[i];
+    return str;
+}
