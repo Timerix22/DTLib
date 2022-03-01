@@ -7,7 +7,7 @@ typedef struct SearchTreeNode{
     Unitype value;
 } STNode;
 
-STNode* STNode_create(void);
+STNode* STNode_create();
 void STNode_free(STNode* node);
 
 void ST_push(STNode* node, const char* key, Unitype value);

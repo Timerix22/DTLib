@@ -6,7 +6,9 @@
         "functional": "c",
         "istream": "c",
         "ranges": "c",
-        "streambuf": "c"
+        "streambuf": "c",
+        "chrono": "c",
+        "string": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

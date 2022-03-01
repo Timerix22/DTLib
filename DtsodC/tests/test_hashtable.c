@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../Hashtable/Hashtable.h"
+#include "../src/Hashtable/Hashtable.h"
 
 void printkvp(KeyValuePair p){
     printf("{\"%s\", ",p.key);
@@ -31,9 +31,9 @@ void printrowgraph(Hashtable* ht){
     }
     for(uint32 i=0; i<lgs_l; i++)
         if(lgs[i]>0) {
-            char* str0=mystrmtpl(' ',i>=100?0:(i>=10?1:2));
-            char* str1=mystrmtpl(' ',lgs[i]>=100?0:(lgs[i]>=10?1:2));
-            char* str2=mystrmtpl('#',lgs[i]/100);
+            char* str0=char_multiply(' ',i>=100?0:(i>=10?1:2));
+            char* str1=char_multiply(' ',lgs[i]>=100?0:(lgs[i]>=10?1:2));
+            char* str2=char_multiply('#',lgs[i]/100);
             printf("\e[94m  length: \e[96m%u %s \e[94mfrequency: \e[96m%u %s \e[90m%s\n",i,str0,lgs[i],str1,str2);
             free(str0);
             free(str1);
@@ -61,7 +61,7 @@ Unitype gett(Hashtable* ht){
 }
 
 
-void test_hashtable(void){
+void test_hashtable(){
     optime("test_hashtable",1,({
         printf("\e[96m-----------[test_hashtable]------------\n");
         Hashtable* ht=Hashtable_create();

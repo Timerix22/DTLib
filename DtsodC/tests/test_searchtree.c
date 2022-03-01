@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../SearchTree/SearchTree.h"
+#include "../src/SearchTree/SearchTree.h"
 
 void printstnode(STNode* node){
     printf("\e[94mSTNode: %lu\n  address: %p\n  value: ",sizeof(STNode),node);

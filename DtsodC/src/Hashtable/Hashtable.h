@@ -26,7 +26,7 @@ void Hashtable_free(Hashtable* ht);
 uint32 Hashtable_height(Hashtable* ht);
 
 //adds charptr and value to new KeyValuePair
-//use mystrcpy() to create new string if needed
+//use charbuf_copy() to create new string if needed
 #define cpair(key,value) (KeyValuePair){key,value}
 
 

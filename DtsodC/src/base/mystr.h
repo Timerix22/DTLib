@@ -6,13 +6,13 @@
 uint32 mystrlen(char* str);
 
 //allocates new char[] and copies src there
-char* mystrcpy(char* src);
+char* charbuf_copy(char* src);
 
-//compares two strings, NullPtr-friendly
-bool mystrcmp(char* key0, char* key1);
+//compares two char buffers, NullPtr-friendly
+bool charbuf_compare(char* key0, char* key1);
 
 //multiplies char n times
-char* mystrmtpl(char c, uint32 n);
+char* char_multiply(char c, uint32 n);
 
 //my fixed length string struct
 //doesn't store '\0' at the end
@@ -24,7 +24,10 @@ typedef struct string{
 static const string stringNull={NULL,0};
 
 //copies str content to new char pointer value (adding '\0' at the end)
-char* string_toCharPtr(string str);
+char* string_cpToCharPtr(string str);
 
 //copies cptr content (excluding '\0' at the end) to new string
-string string_fromCharPtr(char* cptr);
+string string_cpFromCharPtr(char* cptr);
+
+//compares two strings, NullPtr-friendly
+bool string_compare(string str0, string str1);

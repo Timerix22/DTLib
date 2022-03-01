@@ -14,7 +14,7 @@ typedef enum my_type{
     Null, Float, Double, Char, Bool,
     UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, 
     UInt8Ptr, Int8Ptr, UInt16Ptr, Int16Ptr, UInt32Ptr, Int32Ptr, UInt64Ptr, Int64Ptr,
-    UniversalType, STNodePtr, HashtablePtr,
+    CharPtr, UniversalType, STNodePtr, HashtablePtr,
     AutoarrInt8Ptr, AutoarrUInt8Ptr, AutoarrInt16Ptr, AutoarrUInt16Ptr, 
     AutoarrInt32Ptr, AutoarrUInt32Ptr, AutoarrInt64Ptr, AutoarrUInt64Ptr,
     AutoarrUnitypePtr, AutoarrKVPairPtr
@@ -46,6 +46,9 @@ typedef struct Unitype{
     };
 } Unitype;
 
+static const Unitype UniNull={Null,.VoidPtr=NULL};
+static const Unitype UniTrue={Bool,.Bool=true};
+static const Unitype UniFalse={Bool,.Bool=false};
+
 #define Uni(TYPE,VAL) (Unitype){.type=TYPE,.TYPE=VAL}
 #define UniPtr(TYPE,VAL) (Unitype){.type=TYPE,.VoidPtr=VAL}
-#define UniNull (Unitype){Null,.VoidPtr=NULL}

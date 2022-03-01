@@ -2,4 +2,5 @@
 #include "../base/base.h"
 #include "../Hashtable/Hashtable.h"
 
-Hashtable* DtsodV24_parse(const char* text);
+Hashtable* DtsodV24_deserialize(char* text);
+string DtsodV24_serialize(Hashtable* dtsod);

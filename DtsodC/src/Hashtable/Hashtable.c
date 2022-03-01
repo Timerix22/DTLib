@@ -53,7 +53,6 @@ void Hashtable_expand(Hashtable* ht){
     ht->rows=newrows;
 }
 
-#include "../tests/tests.h"
 Autoarr2(KeyValuePair)* getrow(Hashtable* ht, char* key, bool can_expand){
     Autoarr2(KeyValuePair)* ar=ht->rows+ihash(key)%HT_HEIGHTS[ht->hein];
     if(can_expand && Autoarr2_length(ar)==Autoarr2_max_length(ar))
@@ -76,7 +75,7 @@ Unitype* Hashtable_getptr(Hashtable* ht, char* key){
     uint32 arlen=Autoarr2_length(ar);
     for(uint32 i=0;i<arlen;i++){
         KeyValuePair* p=Autoarr2_getptr(ar,i);
-        if(mystrcmp(key,p->key)) return &p->value;
+        if(charbuf_compare(key,p->key)) return &p->value;
     }
     return NULL;
 }
@@ -86,7 +85,7 @@ Unitype Hashtable_get(Hashtable* ht, char* key){
     uint32 arlen=Autoarr2_length(ar);
     for(uint32 i=0;i<arlen;i++){
         KeyValuePair p=Autoarr2_get(ar,i);
-        if(mystrcmp(key,p.key)) return p.value;
+        if(charbuf_compare(key,p.key)) return p.value;
     }
     return UniNull;
 }

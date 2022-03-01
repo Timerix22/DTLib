@@ -1,4 +1,5 @@
 SRC=$(wildcard src/*c) $(wildcard src/**/*.c)
+TESTS=$(wildcard tests/*c) $(wildcard tests/**/*.c)
 OUTDIR=bin/
 OUTFILE=$(OUTDIR)dtsodc.com
 CMP=gcc
@@ -14,10 +15,10 @@ clear_bin:
 clang: CMP=clang
 clang: all
 
-CMPARGS= -Wall $(SRC) -o $(OUTFILE)
+CMPARGS= -Wall $(SRC) $(TESTS) -o $(OUTFILE)
 build:
 	@echo -e '\n\e[96m----------------[build]----------------\e[0m'
-	$(CMP) -O1 -flto -Wno-discarded-qualifiers $(CMPARGS)
+	$(CMP) -O1 -flto $(CMPARGS)
 build_dbg: 
 	@echo -e '\n\e[96m--------------[build_dbg]--------------\e[0m'
 	$(CMP) -O0 -g $(CMPARGS).dbg
