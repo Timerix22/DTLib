@@ -1,18 +1,8 @@
 #pragma once
 
 #include "../base/base.h"
-#include "../Autoarr/Autoarr2.h"
 #include "hash.h"
-
-typedef struct KeyValuePair{
-    char* key;
-    Unitype value;
-} KeyValuePair;
-
-//copies string and value to new KeyValuePair
-KeyValuePair cpair(char* key, Unitype value);
-
-declare_Autoarr2(KeyValuePair)
+#include "KeyValuePair.h"
 
 typedef struct Hashtable{
     uint8 hein;  //height=HT_HEIGHTS[hein] 
@@ -27,7 +17,7 @@ uint32 Hashtable_height(Hashtable* ht);
 
 //adds charptr and value to new KeyValuePair
 //use charbuf_copy() to create new string if needed
-#define cpair(key,value) (KeyValuePair){key,value}
+#define KVPair(key,value) (KeyValuePair){key,value}
 
 
 void Hashtable_add_pair(Hashtable* ht, KeyValuePair p);

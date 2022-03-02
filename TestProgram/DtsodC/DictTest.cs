@@ -1,4 +1,3 @@
-using static DTLib.Experimental.Tester;
 using static TestProgram.Program;
 
 namespace TestProgram;

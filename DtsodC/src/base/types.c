@@ -1,5 +1,8 @@
 #include "types.h"
 #include "errors.h"
+#include "../Autoarr/Autoarr2.h"
+#include "../Hashtable/Hashtable.h"
+#include "../SearchTree/SearchTree.h"
 
 const char* typename(my_type t){
     switch (t) {
@@ -24,48 +27,90 @@ const char* typename(my_type t){
         case UInt32Ptr: return "UInt32Ptr";
         case Int64Ptr: return "Int64Ptr";
         case UInt64Ptr: return "UInt64Ptr";
-        case UniversalType: return "Unitype";
         case CharPtr: return "CharPtr";
-case STNodePtr: return "STNodePtr";
-case HashtablePtr: return "HashtablePtr";
-case AutoarrInt8Ptr: return "AutoarrInt8Ptr";
-case AutoarrUInt8Ptr: return "AutoarrUInt8Ptr";
-case AutoarrInt16Ptr: return "AutoarrInt16Ptr";
-case AutoarrUInt16Ptr: return "AutoarrUInt16Ptr";
-case AutoarrInt32Ptr: return "AutoarrInt32Ptr";
-case AutoarrUInt32Ptr: return "AutoarrUInt32Ptr";
-case AutoarrInt64Ptr: return "AutoarrInt64Ptr";
-case AutoarrUInt64Ptr: return "AutoarrUInt64Ptr";
-case AutoarrUnitypePtr: return "AutoarrUnitypePtr";
-case AutoarrKVPairPtr: return "AutoarrKVPairPtr";
+        case STNodePtr: return "STNodePtr";
+        case HashtablePtr: return "HashtablePtr";
+        case UniversalType: return "Unitype";
+        case AutoarrInt8Ptr: return "AutoarrInt8Ptr";
+        case AutoarrUInt8Ptr: return "AutoarrUInt8Ptr";
+        case AutoarrInt16Ptr: return "AutoarrInt16Ptr";
+        case AutoarrUInt16Ptr: return "AutoarrUInt16Ptr";
+        case AutoarrInt32Ptr: return "AutoarrInt32Ptr";
+        case AutoarrUInt32Ptr: return "AutoarrUInt32Ptr";
+        case AutoarrInt64Ptr: return "AutoarrInt64Ptr";
+        case AutoarrUInt64Ptr: return "AutoarrUInt64Ptr";
+        case AutoarrUnitypePtr: return "AutoarrUnitypePtr";
+        case AutoarrKVPairPtr: return "AutoarrKVPairPtr";
         default: throw(ERR_WRONGTYPE); return "ERROR";
     }
 }
 
-int8 typesize(my_type type){
-    switch (type){
-        case Null: return 0;
-        case Double: return sizeof(double);
-        case Float: return sizeof(float);
-        case Bool: return sizeof(bool);
-        case Char:
+//frees VoidPtr value or does nothing if type isn't pointer
+void Unitype_free(Unitype u){
+    switch (u.type) {
+        case Null: 
+        case Float:
+        case Double: 
+        case Char: 
+        case Bool: 
         case Int8: 
-        case UInt8: return 1;
+        case UInt8: 
         case Int16: 
-        case UInt16: return 2;
+        case UInt16:
         case Int32: 
-        case UInt32: return 4;
+        case UInt32: 
         case Int64:
-        case UInt64: return 8;
+        case UInt64: 
+            break;
         case Int8Ptr: 
-        case UInt8Ptr: 
+        case UInt8Ptr:
         case Int16Ptr: 
         case UInt16Ptr: 
         case Int32Ptr: 
         case UInt32Ptr: 
         case Int64Ptr: 
-        case UInt64Ptr: return sizeof(void*);
-        case UniversalType: return "Unitype";
-        default: throw(ERR_WRONGTYPE); return -1;
+        case UInt64Ptr: 
+        case CharPtr: 
+            free(u.VoidPtr);
+            break;
+        case HashtablePtr: 
+            Hashtable_free(u.VoidPtr);
+            break;
+        case STNodePtr: 
+            STNode_free(u.VoidPtr);
+            break;
+        case AutoarrInt8Ptr: 
+            Autoarr2_clear(((Autoarr2(int8)*)u.VoidPtr));
+            break;
+        case AutoarrUInt8Ptr:
+            Autoarr2_clear(((Autoarr2(uint8)*)u.VoidPtr));
+            break;
+        case AutoarrInt16Ptr: 
+            Autoarr2_clear(((Autoarr2(int16)*)u.VoidPtr));
+            break;
+        case AutoarrUInt16Ptr: 
+            Autoarr2_clear(((Autoarr2(uint16)*)u.VoidPtr));
+            break;
+        case AutoarrInt32Ptr: 
+            Autoarr2_clear(((Autoarr2(int32)*)u.VoidPtr));
+            break;
+        case AutoarrUInt32Ptr: 
+            Autoarr2_clear(((Autoarr2(uint32)*)u.VoidPtr));
+            break;
+        case AutoarrInt64Ptr: 
+            Autoarr2_clear(((Autoarr2(int64)*)u.VoidPtr));
+            break;
+        case AutoarrUInt64Ptr: 
+            Autoarr2_clear(((Autoarr2(uint64)*)u.VoidPtr));
+            break;
+        case AutoarrUnitypePtr:
+            Autoarr2_Unitype_clear(u.VoidPtr);
+            free((Autoarr2(Unitype)*)u.VoidPtr);
+            break;
+        case AutoarrKVPairPtr: 
+            Autoarr2_KeyValuePair_clear(u.VoidPtr);
+            free((Autoarr2(KeyValuePair)*)u.VoidPtr);
+            break;
+        default: throw(ERR_WRONGTYPE);
     }
 }

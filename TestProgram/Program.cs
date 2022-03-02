@@ -8,10 +8,12 @@ global using System.Threading.Tasks;
 global using DTLib;
 global using DTLib.Extensions;
 global using DTLib.Experimental;
+global using static DTLib.Experimental.Tester;
 global using DTLib.Filesystem;
 global using DTLib.Dtsod;
 using DTLib.Loggers;
 using TestProgram.DtsodV2X;
+
 
 namespace TestProgram;
 

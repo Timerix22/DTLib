@@ -15,4 +15,5 @@ declare_Autoarr2(float)
 declare_Autoarr2(double)
 declare_Autoarr2(Unitype)
 
-
+//right func to clear array of unitype values
+void Autoarr2_Unitype_clear(Autoarr2(Unitype)* ar);

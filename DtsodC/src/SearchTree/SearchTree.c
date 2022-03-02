@@ -31,23 +31,7 @@ void STNode_free(STNode* node){
         free(node->branches);
     }
     if(node->value.VoidPtr) 
-        switch (node->value.type) {   
-            case Int8Ptr: case UInt8Ptr: 
-            case Int16Ptr: case UInt16Ptr: 
-            case Int32Ptr: case UInt32Ptr: 
-            case Int64Ptr: case UInt64Ptr:
-                free(node->value.VoidPtr);
-                break;
-            /*case AutoarrPtr:
-                Autoarr_clear((Autoarr*)node->value.VoidPtr);
-                free(node->value.VoidPtr);
-                break;*/
-            case STNodePtr:
-                STNode_free((STNode*)node->value.VoidPtr);
-                break;
-            default: // value is not ptr
-                break;
-    }
+        Unitype_free(node->value);
     free(node);
 }
 

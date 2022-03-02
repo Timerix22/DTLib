@@ -1,7 +1,5 @@
 #include "Hashtable.h"
 
-define_Autoarr2(KeyValuePair)
-
 // amount of rows
 #define HT_HEIN_MIN 0
 #define HT_HEIN_MAX 5
@@ -21,10 +19,7 @@ Hashtable* Hashtable_create(){
 
 void Hashtable_free(Hashtable* ht){
     for(uint16 i=0;i<HT_HEIGHTS[ht->hein];i++){
-        Autoarr2(KeyValuePair)* ar=(Autoarr2(KeyValuePair)*)(ht->rows+i);
-        for(uint32 i=0;i<Autoarr2_length(ar);i++)
-            free(Autoarr2_getptr(ar,i)->key);
-        Autoarr2_clear(ar);
+        Autoarr2_KeyValuePair_clear(ht->rows+i);
     }
     free(ht->rows);
     free(ht);
@@ -66,7 +61,7 @@ void Hashtable_add_pair(Hashtable* ht, KeyValuePair p){
     Autoarr2_add(getrow(ht,p.key,true),p);
 }
 void Hashtable_add(Hashtable* ht, char* key, Unitype u){
-    Hashtable_add_pair(ht,cpair(key,u));
+    Hashtable_add_pair(ht,KVPair(key,u));
 }
 
 //returns null or pointer to value in hashtable
@@ -90,12 +85,12 @@ Unitype Hashtable_get(Hashtable* ht, char* key){
     return UniNull;
 }
 KeyValuePair Hashtable_get_pair(Hashtable* ht, char* key){
-    return cpair(key,Hashtable_get(ht,key));
+    return KVPair(key,Hashtable_get(ht,key));
 }
 bool Hashtable_try_get(Hashtable* ht, char* key, Unitype* output){
     Unitype u=Hashtable_get(ht,key);
     *output=u;
-    return u.type==Null;
+    return u.type!=Null;
 }
 
 /* void Hashtable_set_pair(Hashtable* ht, KeyValuePair p){
@@ -103,4 +98,4 @@ bool Hashtable_try_get(Hashtable* ht, char* key, Unitype* output){
 
     }
 }
-void Hashtable_set(Hashtable* ht, char* key, Unitype u){ Hashtable_set_pair(ht,cpair(key,u)); } */
+void Hashtable_set(Hashtable* ht, char* key, Unitype u){ Hashtable_set_pair(ht,KVPair(key,u)); } */

@@ -37,7 +37,7 @@ void __Autoarr2_set_##type(Autoarr2_##type* ar, uint32 index, type element){\
 \
 void __Autoarr2_clear_##type(Autoarr2_##type* ar){\
     for(uint16 i=0; i<ar->blocks_count;i++)\
-                free(ar->values[i]); \
+        free(ar->values[i]); \
     free(ar->values);\
     ar->values=NULL;\
     ar->blocks_count=0;\

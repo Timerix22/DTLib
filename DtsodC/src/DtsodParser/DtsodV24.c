@@ -31,18 +31,27 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
 
     string ReadName(){
         string nameStr={text,0};
-        while ((c=*++text)) switch (c){
+        while ((c=*text++)) switch (c){
             case ' ':  case '\t':
             case '\r': case '\n':
+                if(nameStr.length!=0)
+                    throw_wrongchar(c);
+                nameStr.ptr++;
                 break;
             case '#':
                 SkipComment();
+                if(nameStr.length!=0)
+                    throw_wrongchar(c);
+                nameStr.ptr=text;
                 break;
             case '}':
                 if(!calledRecursively) throw_wrongchar(c);
             case ':':
                 return nameStr;
             case '$':
+                if(nameStr.length!=0)
+                    throw_wrongchar(c);
+                nameStr.ptr++;
                 partOfDollarList=true;
                 break;
             case '=':  case ';':
@@ -68,7 +77,6 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
             bool prevIsBackslash = false;
             string str={text,1};
             while ((c=*++text)!='"' || prevIsBackslash){
-                printf("%c",c);
                 if (!c) throw(ERR_ENDOFSTR);
                 prevIsBackslash= c=='\\' && !prevIsBackslash;
                 str.length++;
@@ -121,24 +129,33 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                     if(str.ptr[str.length-1]=='"'){
                         //removing quotes
                         string _str={str.ptr+1,str.length-1};
-                        return UniPtr(CharPtr, string_cpToCharPtr(_str));
+                        return UniPtr(CharPtr,string_cpToCharPtr(_str));
                     }
                     else throw_wrongchar(*str.ptr);
                     break;
                 default: 
                     switch(str.ptr[str.length-1]){
-                        case 'f':
-                            return Uni(Double,strtod(string_cpToCharPtr(str),NULL));
-                        case 'u': ; //some weird "empty statement"
-                            //not "statement"
-                            uint64 lu=0;
-                            sscanf(string_cpToCharPtr(str),"%lu",&lu);
-                            return Uni(UInt64,lu);
+                        case 'f': {
+                                char* _c=string_cpToCharPtr(str);
+                                Unitype rez=Uni(Double,strtod(_c,NULL));
+                                free(_c);
+                                return rez;
+                            }
+                        case 'u': {
+                                uint64 lu=0;
+                                char* _c=string_cpToCharPtr(str);
+                                sscanf(_c,"%lu",&lu);
+                                free(_c);
+                                return Uni(UInt64,lu);
+                            }
                         case '0': case '1': case '2': case '3': case '4':
-                        case '5': case '6': case '7': case '8': case '9': ;
-                            int64 li=0;
-                            sscanf(string_cpToCharPtr(str),"%li",&li);
-                            return Uni(Int64,li);
+                        case '5': case '6': case '7': case '8': case '9': {
+                                int64 li=0;
+                                char* _c=string_cpToCharPtr(str);
+                                sscanf(_c,"%li",&li);
+                                free(_c);
+                                return Uni(Int64,li);
+                            }
                         default:
                             throw_wrongchar(str.ptr[str.length-1]);
                     }
@@ -187,7 +204,8 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
         return UniNull;
     };
 
-    while((c=*text++)){
+    text--;
+    while((c=*++text)){
         string name=ReadName();
         if(name.length==0) //end of file or '}' in recursive call 
             goto END;
@@ -196,8 +214,9 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
         if(partOfDollarList){
             Autoarr2(Unitype)* list;
             Unitype lu;
-            if(Hashtable_try_get(dict,nameCPtr, &lu))
+            if(Hashtable_try_get(dict,nameCPtr, &lu)){
                 list=(Autoarr2(Unitype)*)lu.VoidPtr;
+            }
             else{
                 list=malloc(sizeof(Autoarr2(Unitype)));
                 *list=Autoarr2_create(Unitype,ARR_BC,ARR_BL);
