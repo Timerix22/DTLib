@@ -15,11 +15,13 @@ clear_bin:
 clang: CMP=clang
 clang: all
 
-CMPARGS= -Wall $(SRC) $(TESTS) -o $(OUTFILE)
+CMPARGS= -Wall -Wno-discarded-qualifiers $(SRC) $(TESTS) -o $(OUTFILE)
 build:
 	@echo -e '\n\e[96m----------------[build]----------------\e[0m'
+	@mkdir -p bin
 	$(CMP) -O1 -flto $(CMPARGS)
 build_dbg: 
+	@mkdir -p bin
 	@echo -e '\n\e[96m--------------[build_dbg]--------------\e[0m'
 	$(CMP) -O0 -g $(CMPARGS).dbg
 test:

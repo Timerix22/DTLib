@@ -4,21 +4,25 @@
 #define ARR_BC 2
 #define ARR_BL 8
 
-Hashtable* __deserialize(char* text, bool calledRecursively){
+Hashtable* __deserialize(char** _text, bool calledRecursively){
     Hashtable* dict=Hashtable_create();
+    char* text=*_text;
     char c;
     bool partOfDollarList=false;
     bool readingList=false;
 
-    void throw_wrongchar(char _c){
+    void __throw_wrongchar(char* fname,char _c){
                 char errBuf[]="unexpected <c> at:\n  \""
                     "00000000000000000000000000000000"
                     "\"";
                 errBuf[12]=_c;
                 for(uint8 i=0;i<32;i++)
                     errBuf[i+22]=*(text-16+i);
+                printf("\n\e[31mfunc: %s\n",fname);
                 throw(errBuf);
     };
+    #define throw_wrongchar(C) __throw_wrongchar(__func__,C)
+    
 
     void SkipComment(){
         while((c=*++text)!='\n')
@@ -86,7 +90,7 @@ Hashtable* __deserialize(char* text, bool calledRecursively){
 
         Hashtable* ReadDtsod(){
             if(*++text) //skips {
-                return __deserialize(text,true);
+                return __deserialize(&text,true);
             else {
                 throw(ERR_ENDOFSTR);
                 return NULL;
@@ -123,45 +127,23 @@ Hashtable* __deserialize(char* text, bool calledRecursively){
                     break;
                 default: 
                     switch(str.ptr[str.length-1]){
-                        case 's':
-                                return value_str[value_str.Length - 2] == 'u'
-                                    ? value_str.Remove(value_str.Length - 2).ToUShort()
-                                    : value_str.Remove(value_str.Length - 1).ToShort();
-                            case 'u':
-                                return value_str.Remove(value_str.Length - 1).ToUInt();
-                            case 'i':
-                                return value_str[value_str.Length - 2] == 'u'
-                                    ? value_str.Remove(value_str.Length - 2).ToUInt()
-                                    : value_str.Remove(value_str.Length - 1).ToInt();
-                            case 'l':
-                                return value_str[value_str.Length - 2] == 'u'
-                                    ? value_str.Remove(value_str.Length - 2).ToULong()
-                                    : value_str.Remove(value_str.Length - 1).ToLong();
-                            case 'b':
-                                return value_str[value_str.Length - 2] == 's'
-                                    ? value_str.Remove(value_str.Length - 2).ToSByte()
-                                    : value_str.Remove(value_str.Length - 1).ToByte();
-                            case 'f':
-                                return value_str.Remove(value_str.Length - 1).ToFloat();
-                            case 'e':
-                                return value_str[value_str.Length - 2] == 'd'
-                                    ? value_str.Remove(value_str.Length - 2).ToDecimal()
-                                    : throw new Exception("can't parse value:" + value_str);
-                            default:
-                                /* if (value_str.Contains('.'))
-                                    return (object)(value_str.ToDouble());
-                                else
-                                {
-                                    try { return (object)(value_str.ToInt()); }
-                                    catch (FormatException)
-                                    {
-                                        Log("r", $"can't parse value: {value_str}");
-                                        return null;
-                                    }
-                                } */
+                        case 'f':
+                            return Uni(Double,strtod(string_cpToCharPtr(str),NULL));
+                        case 'u': ; //some weird "empty statement"
+                            //not "statement"
+                            uint64 lu=0;
+                            sscanf(string_cpToCharPtr(str),"%lu",&lu);
+                            return Uni(UInt64,lu);
+                        case '0': case '1': case '2': case '3': case '4':
+                        case '5': case '6': case '7': case '8': case '9': ;
+                            int64 li=0;
+                            sscanf(string_cpToCharPtr(str),"%li",&li);
+                            return Uni(Int64,li);
+                        default:
+                            throw_wrongchar(str.ptr[str.length-1]);
                     }
             }
-            throw(ERR_NOTIMPLEMENTED);
+            throw(ERR_ENDOFSTR);
             return UniNull;
         };
 
@@ -208,7 +190,7 @@ Hashtable* __deserialize(char* text, bool calledRecursively){
     while((c=*text++)){
         string name=ReadName();
         if(name.length==0) //end of file or '}' in recursive call 
-            return dict;
+            goto END;
         char* nameCPtr=string_cpToCharPtr(name);
         Unitype value=ReadValue();
         if(partOfDollarList){
@@ -225,7 +207,12 @@ Hashtable* __deserialize(char* text, bool calledRecursively){
         }
         else Hashtable_add(dict,nameCPtr,value);
     }
+    END:
+    *_text=text;
     return dict;
 }
 
-Hashtable* DtsodV24_deserialize(char* text) { return __deserialize(text,false); }
+Hashtable* DtsodV24_deserialize(char* text) {
+    Hashtable* r=__deserialize(&text,false); 
+    return r;
+}

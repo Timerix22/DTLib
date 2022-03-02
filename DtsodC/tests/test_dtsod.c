@@ -15,5 +15,9 @@ void test_dtsod(){
             "    text: \"_$\\\"\\\\'''\n\ta ыыы000;2;=:%d;```\";\n"
             "};\n";
         Hashtable* dtsod=DtsodV24_deserialize(text);
+        Unitype msg=Hashtable_get(dtsod,"message");
+        printuni(msg);
+        Unitype id=Hashtable_get(msg.VoidPtr,"message_id");
+    printf("\e[92mid: %lu",id.UInt64);
     }));
 }

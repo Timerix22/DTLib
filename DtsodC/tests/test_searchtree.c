@@ -25,11 +25,11 @@ void test_searchtree(){
         STNode* node=STNode_create();
         printf("\e[92mnode created\n");
         printf("push:\e[94m\n  ");
-        Unitype u={.type=Int16,.Int16=-3};
+        Unitype u={.type=Int64,.Int64=-3};
         printuni(u);
         ST_push(node,"type", u);
         printf(" -> type\n  ");
-        u=(Unitype){.type=Int16,.Int16=25};
+        u=(Unitype){.type=Int64,.Int64=25};
         printuni(u);
         ST_push(node,"time", u);
         printf(" -> time\n  ");
@@ -41,7 +41,7 @@ void test_searchtree(){
         printuni(u);
         ST_push(node,"channel_id", u);
         printf(" -> channel_id\n  ");
-        u=(Unitype){.type=Float,.Float=32.2004};
+        u=(Unitype){.type=Double,.Double=32.2004};
         printuni(u);
         ST_push(node,"message_id", u);
         printf(" -> message_id\n  ");

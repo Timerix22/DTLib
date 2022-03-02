@@ -45,7 +45,7 @@ void fill(Hashtable* ht){
     for(uint32 i=0;i<100000;i++){
         char* key=malloc(12);
         sprintf(key,"key__%u",i);
-        Hashtable_add(ht,key,Uni(UInt32,i));
+        Hashtable_add(ht,key,Uni(UInt64,i));
     }
 }
 
