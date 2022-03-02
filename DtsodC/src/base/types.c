@@ -1,6 +1,6 @@
 #include "types.h"
 #include "errors.h"
-#include "../Autoarr/Autoarr2.h"
+#include "../Autoarr/Autoarr.h"
 #include "../Hashtable/Hashtable.h"
 #include "../SearchTree/SearchTree.h"
 
@@ -80,36 +80,36 @@ void Unitype_free(Unitype u){
             STNode_free(u.VoidPtr);
             break;
         case AutoarrInt8Ptr: 
-            Autoarr2_clear(((Autoarr2(int8)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(int8)*)u.VoidPtr));
             break;
         case AutoarrUInt8Ptr:
-            Autoarr2_clear(((Autoarr2(uint8)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(uint8)*)u.VoidPtr));
             break;
         case AutoarrInt16Ptr: 
-            Autoarr2_clear(((Autoarr2(int16)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(int16)*)u.VoidPtr));
             break;
         case AutoarrUInt16Ptr: 
-            Autoarr2_clear(((Autoarr2(uint16)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(uint16)*)u.VoidPtr));
             break;
         case AutoarrInt32Ptr: 
-            Autoarr2_clear(((Autoarr2(int32)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(int32)*)u.VoidPtr));
             break;
         case AutoarrUInt32Ptr: 
-            Autoarr2_clear(((Autoarr2(uint32)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(uint32)*)u.VoidPtr));
             break;
         case AutoarrInt64Ptr: 
-            Autoarr2_clear(((Autoarr2(int64)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(int64)*)u.VoidPtr));
             break;
         case AutoarrUInt64Ptr: 
-            Autoarr2_clear(((Autoarr2(uint64)*)u.VoidPtr));
+            Autoarr_clear(((Autoarr(uint64)*)u.VoidPtr));
             break;
         case AutoarrUnitypePtr:
-            Autoarr2_Unitype_clear(u.VoidPtr);
-            free((Autoarr2(Unitype)*)u.VoidPtr);
+            Autoarr_Unitype_clear(u.VoidPtr);
+            free((Autoarr(Unitype)*)u.VoidPtr);
             break;
         case AutoarrKVPairPtr: 
-            Autoarr2_KeyValuePair_clear(u.VoidPtr);
-            free((Autoarr2(KeyValuePair)*)u.VoidPtr);
+            Autoarr_KeyValuePair_clear(u.VoidPtr);
+            free((Autoarr(KeyValuePair)*)u.VoidPtr);
             break;
         default: throw(ERR_WRONGTYPE);
     }

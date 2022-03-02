@@ -85,12 +85,12 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
             return str;
         };
 
-        Autoarr2(Unitype)* ReadList(){
-            Autoarr2(Unitype)* list=malloc(sizeof(Autoarr2(Unitype)));
-            *list=Autoarr2_create(Unitype,ARR_BC,ARR_BL);
+        Autoarr(Unitype)* ReadList(){
+            Autoarr(Unitype)* list=malloc(sizeof(Autoarr(Unitype)));
+            *list=Autoarr_create(Unitype,ARR_BC,ARR_BL);
             readingList=true;
             while (true){
-                Autoarr2_add(list,ReadValue());
+                Autoarr_add(list,ReadValue());
                 if (!readingList) break;
             }
             return list;
@@ -212,17 +212,17 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
         char* nameCPtr=string_cpToCharPtr(name);
         Unitype value=ReadValue();
         if(partOfDollarList){
-            Autoarr2(Unitype)* list;
+            Autoarr(Unitype)* list;
             Unitype lu;
             if(Hashtable_try_get(dict,nameCPtr, &lu)){
-                list=(Autoarr2(Unitype)*)lu.VoidPtr;
+                list=(Autoarr(Unitype)*)lu.VoidPtr;
             }
             else{
-                list=malloc(sizeof(Autoarr2(Unitype)));
-                *list=Autoarr2_create(Unitype,ARR_BC,ARR_BL);
+                list=malloc(sizeof(Autoarr(Unitype)));
+                *list=Autoarr_create(Unitype,ARR_BC,ARR_BL);
                 Hashtable_add(dict,nameCPtr,UniPtr(AutoarrUnitypePtr,list));
             }
-            Autoarr2_add(list,value);
+            Autoarr_add(list,value);
         }
         else Hashtable_add(dict,nameCPtr,value);
     }

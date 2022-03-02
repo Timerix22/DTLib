@@ -20,8 +20,8 @@ void test_dtsod(){
         printf("\e[92mhashtable_get(message)->\n\e[94m");
         Unitype msg=Hashtable_get(dtsod,"message");
         printuni(msg);
-        Autoarr2(Unitype)* ar=msg.VoidPtr;
-        id=Hashtable_get(Autoarr2_get(ar,0).VoidPtr,"message_id");
+        Autoarr(Unitype)* ar=msg.VoidPtr;
+        id=Hashtable_get(Autoarr_get(ar,0).VoidPtr,"message_id");
         printf("\e[92m\nmessage_id: %lu\n",id.UInt64);
         Hashtable_free(dtsod);
     }));

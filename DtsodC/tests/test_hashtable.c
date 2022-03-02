@@ -25,8 +25,8 @@ void printrowgraph(Hashtable* ht){
      for(uint32 i=0; i<lgs_l; i++)
         lgs[i]=0; 
     for(uint16 h=0;h<Hashtable_height(ht);h++){
-        Autoarr2(KeyValuePair)* ar=ht->rows+h;
-        uint32 l=Autoarr2_length(ar);
+        Autoarr(KeyValuePair)* ar=ht->rows+h;
+        uint32 l=Autoarr_length(ar);
         lgs[l]++;
     }
     for(uint32 i=0; i<lgs_l; i++)

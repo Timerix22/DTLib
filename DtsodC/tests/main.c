@@ -16,7 +16,7 @@ void printuni(Unitype v){
 
 void test_all(){
     test_searchtree();
-    test_autoarr2();
+    test_autoarr();
     test_hashtable();
     test_string();
     test_dtsod();

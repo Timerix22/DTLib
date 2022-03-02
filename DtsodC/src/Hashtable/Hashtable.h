@@ -6,7 +6,7 @@
 
 typedef struct Hashtable{
     uint8 hein;  //height=HT_HEIGHTS[hein] 
-    Autoarr2(KeyValuePair)* rows; // Autoarr[height]
+    Autoarr(KeyValuePair)* rows; // Autoarr[height]
 } Hashtable;
 
 Hashtable* Hashtable_create();

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Autoarr2.h"
+#include "Autoarr.h"
 
-typedef Autoarr2(int8) StringBuilder;
+typedef Autoarr(int8) StringBuilder;
 
 StringBuilder StringBuilder_create(uint16 max_blocks_count, uint16 max_block_length);
 void StringBuilder_append(StringBuilder* b, char c);
