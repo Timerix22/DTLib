@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../src/Autoarr/Autoarr.h"
+#include "../Autoarr/Autoarr.h"
 
 static void printautoarr(Autoarr(uint16)* ar){
     printf("\e[94mAutoarr(uint16): %lu\n"

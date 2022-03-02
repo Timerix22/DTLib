@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../src/DtsodParser/DtsodV24.h"
+#include "../DtsodParser/DtsodV24.h"
 
 void test_dtsod(){
     printf("\e[96m-------------[test_dtsod]-------------\n");

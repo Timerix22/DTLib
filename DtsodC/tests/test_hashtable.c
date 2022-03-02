@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../src/Hashtable/Hashtable.h"
+#include "../Hashtable/Hashtable.h"
 
 void printkvp(KeyValuePair p){
     printf("{\"%s\", ",p.key);

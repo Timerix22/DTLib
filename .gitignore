@@ -1,5 +1,6 @@
 *.user
 [Bb]in/
+.bin/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
@@ -7,3 +8,4 @@
 .vs/
 .vshistory/
 .idea/
+.vscode/

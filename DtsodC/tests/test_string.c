@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "../src/base/mystr.h"
+#include "../base/mystr.h"
 
 void test_string(){
     optime(__func__,1,({
