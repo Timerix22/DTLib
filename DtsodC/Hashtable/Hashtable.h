@@ -33,3 +33,11 @@ bool Hashtable_try_get(Hashtable* ht, char* key, Unitype* output);
 //not implemented yet
 void Hashtable_set_pair(Hashtable* ht, KeyValuePair p);
 void Hashtable_set(Hashtable* ht, char* key, Unitype u);
+
+#define Hashtable_foreach(HT, EL, codeblock)({\
+    uint16 hmax=Hashtable_height(HT);\
+    for(uint16 h=0; h<hmax; h++){\
+        Autoarr(KeyValuePair)* AR=HT->rows+h;\
+        Autoarr_foreach(AR, EL, codeblock);\
+    }\
+})

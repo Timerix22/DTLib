@@ -18,3 +18,9 @@ void Autoarr_KeyValuePair_clear(Autoarr_KeyValuePair* ar){
         KeyValuePair_free(ar->values[ar->blocks_count-1][elemI]);
     Autoarr_clear(ar);
 }
+
+void printkvp(KeyValuePair p){
+    printf("{\"%s\", ",p.key);
+    printuni(p.value);
+    printf("}");
+}

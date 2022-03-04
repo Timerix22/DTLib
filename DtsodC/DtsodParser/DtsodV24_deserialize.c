@@ -1,8 +1,7 @@
 #include "DtsodV24.h"
-#include "../Autoarr/StringBuilder.h"
 
-#define ARR_BC 2
-#define ARR_BL 8
+#define ARR_BC 8
+#define ARR_BL 16
 
 Hashtable* __deserialize(char** _text, bool calledRecursively){
     Hashtable* dict=Hashtable_create();
@@ -11,17 +10,17 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
     bool partOfDollarList=false;
     bool readingList=false;
 
-    void __throw_wrongchar(char* fname,char _c){
+    void __throw_wrongchar(char* file, int line, char* fname,char _c){
                 char errBuf[]="unexpected <c> at:\n  \""
                     "00000000000000000000000000000000"
                     "\"";
                 errBuf[12]=_c;
                 for(uint8 i=0;i<32;i++)
                     errBuf[i+22]=*(text-16+i);
-                printf("\n\e[31mfunc: %s\n",fname);
+                printf("\n\e[31m>%s:%d/%s\n",file,line,fname);
                 throw(errBuf);
     };
-    #define throw_wrongchar(C) __throw_wrongchar(__func__,C)
+    #define throw_wrongchar(C) __throw_wrongchar(__FILE__,__LINE__,__func__,C)
     
 
     void SkipComment(){
@@ -31,7 +30,8 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
 
     string ReadName(){
         string nameStr={text,0};
-        while ((c=*text++)) switch (c){
+        text--;
+        while ((c=*++text)) switch (c){
             case ' ':  case '\t':
             case '\r': case '\n':
                 if(nameStr.length!=0)
@@ -46,6 +46,8 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                 break;
             case '}':
                 if(!calledRecursively) throw_wrongchar(c);
+                if((*++text)!=';')
+                    throw_wrongchar(c);
             case ':':
                 return nameStr;
             case '$':

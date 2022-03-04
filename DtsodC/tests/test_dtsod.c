@@ -14,15 +14,18 @@ void test_dtsod(){
             "    message_id: 920734809096077353ul;\n"
             "    text: \"_$\\\"\\\\'''\n\ta ыыы000;2;=:%d;```\";\n"
             "};\n";
-        Unitype id;
+        KeyValuePair id;
         Hashtable* dtsod;
         optime("deserialize",1,(dtsod=DtsodV24_deserialize(text)));
-        printf("\e[92mhashtable_get(message)->\n\e[94m");
-        Unitype msg=Hashtable_get(dtsod,"message");
-        printuni(msg);
-        Autoarr(Unitype)* ar=msg.VoidPtr;
-        id=Hashtable_get(Autoarr_get(ar,0).VoidPtr,"message_id");
-        printf("\e[92m\nmessage_id: %lu\n",id.UInt64);
+        printf("\e[92mhashtable_get(\"message\")->\n\e[94m");
+        KeyValuePair msg=Hashtable_get_pair(dtsod,"message");
+        printkvp(msg);
+        printf("\n");
+        Autoarr(Unitype)* ar=msg.value.VoidPtr;
+        printf("\e[92mhashtable_get(\"message_id\")->\n\e[94m");
+        id=Hashtable_get_pair(Autoarr_get(ar,0).VoidPtr,"message_id");
+        printkvp(id);
+        printf("\n");
         Hashtable_free(dtsod);
     }));
 }

@@ -17,13 +17,12 @@ clang: all
 
 CMPARGS= -Wall -Wno-discarded-qualifiers $(SRC) $(TESTS) -o $(OUTFILE)
 build:
-	@echo $(SRC)
 	@echo -e '\n\e[96m----------------[build]----------------\e[0m'
 	@mkdir -p $(OUTDIR)
 	$(CMP) -O1 -flto $(CMPARGS)
-build_dbg: 
-	@mkdir -p $(OUTDIR)
+build_dbg:
 	@echo -e '\n\e[96m--------------[build_dbg]--------------\e[0m'
+	@mkdir -p $(OUTDIR)
 	$(CMP) -O0 -g $(CMPARGS).dbg
 test:
 	@echo -e '\n\e[96m----------------[test]-----------------\e[0m'

@@ -50,3 +50,12 @@ Autoarr_##type __Autoarr_create_##type(uint16 max_blocks_count, uint16 max_block
     autoarr->max_block_length*(autoarr->blocks_count-1)+autoarr->block_length)
 #define Autoarr_max_length(autoarr)\
     (uint32)(autoarr->max_block_length*autoarr->max_blocks_count)
+    
+#define Autoarr_remove(AR){\
+    if(AR->block_length==1){\
+                        AR->blocks_count--;\
+                         AR->block_length=AR->max_block_length;\
+                         free(AR->values[AR->blocks_count]);\
+                    }\
+                    else AR->block_length--;\
+}

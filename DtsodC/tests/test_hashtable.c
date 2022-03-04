@@ -1,12 +1,6 @@
 #include "tests.h"
 #include "../Hashtable/Hashtable.h"
 
-void printkvp(KeyValuePair p){
-    printf("{\"%s\", ",p.key);
-    printuni(p.value);
-    printf("}");
-}
-
 void print_hashtable(Hashtable* ht){
     printf("\e[94mHashtable:%lu\n"
         "  hein: %u\n"

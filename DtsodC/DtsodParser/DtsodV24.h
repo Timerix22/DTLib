@@ -3,4 +3,4 @@
 #include "../Hashtable/Hashtable.h"
 
 Hashtable* DtsodV24_deserialize(char* text);
-string DtsodV24_serialize(Hashtable* dtsod);
+char* DtsodV24_serialize(Hashtable* dtsod);

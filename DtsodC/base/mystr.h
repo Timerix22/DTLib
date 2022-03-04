@@ -31,3 +31,6 @@ string string_cpFromCharPtr(char* cptr);
 
 //compares two strings, NullPtr-friendly
 bool string_compare(string str0, string str1);
+
+//creates new string which is reversed variant of <s>
+string string_reverse(string s);

@@ -13,3 +13,5 @@ void KeyValuePair_free(KeyValuePair p);
 
 //func to clear KVP array
 void Autoarr_KeyValuePair_clear(Autoarr_KeyValuePair* ar);
+
+void printkvp(KeyValuePair p);
