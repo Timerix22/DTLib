@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <locale.h>
-#include <uchar.h>
-#include <wchar.h>
 #include <time.h>
 
 #define CHOOSE(B, Y, N) __builtin_choose_expr(B, Y, N)

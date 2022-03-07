@@ -11,14 +11,13 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
     bool readingList=false;
 
     void __throw_wrongchar(char* file, int line, char* fname,char _c){
-                char errBuf[]="unexpected <c> at:\n  \""
-                    "00000000000000000000000000000000"
-                    "\"";
-                errBuf[12]=_c;
-                for(uint8 i=0;i<32;i++)
-                    errBuf[i+22]=*(text-16+i);
-                printf("\n\e[31m[%s:%d/%s]\n",file,line,fname);
-                throw(errBuf);
+        char errBuf[]="unexpected <c> at:\n  \""
+            "00000000000000000000000000000000\"";
+        errBuf[12]=_c;
+        for(uint8 i=0;i<32;i++)
+            errBuf[i+22]=*(text-16+i);
+        printf("\n\e[91m[%s:%d %s] throwed error: %s\n",file,line,fname,errBuf);
+        exit(128);
     };
     #define throw_wrongchar(C) __throw_wrongchar(__FILE__,__LINE__,__func__,C)
     
@@ -54,14 +53,14 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                 if(!calledRecursively) throw_wrongchar(c);
                 if((*++text)!=';')
                     throw_wrongchar(c);
+            case ':':
+                return nameStr;
             case '$':
                 if(nameStr.length!=0)
                     throw_wrongchar(c);
                 nameStr.ptr++;
                 partOfDollarList=true;
                 break;
-            case ':':
-                return nameStr;
             default:
                 nameStr.length++;
                 break;
@@ -72,7 +71,6 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
     };
 
     Unitype ReadValue(){
-
         //returns part of <text> without quotes
         string ReadString(){
             bool prevIsBackslash=false;
@@ -97,16 +95,12 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
         };
 
         Hashtable* ReadDtsod(){
-            if(*++text) //skips {
-                return __deserialize(&text,true);
-            else {
-                throw(ERR_ENDOFSTR);
-                return NULL;
-            }
-        };
+            ++text; //skips '{'
+            return __deserialize(&text,true);
+        }
 
         Unitype ParseValue(string str){
-            printf("\e[94m<\e[96m%s\e[94m>\n",string_cpToCharPtr(str));
+            //printf("\e[94m<\e[96m%s\e[94m>\n",string_cpToCharPtr(str));
             const string nullStr={"null",4};
             const string trueStr={"true",4};
             const string falseStr={"false",5};
@@ -175,10 +169,11 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
             case '}': case '$':
                 throw_wrongchar(c);
                 break;
-            case '#':
+            case '#':;
+                char _c=c;
                 SkipComment();
                 if(valueStr.length!=0)
-                    throw_wrongchar(c);
+                    throw_wrongchar(_c);
                 valueStr.ptr=text;
                 break;
             case '"':
@@ -187,7 +182,6 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                 break;
             case '\'':
                 if(valueStr.length!=0) throw_wrongchar(c);
-                text++;
                 char valueChar=*++text;
                 if (*++text != '\'') throw("after <'> should be char");
                 value=Uni(Char,valueChar);
@@ -201,6 +195,7 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
             case '{':
                 if(valueStr.length!=0) throw_wrongchar(c);
                 value=UniPtr(HashtablePtr,ReadDtsod());
+                return value;
             case ';':
             case ',':
                 if(valueStr.length!=0)

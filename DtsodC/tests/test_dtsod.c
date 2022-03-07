@@ -4,16 +4,16 @@
 const char text[]=
 "message: {\n"
 "    bool: false;"
-//"    char: 'v';"
+"    char: 'v';"
 "    int: -2515;"
-"    uint: 0u;"
-"    double: 965.557f;"
+"    uint:#comment!\n 0u;"
+"    double: 965.557f;#another comment!\n"
 "    text: \"_$\\\"\\\\'''\n\ta ыыы000;2;=:%d;```\";\n"
-"}; \n";
+"}; ";
 
 void test_dtsod(){
     printf("\e[96m-------------[test_dtsod]-------------\n");
-    //optime(__func__,1,({
+    optime(__func__,1,({
         Hashtable* dtsod;
         optime("deserialize",1,(dtsod=DtsodV24_deserialize(text)));
         Hashtable_foreach(dtsod, p,({
@@ -31,5 +31,5 @@ void test_dtsod(){
             printf("\n");
         }));
         Hashtable_free(dtsod);
-    //}));
+    }));
 }
