@@ -8,12 +8,12 @@ const char text[]=
 "    int: -2515;"
 "    uint:#comment!\n 0u;"
 "    double: 965.557f;#another comment!\n"
-"    text: \"_$\\\"\\\\'''\n\ta ыыы000;2;=:%d;```\";\n"
+"    text: \"_$\\\"\\\\'''a ыыы000;2;=:%d;```\";\n"
 "}; ";
 
 void test_dtsod(){
     printf("\e[96m-------------[test_dtsod]-------------\n");
-    optime(__func__,1,({
+    optime(__func__,200,({
         Hashtable* dtsod;
         optime("deserialize",1,(dtsod=DtsodV24_deserialize(text)));
         Hashtable_foreach(dtsod, p,({
@@ -29,7 +29,12 @@ void test_dtsod(){
                 printf("}");
             }
             printf("\n");
+
+            char* s=DtsodV24_serialize(dtsod);
+            printf("\e[93m\n%s",s);
+            dtsod=DtsodV24_deserialize(s);
+            Hashtable_free(dtsod);
         }));
-        Hashtable_free(dtsod);
+
     }));
 }

@@ -1,7 +1,10 @@
 #include "DtsodV24.h"
+#include "../Autoarr/StringBuilder.h"
 
 #define ARR_BC 8
 #define ARR_BL 16
+#define STRB_BC 64
+#define STRB_BL 1024
 
 Hashtable* __deserialize(char** _text, bool calledRecursively){
     Hashtable* dict=Hashtable_create();
@@ -47,7 +50,7 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                 SkipComment();
                 if(nameStr.length!=0)
                     throw_wrongchar(c);
-                nameStr.ptr=text;
+                nameStr.ptr=text+1; //skips '\n'
                 break;
             case '}':
                 if(!calledRecursively) throw_wrongchar(c);
@@ -72,15 +75,26 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
 
     Unitype ReadValue(){
         //returns part of <text> without quotes
-        string ReadString(){
+        char* ReadString(){
             bool prevIsBackslash=false;
-            string str={text+1,0};
-            while ((c=*++text)!='"' || prevIsBackslash){
-                if (!c) throw(ERR_ENDOFSTR);
-                prevIsBackslash= c=='\\' && !prevIsBackslash;
-                str.length++;
+            StringBuilder _b=StringBuilder_create(STRB_BC,STRB_BL);
+            StringBuilder* b=&_b;
+            while ((c=*++text)){
+                if(c=='"') {
+                    if(prevIsBackslash) {
+                        //replacing <\"> with <">
+                        Autoarr_remove(b); 
+                        StringBuilder_append_char(b,c);
+                    }
+                    else return StringBuilder_build(b);
+                } 
+                else {
+                    prevIsBackslash= c=='\\' && !prevIsBackslash;
+                    StringBuilder_append_char(b,c);
+                }
             }
-            return str;
+            throw(ERR_ENDOFSTR);
+            return NULL;
         };
 
         Autoarr(Unitype)* ReadList(){
@@ -174,11 +188,11 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                 SkipComment();
                 if(valueStr.length!=0)
                     throw_wrongchar(_c);
-                valueStr.ptr=text;
+                valueStr.ptr=text+1; //skips '\n'
                 break;
             case '"':
                 if(valueStr.length!=0) throw_wrongchar(c);
-                value=UniPtr(CharPtr,string_cpToCharPtr(ReadString()));
+                value=UniPtr(CharPtr,ReadString());
                 break;
             case '\'':
                 if(valueStr.length!=0) throw_wrongchar(c);

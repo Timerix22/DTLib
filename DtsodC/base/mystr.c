@@ -70,7 +70,7 @@ bool string_compare(string str0, string str1){
 //creates new string which is reversed variant of <s>
 string string_reverse(string s){
     string r={malloc(s.length), s.length};
-    for(uint32 i; i<s.length; i++)
+    for(uint32 i=0; i<s.length; i++)
         r.ptr[i]=s.ptr[s.length-i-1];
     return r;
 }

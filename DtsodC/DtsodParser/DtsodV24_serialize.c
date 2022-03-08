@@ -10,7 +10,7 @@
 void __serialize(StringBuilder* b, uint8 tabs, Hashtable* dtsod){
     
     void AppendTabs(){
-        for(uint8 t; t<tabs; t++)
+        for(uint8 t=0; t<tabs; t++)
             addc(b,'\t');
     };
     
@@ -25,17 +25,28 @@ void __serialize(StringBuilder* b, uint8 tabs, Hashtable* dtsod){
                     break;
                 case Double:
                     StringBuilder_append_double(b,u.Double);
-                    addc(b,'d');
+                    addc(b,'f');
                     break;
                 case CharPtr:
                     addc(b,'"');
-                    StringBuilder_append_cptr(b,u.VoidPtr);
+                    char c;
+                    while((c=*(char*)(u.VoidPtr++))){
+                        if(c=='\"') addc(b,'\\');
+                        addc(b,c);
+                    }
                     addc(b,'"');
                     break;
                 case Char:
                     addc(b,'\'');
                     addc(b,u.Char);
                     addc(b,'\'');
+                    break;
+                case Bool:
+                    StringBuilder_append_cptr(b, u.Bool ? "true" : "false");
+                    break;
+                case Null:
+                    if(!u.VoidPtr) StringBuilder_append_cptr(b, "null");
+                    else throw("Null-type pointer is not 0");
                     break;
                 case AutoarrUnitypePtr:
                     addc(b,'[');
@@ -55,7 +66,7 @@ void __serialize(StringBuilder* b, uint8 tabs, Hashtable* dtsod){
                     AppendTabs();
                     addc(b,'}');
                     break;
-                default: throw(ERR_WRONGTYPE); 
+                default: dbg((u.type)); throw(ERR_WRONGTYPE); 
         }
     };
     

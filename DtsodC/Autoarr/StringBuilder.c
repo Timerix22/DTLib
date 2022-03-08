@@ -55,7 +55,7 @@ void StringBuilder_append_uint64(StringBuilder* b, uint64 a){
 
 void StringBuilder_append_double(StringBuilder* b, double a){
     char buf[32];
-    sprintf(buf,32,"%f",a);
+    sprintf(buf,"%lf",a);
     StringBuilder_append_cptr(b,buf);
 }
 
