@@ -37,6 +37,7 @@ void StringBuilder_append_int64(StringBuilder* b, int64 a){
     }
     string rev=string_reverse((string){buf,i});
     StringBuilder_append_string(b,rev);
+    free(rev.ptr);
 }
 
 void StringBuilder_append_uint64(StringBuilder* b, uint64 a){
@@ -51,6 +52,7 @@ void StringBuilder_append_uint64(StringBuilder* b, uint64 a){
     }
     string rev=string_reverse((string){buf,i});
     StringBuilder_append_string(b,rev);
+    free(rev.ptr);
 }
 
 void StringBuilder_append_double(StringBuilder* b, double a){

@@ -1,15 +1,15 @@
 #include "base.h"
 
 //returns length of string (including \0)
-uint32 mystrlen(char* str){
+uint32 cptr_length(char* str){
     uint32 len=0;
     while(*(str++)) len++;
     return ++len;
 }
 
 //allocates new char[] and copies src there
-char* charbuf_copy(char* src){
-    uint32 len=mystrlen(src);
+char* cptr_copy(char* src){
+    uint32 len=cptr_length(src);
     char* dst=malloc(len*sizeof(char));
     while(len-->0)
         dst[len]=src[len];
@@ -17,7 +17,7 @@ char* charbuf_copy(char* src){
 }
 
 //compares two char buffers, NullPtr-friendly
-bool charbuf_compare(char* key0, char* key1){
+bool cptr_compare(char* key0, char* key1){
     if(!key0) return key1 ? false : true;
     if(!key1) return false;
     while(*key0&&*key1)
@@ -49,7 +49,7 @@ char* string_cpToCharPtr(string str){
 string string_cpFromCharPtr(char* cptr){
     if(!cptr) return stringNull;
     string str;
-    str.length=mystrlen(cptr)-1;
+    str.length=cptr_length(cptr)-1;
     str.ptr=malloc(str.length);
     for(uint32 i=0;i<str.length;i++)
         str.ptr[i]=cptr[i];

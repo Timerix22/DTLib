@@ -11,30 +11,45 @@ const char text[]=
 "    text: \"_$\\\"\\\\'''a ыыы000;2;=:%d;```\";\n"
 "}; ";
 
-void test_dtsod(){
-    printf("\e[96m-------------[test_dtsod]-------------\n");
-    optime(__func__,200,({
-        Hashtable* dtsod;
-        optime("deserialize",1,(dtsod=DtsodV24_deserialize(text)));
-        Hashtable_foreach(dtsod, p,({
-            printkvp(p);
-            if(p.value.type==HashtablePtr){
-                printf(":\n{\n");
-                Hashtable* sub=p.value.VoidPtr;
-                Hashtable_foreach(sub, _p,({
-                    printf("    ");
-                    printkvp(_p);
-                    printf("\n");
-                }));
-                printf("}");
-            }
-            printf("\n");
+void print_dtsod(Hashtable* dtsod){
+    printf("\e[92m");
+    Hashtable_foreach(dtsod, p,({
+        printkvp(p);
+        if(p.value.type==HashtablePtr){
+            printf(": {\n");
+            Hashtable* sub=p.value.VoidPtr;
+            Hashtable_foreach(sub, _p,({
+                printf("    ");
+                printkvp(_p);
+                printf("\n");
+            }));
+            printf("}");
+        }
+        printf("\n");
+    }));
+}
 
-            char* s=DtsodV24_serialize(dtsod);
-            printf("\e[93m\n%s",s);
+void test_dtsod(){
+    optime(__func__,1,({
+        printf("\e[96m-------------[test_dtsod]-------------\n");
+        Hashtable* dtsod;
+        char* s=cptr_copy(text);
+
+        optime("deserialize",1,(dtsod=DtsodV24_deserialize(s)));
+        free(s);
+        print_dtsod(dtsod);
+
+        optime("serialize",1,(s=DtsodV24_serialize(dtsod)));
+        Hashtable_free(dtsod);
+        printf("\e[92m%s",s);
+
+        optime("reserialize",10,({
             dtsod=DtsodV24_deserialize(s);
+            free(s);
+            s=DtsodV24_serialize(dtsod);
             Hashtable_free(dtsod);
         }));
 
+        free(s);
     }));
 }

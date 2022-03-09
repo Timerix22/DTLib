@@ -84,5 +84,7 @@ void __serialize(StringBuilder* b, uint8 tabs, Hashtable* dtsod){
 char* DtsodV24_serialize(Hashtable* dtsod){
     StringBuilder b=StringBuilder_create(STRB_BC,STRB_BL);
     __serialize(&b,0,dtsod);
-    return StringBuilder_build(&b);
+    char* str=StringBuilder_build(&b);
+    Autoarr_clear((&b));
+    return str;
 }

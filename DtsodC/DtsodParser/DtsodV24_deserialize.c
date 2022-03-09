@@ -86,7 +86,11 @@ Hashtable* __deserialize(char** _text, bool calledRecursively){
                         Autoarr_remove(b); 
                         StringBuilder_append_char(b,c);
                     }
-                    else return StringBuilder_build(b);
+                    else {
+                        char* str=StringBuilder_build(b);
+                        Autoarr_clear(b);
+                        return str;
+                    }
                 } 
                 else {
                     prevIsBackslash= c=='\\' && !prevIsBackslash;

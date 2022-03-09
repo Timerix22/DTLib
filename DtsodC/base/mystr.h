@@ -3,13 +3,13 @@
 #include "types.h"
 
 //returns length of string (including \0)
-uint32 mystrlen(char* str);
+uint32 cptr_length(char* str);
 
 //allocates new char[] and copies src there
-char* charbuf_copy(char* src);
+char* cptr_copy(char* src);
 
 //compares two char buffers, NullPtr-friendly
-bool charbuf_compare(char* key0, char* key1);
+bool cptr_compare(char* key0, char* key1);
 
 //multiplies char n times
 char* char_multiply(char c, uint32 n);

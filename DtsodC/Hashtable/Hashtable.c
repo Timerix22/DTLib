@@ -70,7 +70,7 @@ Unitype* Hashtable_getptr(Hashtable* ht, char* key){
     uint32 arlen=Autoarr_length(ar);
     for(uint32 i=0;i<arlen;i++){
         KeyValuePair* p=Autoarr_getptr(ar,i);
-        if(charbuf_compare(key,p->key)) return &p->value;
+        if(cptr_compare(key,p->key)) return &p->value;
     }
     return NULL;
 }
@@ -80,7 +80,7 @@ Unitype Hashtable_get(Hashtable* ht, char* key){
     uint32 arlen=Autoarr_length(ar);
     for(uint32 i=0;i<arlen;i++){
         KeyValuePair p=Autoarr_get(ar,i);
-        if(charbuf_compare(key,p.key)) return p.value;
+        if(cptr_compare(key,p.key)) return p.value;
     }
     return UniNull;
 }
