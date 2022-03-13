@@ -110,5 +110,5 @@ public class TypeHelper
                 : Type.GetType(str, false) 
                     ?? throw new Exception($"DtsodV30.Deserialize.ParseType() error: type {str} doesn't exists")
     };
-    static internal T As<T>(object inst) where T : class => inst as T;
+    internal static T As<T>(object inst) where T : class => inst as T;
 }

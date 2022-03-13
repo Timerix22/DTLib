@@ -1,4 +1,6 @@
-﻿namespace DTLib.Loggers;
+﻿using System.Globalization;
+
+namespace DTLib.Loggers;
 
 // вывод лога в консоль и файл
 public class AsyncLogger : BaseLogger
@@ -12,8 +14,8 @@ public class AsyncLogger : BaseLogger
     {
         lock (statelocker) if (!IsEnabled) return;
         // добавление даты
-        if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString() + "]: " + msg[0];
-        else msg[1] = "[" + DateTime.Now.ToString() + "]: " + msg[1];
+        if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString(CultureInfo.InvariantCulture) + "]: " + msg[0];
+        else msg[1] = "[" + DateTime.Now.ToString(CultureInfo.InvariantCulture) + "]: " + msg[1];
         // перенос строки
         msg[msg.Length - 1] += '\n';
         // вывод в консоль

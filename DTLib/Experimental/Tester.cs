@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 
 namespace DTLib.Experimental;
 
@@ -12,6 +13,6 @@ public static class Tester
             operation();
         clock.Stop();
         double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
-        LogNoTime("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(),"y"," seconds");
+        LogNoTime("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(CultureInfo.InvariantCulture),"y"," seconds");
     }
 }

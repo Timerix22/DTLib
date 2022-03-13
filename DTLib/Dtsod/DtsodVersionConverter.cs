@@ -8,7 +8,9 @@ public static class DtsodVersionConverter
             DtsodVersion.V21 => new DtsodV21(src.ToDictionary()),
             DtsodVersion.V22 => throw new NotImplementedException("Converting dtsods to V22 isn't implemented"),
             DtsodVersion.V23 => new DtsodV23(src.ToDictionary()),
+#if DEBUG
             DtsodVersion.V30 => new DtsodV30(src.ToDictionary()),
+#endif
             _ => throw new Exception($"DtsodVersionConverter.Convert() error: unknown target version <{targetVersion}>"),
         };
 }

@@ -1,18 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<LangVersion>preview</LangVersion>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<DebugType>portable</DebugType>
 		<AssemblyName>DTLib</AssemblyName>
-		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+		<!--xxhash uses arithmetic overflow-->
+		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<Configurations>Debug;Release;Release-net48</Configurations>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Compile Remove="Experimental\**" />
-	  <EmbeddedResource Remove="Experimental\**" />
-	  <None Remove="Experimental\**" />
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release-net48' ">
+		<TargetFramework>net48</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<Reference Include="System.Net" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Dynamic" />
+		<Reference Include="Microsoft.CSharp" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+	  	<Compile Remove="Experimental\**" />
+	  	<EmbeddedResource Remove="Experimental\**" />
+		<None Remove="Experimental\**" />
+		<Compile Remove="Dtsod\V30\**" />
+		<EmbeddedResource Remove="Dtsod\V30\**" />
+		<None Remove="Dtsod\V30\**" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Include="Experimental\Tester.cs" />

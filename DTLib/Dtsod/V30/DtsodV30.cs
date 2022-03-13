@@ -260,7 +260,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
         StringBuilder b = new();
         foreach (KeyValuePair<string, dynamic> pair in dtsod)
         {
-
+            SerializeObject(pair.Key, pair.Value);
         }
 
         void SerializeObject(string name, dynamic inst)

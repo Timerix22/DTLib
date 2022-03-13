@@ -290,7 +290,7 @@ public class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>, IDtsod
                                     break;
                                 default:
                                     throw new Exception($"Dtsod.Parse.ReadValue() error: value <{stringValue}> has wrong type");
-                            };
+                            }
                         }
                         // short; long; int
                         else
@@ -310,7 +310,7 @@ public class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>, IDtsod
                                     break;
                             }
                         break;
-                };
+                }
             }
 
             StringBuilder defaultValueBuilder = new();
@@ -344,7 +344,7 @@ public class DtsodV22 : Dictionary<string, DtsodV22.ValueStruct>, IDtsod
                             case ValueTypes.List:
                                 isList = true;
                                 break;
-                        };
+                        }
                         outType = type;
                         return value;
                     // строка, начинающаяся с # будет считаться комментом

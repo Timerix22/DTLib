@@ -2,13 +2,13 @@
 
 public abstract class BaseLogger
 {
-    public string Logfile { get; init; }
     public BaseLogger() { }
     public BaseLogger(string logfile) => (Logfile, WriteToFile) = (logfile,true);
     public BaseLogger(string dir, string programName)
         : this($"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_')) { }
 
 
+    public string Logfile { get; init; }
     public bool IsEnabled { get; private set; } = false;
     public bool WriteToFile { get; private set; } = false;
     protected readonly object statelocker = new();

@@ -1,11 +1,21 @@
-*.user
+# Build results
 [Bb]in/
 .bin/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+
+# IDE files
 .vs/
+.vscode/
 .vshistory/
 .idea/
-.vscode/
+.editorconfig
+*.user
+
+#backups
+.old*/

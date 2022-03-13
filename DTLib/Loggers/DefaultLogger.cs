@@ -1,4 +1,6 @@
-﻿namespace DTLib.Loggers;
+﻿using System.Globalization;
+
+namespace DTLib.Loggers;
 
 // вывод лога в консоль и файл
 public class DefaultLogger : BaseLogger
@@ -10,15 +12,15 @@ public class DefaultLogger : BaseLogger
 
     public override void Log(params string[] msg)
     {
-        lock (Logfile) if (!IsEnabled) return;
-        if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString() + "]: " + msg[0];
-        else msg[1] = "[" + DateTime.Now.ToString() + "]: " + msg[1];
+        lock (statelocker) if (!IsEnabled) return;
+        if (msg.Length == 1) msg[0] = "[" + DateTime.Now.ToString(CultureInfo.InvariantCulture) + "]: " + msg[0];
+        else msg[1] = "[" + DateTime.Now.ToString(CultureInfo.InvariantCulture) + "]: " + msg[1];
         LogNoTime(msg);
     }
 
     public void LogNoTime(params string[] msg)
     {
-        lock (Logfile) if (!IsEnabled) return;
+        lock (statelocker) if (!IsEnabled) return;
         msg[msg.Length - 1] += '\n';
         ColoredConsole.Write(msg);
         if (WriteToFile)

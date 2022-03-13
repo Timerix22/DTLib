@@ -1,6 +1,4 @@
 ﻿using System.Globalization;
-using System.IO;
-using System.Linq.Expressions;
 
 namespace DTLib.Dtsod;
 
@@ -12,7 +10,7 @@ namespace DTLib.Dtsod;
 public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
 {
 
-    public DtsodVersion Version { get; } = DtsodVersion.V30;
+    public DtsodVersion Version { get; } = DtsodVersion.V23;
     public IDictionary<string, dynamic> ToDictionary() => this;
 
     public DtsodV23() : base() {}
