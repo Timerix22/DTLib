@@ -41,13 +41,13 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
             }
             else output.Add(name, value);
         }
-    end:return new DtsodV23(output);
+        end:return new DtsodV23(output);
 
         string ReadName()
         {
-            while (i < text.Length - 1)
+            while (++i < text.Length)
             {
-                c = text[++i];
+                c = text[i];
                 switch (c)
                 {
                     case ' ':
@@ -82,7 +82,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
 
             return b.Length == 0
                 ? ""
-                : throw new Exception("DtsodV23.Deserialize.ReadName() error: end of text\ntext:\n" + text);
+                : throw new Exception("DtsodV23.Deserialize.ReadName() error: end of text\ntext:\n" + _text);
         }
 
         dynamic ReadValue(out bool endOfList)
@@ -98,7 +98,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 {
                     prevIsBackslash = c == '\\' && !prevIsBackslash;
                     b.Append(c);
-                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + text);
+                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + _text);
                     c = text[i];
                 }
                 b.Append('"');
@@ -137,7 +137,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                             break;
                     }
 
-                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + text);
+                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + _text);
                     c = text[i];
                 }
 
@@ -215,9 +215,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 };
             }
 
-            while (i < text.Length - 1)
+            while (++i < text.Length)
             {
-                c = text[++i];
+                c = text[i];
                 switch (c)
                 {
                     case ' ':
@@ -260,13 +260,13 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 }
             }
 
-            throw new Exception("DtsodV23.Deserialize.ReadValue() error: end of text\ntext:\n" + text);
+            throw new Exception("DtsodV23.Deserialize.ReadValue() error: end of text\ntext:\n" + _text);
         }
 
         void SkipComment()
         {
-            while (text[i] != '\n')
-                if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + text);
+            while (i < text.Length && text[i] != '\n') 
+                i++;
         }
     }
 
