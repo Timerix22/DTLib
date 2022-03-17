@@ -1,6 +1,6 @@
 ﻿namespace DTLib.Dtsod;
 
-public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>
+public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>, IDictionary
 {
     // да, вместо собственной реализации интерфейса это ссылки на Dictionary
     readonly Dictionary<TKey, TVal> baseDict;
@@ -41,12 +41,51 @@ public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>
        => ((ICollection<KeyValuePair<TKey, TVal>>)baseDict).Add(pair);
 
 
+    public void CopyTo(Array array, int index)
+    {
+        ((ICollection) baseDict).CopyTo(array, index);
+    }
+
     public int Count => baseDict.Count;
+    public bool IsSynchronized => ((ICollection) baseDict).IsSynchronized;
+
+    public object SyncRoot => ((ICollection) baseDict).SyncRoot;
+
     public ICollection<TKey> Keys => baseDict.Keys;
+    ICollection IDictionary.Values => ((IDictionary) baseDict).Values;
+
+    ICollection IDictionary.Keys => ((IDictionary) baseDict).Keys;
+
     public ICollection<TVal> Values => baseDict.Values;
     public bool IsReadOnly { get; } = false;
+    public object this[object key]
+    {
+        get => ((IDictionary) baseDict)[key];
+        set => ((IDictionary) baseDict)[key] = value;
+    }
+
+    public void Add(object key, object value)
+    {
+        ((IDictionary) baseDict).Add(key, value);
+    }
 
     public virtual void Clear() => baseDict.Clear();
+    public bool Contains(object key)
+    {
+        return ((IDictionary) baseDict).Contains(key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+        return ((IDictionary) baseDict).GetEnumerator();
+    }
+
+    public void Remove(object key)
+    {
+        ((IDictionary) baseDict).Remove(key);
+    }
+
+    public bool IsFixedSize => ((IDictionary) baseDict).IsFixedSize;
 
     public virtual bool ContainsKey(TKey key) => baseDict.ContainsKey(key);
 

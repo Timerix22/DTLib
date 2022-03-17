@@ -139,7 +139,7 @@ public class FSP
         if (!dirOnServer.EndsWith("\\"))
             dirOnServer += "\\";
         Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">");
-        var manifest = new DtsodV22(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
+        var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
         Debug("g", $"found {manifest.Values.Count} files in manifest");
         var hasher = new Hasher();
         foreach (string fileOnServer in manifest.Keys)
