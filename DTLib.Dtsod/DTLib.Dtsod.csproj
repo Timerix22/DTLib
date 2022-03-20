@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net48</TargetFrameworks>
+        <LangVersion>10</LangVersion>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+        <DebugType>portable</DebugType>
+        <Configurations>Debug;Release;Release-net48</Configurations>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DTLib\DTLib.csproj" />
+    </ItemGroup>
+    
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release-net48' ">
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+        <Reference Include="System.Dynamic" />
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+        <Compile Remove="V30\**" />
+    </ItemGroup>
+    
+</Project>

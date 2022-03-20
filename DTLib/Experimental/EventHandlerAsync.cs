@@ -1,4 +1,4 @@
-﻿namespace DTLib;
+﻿namespace DTLib.Experimental;
 
 // по идее это нужно, чтоб делать так: SomeEvent?.Invoke().Wait()
 public delegate Task EventHandlerAsyncDelegate();

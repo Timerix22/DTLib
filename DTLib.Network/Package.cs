@@ -1,7 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Threading;
-
-namespace DTLib.Network;
+﻿namespace DTLib.Network;
 
 //
 // отправка/получение пакетов
@@ -27,8 +24,7 @@ public static class Package
                 socket.Receive(data, data.Length, 0);
                 return data;
             }
-            else
-                Thread.Sleep(5);
+            else Thread.Sleep(5);
         }
         throw new Exception($"GetPackage() error: timeout. socket.Available={socket.Available}");
     }

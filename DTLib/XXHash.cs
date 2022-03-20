@@ -57,7 +57,7 @@ sealed class XXHash32 : HashAlgorithm
 
     /// Creates an instance of <see cref="XXHash32"/> class by default seed(0).
     /// <returns></returns>
-    public static new XXHash32 Create() => new();
+    public new static XXHash32 Create() => new();
 
     /// Initializes a new instance of the <see cref="XXHash32"/> class by default seed(0).
     public XXHash32() => Initialize(0);

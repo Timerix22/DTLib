@@ -46,7 +46,7 @@ public static class StringConverter
     {
         StringBuilder builder = new();
         for (int i = 0; i < parts.Length; i++)
-            builder.Append(parts[i].ToString());
+            builder.Append(parts[i]);
         return builder.ToString();
     }
     public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
@@ -54,7 +54,7 @@ public static class StringConverter
         StringBuilder builder = new();
         foreach (T elem in collection)
         {
-            builder.Append(elem.ToString());
+            builder.Append(elem);
             builder.Append(separator);
         }
         if (builder.Length == 0)
@@ -66,7 +66,7 @@ public static class StringConverter
     {
         StringBuilder builder = new();
         foreach (T elem in collection)
-            builder.Append(elem.ToString());
+            builder.Append(elem);
         return builder.ToString();
     }
 

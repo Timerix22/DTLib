@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DTLib.Reactive
+﻿namespace DTLib.Experimental.Reactive
 {
     public class ReactiveSender<T> : ReactiveProvider<T>
     {

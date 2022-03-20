@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 
-namespace DTLib
+namespace DTLib.Experimental
 {
     public class CompressedArray
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DTLib.Reactive
+﻿namespace DTLib.Experimental.Reactive
 {
     public abstract class ReactiveProvider<T>
     {

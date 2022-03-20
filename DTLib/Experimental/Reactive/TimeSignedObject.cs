@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTLib.Reactive
+﻿namespace DTLib.Experimental.Reactive
 {
     public class TimeSignedObject<T>
     {

@@ -1,6 +1,4 @@
-﻿using static TestProgram.Program;
-
-namespace TestProgram.DtsodV2X;
+﻿namespace DTLib.Tests;
 
 public static class TestDtsodV23
 {
@@ -52,7 +50,7 @@ public static class TestDtsodV23
     public static void TestReSerialization()
     {
         Info.Log("c", "---[TestDtsodV23/TestReSerialization]--");
-        DtsodV23 dtsod = new DtsodV23(new DtsodV23(new DtsodV23(
+        var dtsod = new DtsodV23(new DtsodV23(new DtsodV23(
             new DtsodV23(File.ReadAllText($"DtsodV2X{Path.Sep}complexes.dtsod")).ToString()).ToString()).ToString());
         Info.Log("y", dtsod.ToString());
         Info.Log("g", "test completed");
@@ -63,10 +61,10 @@ public static class TestDtsodV23
         Info.Log("c", "--------[TestDtsodV23/TestSpeed]-------");
         IDtsod dtsod=null;
         string text = File.ReadAllText($"DtsodV2X{Path.Sep}messages.dtsod");
-        Tester.LogOperationTime("V21 deserialization",100,()=>dtsod=new DtsodV21(text));
-        Tester.LogOperationTime("V21 serialization", 100, () => _=dtsod.ToString());
-        Tester.LogOperationTime("V23 deserialization", 100, () => dtsod = new DtsodV23(text));
-        Tester.LogOperationTime("V23 serialization", 100, () => _ = dtsod.ToString());
+        LogOperationTime("V21 deserialization",100,()=>dtsod=new DtsodV21(text));
+        LogOperationTime("V21 serialization", 100, () => _=dtsod.ToString());
+        LogOperationTime("V23 deserialization", 100, () => dtsod = new DtsodV23(text));
+        LogOperationTime("V23 serialization", 100, () => _ = dtsod.ToString());
         Info.Log("g", "test completed");
     }
 
@@ -75,7 +73,7 @@ public static class TestDtsodV23
         Info.Log("c", "-----[TestDtsodV23/TestMemConsumpt]----");
         string text = File.ReadAllText($"DtsodV2X{Path.Sep}messages.dtsod");
         var a = GC.GetTotalMemory(true);
-        DtsodV23[] dtsods = new DtsodV23[100];
+        var dtsods = new DtsodV23[100];
         for (int i = 0; i < dtsods.Length; i++)
             dtsods[i] = new(text);
         var b = GC.GetTotalMemory(true);

@@ -1,6 +1,4 @@
-using static TestProgram.Program;
-
-namespace TestProgram;
+namespace DTLib.Tests;
 
 static class DictTest
 {
@@ -15,7 +13,7 @@ static class DictTest
         return r;
     }
 
-    static public void Test(){
+    public static void Test(){
         Info.Log("c","--------------[DictTest]---------------");
         Dictionary<string,long> dict=new();
         LogOperationTime("fill",1,()=>Fill(dict));

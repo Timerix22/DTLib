@@ -2,17 +2,21 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>10</LangVersion>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<DebugType>portable</DebugType>
 		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<StartupObject>TestProgram.Program</StartupObject>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<RootNamespace>DTLib.Tests</RootNamespace>
 	</PropertyGroup>
+
 	<ItemGroup>
-	  <ProjectReference Include="..\DTLib\DTLib.csproj" />
+		<ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
+		<ProjectReference Include="..\DTLib\DTLib.csproj" />
 	</ItemGroup>
+	
 	<ItemGroup>
 	  <None Include="DtsodV2X\*">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace DTLib.Reactive
+﻿namespace DTLib.Experimental.Reactive
 {
     public class ReactiveListener<T> : ReactiveProvider<T>
     {

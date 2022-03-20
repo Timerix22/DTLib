@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 
-namespace DTLib.Experimental;
+namespace DTLib.Loggers;
 
-public static class Tester
+public static class LogFunctions
 {
     public static void LogOperationTime(string op_name, int repeats, Action operation)
     {

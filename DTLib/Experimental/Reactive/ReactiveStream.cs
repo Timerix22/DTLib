@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace DTLib.Reactive
+﻿namespace DTLib.Experimental.Reactive
 {
     public class ReactiveStream<T> : IEnumerable<TimeSignedObject<T>>, IList<TimeSignedObject<T>>
     {

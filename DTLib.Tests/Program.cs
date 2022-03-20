@@ -7,20 +7,19 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using DTLib;
 global using DTLib.Extensions;
-global using DTLib.Experimental;
-global using static DTLib.Experimental.Tester;
+global using static DTLib.Loggers.LogFunctions;
 global using DTLib.Filesystem;
 global using DTLib.Dtsod;
+global using static DTLib.Tests.Program;
 using DTLib.Loggers;
-using TestProgram.DtsodV2X;
 
 
-namespace TestProgram;
+namespace DTLib.Tests;
 
-static class Program
+public static class Program
 {
-    public static DefaultLogger Info = new();
-    static public void Main()
+    public static readonly DefaultLogger Info = new();
+    public static void Main()
     {
 
         Info.Enable();
@@ -31,7 +30,7 @@ static class Program
         Console.Title="tester";
         try
         {
-            Info.Log("c", "-------------[TestProgram]-------------");
+            Info.Log("c", "-------------[DTLib.Tests]-------------");
             //TestDtsodV23.TestAll();
             DictTest.Test();
         }
