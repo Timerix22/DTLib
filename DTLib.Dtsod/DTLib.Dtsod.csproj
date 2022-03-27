@@ -8,6 +8,7 @@
         <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
         <DebugType>portable</DebugType>
         <Configurations>Debug;Release;Release-net48</Configurations>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +25,12 @@
 
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
         <Compile Remove="V30\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Dependencies\kerep.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     
 </Project>

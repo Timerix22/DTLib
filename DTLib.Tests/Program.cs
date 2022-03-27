@@ -21,7 +21,6 @@ public static class Program
     public static readonly DefaultLogger Info = new();
     public static void Main()
     {
-
         Info.Enable();
         PublicLog.LogEvent += Info.Log;
         PublicLog.LogNoTimeEvent += Info.LogNoTime;
@@ -32,7 +31,12 @@ public static class Program
         {
             Info.Log("c", "-------------[DTLib.Tests]-------------");
             //TestDtsodV23.TestAll();
-            DictTest.Test();
+            //DictTest.Test();
+            for (uint i = 0; i < 10; i++)
+            {
+                Dtsod.V24.KerepFunctions.TestMarshalling();
+                Info.Log($"{i}");
+            }
         }
         catch (Exception ex)
         { Info.Log("r", ex.ToString()); }

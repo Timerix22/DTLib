@@ -18,6 +18,8 @@ public class FSP
     // скачивает файл с помощью FSP протокола
     public void DownloadFile(string filePath_server, string filePath_client)
     {
+        Путь.Предупредить(filePath_server);
+        Путь.Предупредить(filePath_client);
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
@@ -29,6 +31,7 @@ public class FSP
 
     public void DownloadFile(string filePath_client)
     {
+        Путь.Предупредить(filePath_client);
         using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
         Download_SharedCode(fileStream, true);
         fileStream.Close();
@@ -37,6 +40,7 @@ public class FSP
 
     public byte[] DownloadFileToMemory(string filePath_server)
     {
+        Путь.Предупредить(filePath_server);
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
@@ -79,8 +83,7 @@ public class FSP
                         fileStream.Flush();
                         n = 0;
                     }
-                    else
-                        n++;
+                    else n++;
                 }
             }
             // получение остатка
@@ -99,6 +102,7 @@ public class FSP
     // отдаёт файл с помощью FSP протокола
     public void UploadFile(string filePath)
     {
+        Путь.Предупредить(filePath);
         BytesUploaded = 0;
         Debug("b", $"uploading file {filePath}");
         using System.IO.FileStream fileStream = File.OpenRead(filePath);

@@ -10,8 +10,8 @@ public static class Directory
         if (!Directory.Exists(dir))
         {
             // проверяет существование папки, в которой нужно создать dir
-            if (dir.Contains(Path.Sep) && !Directory.Exists(dir.Remove(dir.LastIndexOf(Path.Sep))))
-                Create(dir.Remove(dir.LastIndexOf(Path.Sep)));
+            if (dir.Contains(Путь.Разд) && !Directory.Exists(dir.Remove(dir.LastIndexOf(Путь.Разд))))
+                Create(dir.Remove(dir.LastIndexOf(Путь.Разд)));
             System.IO.Directory.CreateDirectory(dir);
         }
     }
@@ -100,8 +100,8 @@ public static class Directory
 
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
-        if (symlinkName.Contains(Path.Sep))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
+        if (symlinkName.Contains(Путь.Разд))
+            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Путь.Разд)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
             throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
     }
@@ -110,8 +110,8 @@ public static class Directory
     public static int SymCopy(string srcdir, string newdir)
     {
         List<string> files = Directory.GetAllFiles(srcdir);
-        if (!srcdir.EndsWith(Path.Sep)) srcdir += Path.Sep;
-        if (!newdir.EndsWith(Path.Sep)) newdir += Path.Sep;
+        if (!srcdir.EndsWith(Путь.Разд)) srcdir += Путь.Разд;
+        if (!newdir.EndsWith(Путь.Разд)) newdir += Путь.Разд;
         int i = 0;
         for (; i < files.Count; i++)
             File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
