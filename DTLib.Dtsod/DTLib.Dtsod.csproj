@@ -7,17 +7,14 @@
         <Nullable>disable</Nullable>
         <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
         <DebugType>portable</DebugType>
-        <Configurations>Debug;Release;Release-net48</Configurations>
+        <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\DTLib\DTLib.csproj" />
     </ItemGroup>
-    
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release-net48' ">
-        <TargetFramework>net48</TargetFramework>
-    </PropertyGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
         <Reference Include="System.Dynamic" />
         <Reference Include="Microsoft.CSharp" />

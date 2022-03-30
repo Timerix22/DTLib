@@ -15,9 +15,6 @@
         <ProjectReference Include="..\DTLib\DTLib.csproj" />
     </ItemGroup>
     
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release-net48' ">
-        <TargetFramework>net48</TargetFramework>
-    </PropertyGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
         <Reference Include="System.Net" />
         <Reference Include="System.Net.Http" />

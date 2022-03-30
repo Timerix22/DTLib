@@ -10,12 +10,10 @@
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-		<Configurations>Debug;Release;Release-net48</Configurations>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU</Platforms>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release-net48' ">
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
 		<Reference Include="System.Net" />
 		<Reference Include="System.Net.Http" />

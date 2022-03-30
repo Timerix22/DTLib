@@ -22,32 +22,24 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Release-net48|Any CPU = Release-net48|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Release-net48|Any CPU.ActiveCfg = Release-net48|Any CPU
-		{B620E5E9-800F-4B2D-B4A5-062E05DB704F}.Release-net48|Any CPU.Build.0 = Release-net48|Any CPU
 		{72BA37EF-07EC-4D34-966A-20D5E83ADB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72BA37EF-07EC-4D34-966A-20D5E83ADB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72BA37EF-07EC-4D34-966A-20D5E83ADB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72BA37EF-07EC-4D34-966A-20D5E83ADB32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72BA37EF-07EC-4D34-966A-20D5E83ADB32}.Release-net48|Any CPU.ActiveCfg = Debug|Any CPU
 		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Release-net48|Any CPU.ActiveCfg = Release-net48|Any CPU
-		{ADE425F5-8645-47F0-9AA8-33FA748D36BE}.Release-net48|Any CPU.Build.0 = Release-net48|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release-net48|Any CPU.ActiveCfg = Release-net48|Any CPU
-		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release-net48|Any CPU.Build.0 = Release-net48|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
