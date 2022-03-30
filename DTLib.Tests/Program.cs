@@ -34,7 +34,7 @@ public static class Program
             //DictTest.Test();
             for (uint i = 0; i < 10; i++)
             {
-                Dtsod.V24.KerepFunctions.TestMarshalling();
+                Dtsod.V24.DtsodV24Functions.TestMarshalling();
                 Info.Log($"{i}");
             }
         }

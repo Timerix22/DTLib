@@ -1,6 +1,6 @@
 ﻿namespace DTLib.Dtsod;
 
-public static class DtsodFunctions
+public static class DtsodConverter
 {
     public static IDtsod ConvertVersion(IDtsod src, DtsodVersion targetVersion)
         => targetVersion switch
@@ -11,7 +11,7 @@ public static class DtsodFunctions
 #if DEBUG
             DtsodVersion.V30 => new DtsodV30(src.ToDictionary()),
 #endif
-            _ => throw new Exception($"DtsodFunctions.Convert() error: unknown target version <{targetVersion}>"),
+            _ => throw new Exception($"DtsodConverter.Convert() error: unknown target version <{targetVersion}>"),
         };
 
     // заменяет дефолтные значения на пользовательские
