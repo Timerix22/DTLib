@@ -1,0 +1,15 @@
+uints: [10,20,30,0,0 ];
+floats: [8.2,5.225,-0.9993];
+strings: ["aaa","bbb","ccc"];
+things: ["aaa",true,-122];
+$complex: {
+    a:141;
+    b:00f;
+    c:false;
+}; 
+$complex: {
+    d:-1u;
+    e:005;
+    f:-1f;
+};
+list_of_lists: [ ["sss"]];

@@ -1,48 +1,49 @@
 global using DtsodPtr=System.IntPtr;
 global using AutoarrKVPairPtr=System.IntPtr;
 global using AutoarrUnitypePtr=System.IntPtr;
+global using CharPtr=System.IntPtr;
 using System.Runtime.InteropServices;
-using DTLib.Dtsod.V24.Autoarr;
+using DTLib.Dtsod.V24.KerepTypes;
 
 namespace DTLib.Dtsod.V24;
 
-public static unsafe class DtsodV24Functions
+internal static class DtsodV24Functions
 {
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
-    static extern void pinvoke_print(string msg);
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
-    static extern void test_marshalling(string text, out KVPair* k);
-    public static void TestMarshalling()
+    static DtsodV24Functions()
     {
-        pinvoke_print("UwU");
-        string msg = "hello!";
-        test_marshalling(msg, out KVPair* kptr);
-        Log("kptr: " + kptr->ToString());
-        KVPair k = *kptr;
-        Log("y",
-            $"{{{Marshal.PtrToStringAnsi(k.key)}, {{{k.value.type.ToString()}, {Marshal.PtrToStringAnsi(k.value.VoidPtr)} }} }}");
+        DependencyResolver.CopyLibs();
+    }
+    
+    static void TryThrowErrmsg(CharPtr err)
+    {
+        if (err == IntPtr.Zero) return;
+        string errmsg = Marshal.PtrToStringUTF8(err);
+        Marshal.FreeHGlobal(err);
+        throw new Exception(errmsg);
     }
     
     
     //parses text to binary values
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
-    static extern void kerep_DtsodV24_deserialize(string text, out DtsodPtr output);
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
+    static extern void kerep_DtsodV24_deserialize(string text, out DtsodPtr output, out CharPtr errmsg);
     internal static DtsodPtr Deserialize(string text)
     {
-        kerep_DtsodV24_deserialize(text, out var dtsod);
+        kerep_DtsodV24_deserialize(text, out var dtsod,out var err);
+        TryThrowErrmsg(err);
         return dtsod;
     }
 
     //creates text representation of dtsod
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
-    static extern void kerep_DtsodV24_serialize(DtsodPtr dtsod, out string output);
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
+    static extern void kerep_DtsodV24_serialize(DtsodPtr dtsod, out CharPtr output, out CharPtr errmsg);
     internal static string Serialize(DtsodPtr dtsod)
     {
-        kerep_DtsodV24_serialize(dtsod, out var text);
-        return text;
+        kerep_DtsodV24_serialize(dtsod, out var text, out var err);
+        TryThrowErrmsg(err);
+        return Marshal.PtrToStringUTF8(text);
     }
 
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
     static extern void kerep_DtsodV24_get(DtsodPtr dtsod, string key, out Unitype output);
     //returns value or UniNull if key not found
     internal static Unitype Get(DtsodPtr dtsod, string key)
@@ -51,11 +52,17 @@ public static unsafe class DtsodV24Functions
         return output;
     }
 
-    [DllImport("kerep.dll",EntryPoint = "kerep_DtsodV24_addOrSet",CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep",EntryPoint = "kerep_DtsodV24_addOrSet",CallingConvention = CallingConvention.Cdecl)]
     //adds or sets value
-    internal static extern void AddOrSet(DtsodPtr dtsod, string key, Unitype value);
+    static extern void kerep_DtsodV24_addOrSet(DtsodPtr dtsod, IntPtr key, Unitype value);
 
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
+    internal static void AddOrSet(DtsodPtr dtsod, string key, Unitype value)
+    {
+        IntPtr keyptr = key.ToHGlobalUTF8();
+        kerep_DtsodV24_addOrSet(dtsod, keyptr, value);
+    }
+
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
     //checks for dtsod contains value or dont
     static extern void kerep_DtsodV24_contains(DtsodPtr dtsod, string key, [MarshalAs(UnmanagedType.I1)] out bool output);
     internal static bool Contains(DtsodPtr dtsod, string key)
@@ -64,7 +71,7 @@ public static unsafe class DtsodV24Functions
         return output;
     }
 
-    [DllImport("kerep.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
     static extern void kerep_DtsodV24_remove(DtsodPtr dtsod, string key, [MarshalAs(UnmanagedType.I1)] out bool output);
     //replaces value with UniNull if key exists in dtsod
     internal static bool Remove(DtsodPtr dtsod, string key)
@@ -73,11 +80,11 @@ public static unsafe class DtsodV24Functions
         return output;
     }
     
-    [DllImport("kerep.dll",EntryPoint="kerep_DtsodV24_free", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep",EntryPoint="kerep_DtsodV24_free", CallingConvention = CallingConvention.Cdecl)]
     //replaces value with UniNull if key exists in dtsod
     internal static extern void Free(DtsodPtr dtsod);
 
-    [DllImport("kerep.dll",EntryPoint="kerep_DtsodV24_free", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
     static extern void kerep_DtsodV24_height(DtsodPtr dtsod, out ushort heigth);
     //returns current amounts of rows (Autoarrs of KVPairs) in hashtable
     internal static ushort Height(DtsodPtr ptr)
@@ -86,7 +93,7 @@ public static unsafe class DtsodV24Functions
         return h;
     }
     
-    [DllImport("kerep.dll",EntryPoint="kerep_DtsodV24_free", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
     static extern void kerep_DtsodV24_getrow(DtsodPtr dtsod, ushort h, out AutoarrKVPairPtr row);
     //Returns row from hashtable.
     //check current hashtable height before calling this.

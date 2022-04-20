@@ -1,46 +1,52 @@
+using System.Runtime.InteropServices;
+
 namespace DTLib.Dtsod.V24.Autoarr;
 
 public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
 {
-    private readonly IntPtr AutoarrHandler;
-    private readonly AutoarrFunctions<T> Funcs;
-    public readonly uint MaxLength;
+    public readonly IntPtr UnmanagedPtr;
     //if true, destructor frees allocated unmanaged memory
     public bool AutoDispose;
+    private readonly AutoarrFunctions<T> Funcs;
+    public readonly uint MaxLength;
+    public uint Length { get; private set; }
 
-    public Autoarr(IntPtr ptr, bool autoDispose=true)
+    public Autoarr(IntPtr ptr, bool autoDispose)
     {
         AutoDispose = autoDispose;
         Funcs = AutoarrFunctions<T>.GetFunctions();
-        MaxLength = Funcs.MaxLength(AutoarrHandler);
-        Length = Funcs.Length(AutoarrHandler);
-        AutoarrHandler = ptr;
+        UnmanagedPtr = ptr;
+        MaxLength = Funcs.MaxLength(UnmanagedPtr);
+        Length = Funcs.Length(UnmanagedPtr);
     }
 
-    public Autoarr(ushort blockCount, ushort blockLength, bool autoDispose=true) : this(IntPtr.Zero,autoDispose)
+    public Autoarr(ushort blockCount, ushort blockLength, bool autoDispose=true)
     {
-        AutoarrHandler = Funcs.Create(blockCount, blockLength);
+        AutoDispose = autoDispose;
+        Funcs = AutoarrFunctions<T>.GetFunctions();
+        UnmanagedPtr = Funcs.Create(blockCount, blockLength);
+        MaxLength = Funcs.MaxLength(UnmanagedPtr);
+        Length = Funcs.Length(UnmanagedPtr);
     }
 
-    public uint Length { get; private set; }
 
     public T this[uint i]
     {
         get
         {
-            if (i < Length) return Funcs.Get(AutoarrHandler, i);
+            if (i < Length) return Funcs.Get(UnmanagedPtr, i);
             throw new IndexOutOfRangeException($"index {i} >= Autoarr.Length {Length}");
         }
         set
         {
-            if (i < Length) Funcs.Set(AutoarrHandler, i, value);
+            if (i < Length) Funcs.Set(UnmanagedPtr, i, value);
             else throw new IndexOutOfRangeException($"index {i} >= Autoarr.Length {Length}");
         }
     }
 
     public void Dispose()
     {
-        Funcs.Free(AutoarrHandler);
+        Funcs.Free(UnmanagedPtr);
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -55,7 +61,11 @@ public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
 
     public void Add(T value)
     {
-        if (Length++ < MaxLength - 1) Funcs.Add(AutoarrHandler, value);
+        if (Length < MaxLength)
+        {
+            Funcs.Add(UnmanagedPtr, value);
+            Length++;
+        }
         else throw new IndexOutOfRangeException($"Autoarr.Length == MaxLength ({MaxLength})");
     }
 
@@ -74,7 +84,6 @@ public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
             arr = ar;
         }
 
-
         public T Current { get; private set; }
         object IEnumerator.Current => Current;
 
@@ -84,9 +93,10 @@ public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
 
         public bool MoveNext()
         {
-            var r = ++index < arr.Length;
-            if (r) Current = arr[index];
-            return r;
+            if (index >= arr.Length) return false;
+            Current = arr[index];
+            index++;
+            return true;
         }
 
         public void Reset()

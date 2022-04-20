@@ -9,7 +9,7 @@ public static class File
     // если файл не существует, создаёт файл, создаёт папки из его пути
     public static void Create(string file)
     {
-        if (!File.Exists(file))
+        if (!Exists(file))
         {
             if (file.Contains(Путь.Разд))
                 Directory.Create(file.Remove(file.LastIndexOf(Путь.Разд)));
@@ -30,7 +30,7 @@ public static class File
 
     public static byte[] ReadAllBytes(string file)
     {
-        using System.IO.FileStream stream = File.OpenRead(file);
+        using System.IO.FileStream stream = OpenRead(file);
         int size = GetSize(file);
         byte[] output = new byte[size];
         stream.Read(output, 0, size);
@@ -42,7 +42,7 @@ public static class File
 
     public static void WriteAllBytes(string file, byte[] content)
     {
-        using System.IO.FileStream stream = File.OpenWrite(file);
+        using System.IO.FileStream stream = OpenWrite(file);
         stream.Write(content, 0, content.Length);
         stream.Close();
     }
@@ -51,7 +51,7 @@ public static class File
 
     public static void AppendAllBytes(string file, byte[] content)
     {
-        using System.IO.FileStream stream = File.OpenAppend(file);
+        using System.IO.FileStream stream = OpenAppend(file);
         stream.Write(content, 0, content.Length);
         stream.Close();
     }
@@ -62,14 +62,14 @@ public static class File
         Exists(file) ? System.IO.File.OpenRead(file) : throw new Exception($"file not found: <{file}>");
     public static System.IO.FileStream OpenWrite(string file)
     {
-        if (File.Exists(file))
-            File.Delete(file);
-        File.Create(file);
+        if (Exists(file))
+            Delete(file);
+        Create(file);
         return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate);
     }
     public static System.IO.FileStream OpenAppend(string file)
     {
-        File.Create(file);
+        Create(file);
         return System.IO.File.Open(file, System.IO.FileMode.Append);
     }
 

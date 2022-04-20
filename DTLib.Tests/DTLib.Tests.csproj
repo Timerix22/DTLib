@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>10</LangVersion>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
@@ -28,10 +28,22 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Include="DtsodV2X\*">
+	  <None Include="DtsodV23\*">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Include="DtsodV30\*">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="DtsodV24\base_types.dtsod">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="DtsodV24\complexes.dtsod">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="DtsodV24\lists.dtsod">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="DtsodV24\messages.dtsod">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

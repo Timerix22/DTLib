@@ -1,15 +1,14 @@
 ﻿global using System;
 global using System.Collections;
 global using System.Collections.Generic;
-global using System.Linq;
 global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using DTLib;
 global using DTLib.Extensions;
-global using static DTLib.Loggers.LogFunctions;
 global using DTLib.Filesystem;
 global using DTLib.Dtsod;
+global using static DTLib.Loggers.LogFunctions;
 global using static DTLib.Tests.Program;
 using DTLib.Loggers;
 
@@ -29,14 +28,10 @@ public static class Program
         Console.Title="tester";
         try
         {
-            Info.Log("c", "-------------[DTLib.Tests]-------------");
-            //TestDtsodV23.TestAll();
-            //DictTest.Test();
-            for (uint i = 0; i < 10; i++)
-            {
-                Dtsod.V24.DtsodV24Functions.TestMarshalling();
-                Info.Log($"{i}");
-            }
+            TestPInvoke.TestAll();
+            TestAutoarr.TestAll();
+            TestDtsodV23.TestAll();
+            TestDtsodV24.TestAll();
         }
         catch (Exception ex)
         { Info.Log("r", ex.ToString()); }

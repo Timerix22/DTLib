@@ -1,0 +1,7 @@
+bool: false ;
+int: -2515;
+uint: 0u;
+float: 39.944f;
+double: 965.557f;
+string: "_$\"\\\\'''\n\ta ыыы000;2;=:%d;```";
+ 

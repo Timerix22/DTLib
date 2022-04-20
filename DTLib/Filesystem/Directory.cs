@@ -7,10 +7,10 @@ public static class Directory
     // создает папку, если её не существует
     public static void Create(string dir)
     {
-        if (!Directory.Exists(dir))
+        if (!Exists(dir))
         {
             // проверяет существование папки, в которой нужно создать dir
-            if (dir.Contains(Путь.Разд) && !Directory.Exists(dir.Remove(dir.LastIndexOf(Путь.Разд))))
+            if (dir.Contains(Путь.Разд) && !Exists(dir.Remove(dir.LastIndexOf(Путь.Разд))))
                 Create(dir.Remove(dir.LastIndexOf(Путь.Разд)));
             System.IO.Directory.CreateDirectory(dir);
         }
@@ -54,12 +54,12 @@ public static class Directory
             File.Delete(files[i]);
         for (int i = subdirs.Count - 1; i >= 0; i--)
         {
-            PublicLog.Log($"deleting {subdirs[i]}");
-            if (Directory.Exists(subdirs[i]))
+            Log($"deleting {subdirs[i]}");
+            if (Exists(subdirs[i]))
                 System.IO.Directory.Delete(subdirs[i], true);
         }
-        PublicLog.Log($"deleting {dir}");
-        if (Directory.Exists(dir))
+        Log($"deleting {dir}");
+        if (Exists(dir))
             System.IO.Directory.Delete(dir, true);
     }
 
@@ -71,10 +71,10 @@ public static class Directory
     public static List<string> GetAllFiles(string dir)
     {
         var all_files = new List<string>();
-        string[] cur_files = Directory.GetFiles(dir);
+        string[] cur_files = GetFiles(dir);
         for (int i = 0; i < cur_files.Length; i++)
             all_files.Add(cur_files[i]);
-        string[] cur_subdirs = Directory.GetDirectories(dir);
+        string[] cur_subdirs = GetDirectories(dir);
         for (int i = 0; i < cur_subdirs.Length; i++)
             all_files.AddRange(GetAllFiles(cur_subdirs[i]));
         return all_files;
@@ -84,10 +84,10 @@ public static class Directory
     public static List<string> GetAllFiles(string dir, ref List<string> all_subdirs)
     {
         var all_files = new List<string>();
-        string[] cur_files = Directory.GetFiles(dir);
+        string[] cur_files = GetFiles(dir);
         for (int i = 0; i < cur_files.Length; i++)
             all_files.Add(cur_files[i]);
-        string[] cur_subdirs = Directory.GetDirectories(dir);
+        string[] cur_subdirs = GetDirectories(dir);
         for (int i = 0; i < cur_subdirs.Length; i++)
         {
             all_subdirs.Add(cur_subdirs[i]);
@@ -101,7 +101,7 @@ public static class Directory
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
         if (symlinkName.Contains(Путь.Разд))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Путь.Разд)));
+            Create(symlinkName.Remove(symlinkName.LastIndexOf(Путь.Разд)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
             throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
     }
@@ -109,7 +109,7 @@ public static class Directory
     // copies directory with symlinks instead of files
     public static int SymCopy(string srcdir, string newdir)
     {
-        List<string> files = Directory.GetAllFiles(srcdir);
+        List<string> files = GetAllFiles(srcdir);
         if (!srcdir.EndsWith(Путь.Разд)) srcdir += Путь.Разд;
         if (!newdir.EndsWith(Путь.Разд)) newdir += Путь.Разд;
         int i = 0;

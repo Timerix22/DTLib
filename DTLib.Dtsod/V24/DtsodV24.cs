@@ -1,4 +1,5 @@
 using DTLib.Dtsod.V24.Autoarr;
+using DTLib.Dtsod.V24.KerepTypes;
 using Funcs=DTLib.Dtsod.V24.DtsodV24Functions;
 
 namespace DTLib.Dtsod.V24;
@@ -6,39 +7,41 @@ namespace DTLib.Dtsod.V24;
 public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
 {
     public DtsodVersion Version => DtsodVersion.V24;
-    private readonly DtsodPtr DtsodHandler;
+    public readonly DtsodPtr UnmanagedPtr;
     //if true, destructor frees allocated unmanaged memory
     public bool AutoDispose = true;
-
-    public DtsodV24(DtsodPtr ptr) => DtsodHandler = ptr;
+    public ushort Height => Funcs.Height(UnmanagedPtr);
     
-    public DtsodV24() => DtsodHandler = Funcs.Deserialize(" ");
+    public DtsodV24(DtsodPtr ptr) => UnmanagedPtr = ptr;
+    public DtsodV24(string text, bool autoDispose = true) : this(Funcs.Deserialize(text))
+        => AutoDispose = autoDispose;
+    public DtsodV24(bool autoDispose=true) : this(" ", autoDispose) { }
 
-    public DtsodV24(string text) => DtsodHandler = Funcs.Deserialize(text);
-
-    public DtsodV24(IDictionary dict) : this()
+    public DtsodV24(IDictionary<string,dynamic> dict, bool autoDispose=true) : this(autoDispose)
     {
         foreach (KeyValuePair<string, dynamic> pair in dict)
-            AddOrSet(pair.Key, pair.Value);
+        {
+            if (pair.Value is not null) AddOrSet(pair.Key, pair.Value);
+            //else Log("y", $"skiping key <{pair.Key}> with null value");
+        }
     }
 
     public IDictionary<string, dynamic> ToDictionary()
     {
         DtsodDict<string, dynamic> dict = new();
-
-        return dict;
+        throw new NotImplementedException();
     }
 
 
     public bool TryGet(string key, out dynamic elem)
     {
-        var g = Funcs.Get(DtsodHandler, key);
+        var g = Funcs.Get(UnmanagedPtr, key);
         elem = g.ToDynamic();
-        return g.type == my_type.Null;
+        return g.TypeCode == KerepTypeCode.Null;
     }
 
     public void AddOrSet(string key, dynamic value) =>
-        Funcs.AddOrSet(DtsodHandler, key, new Unitype(value));
+        Funcs.AddOrSet(UnmanagedPtr, key, new Unitype(value));
     
     public dynamic this[string key]
     {
@@ -50,12 +53,14 @@ public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
         set => AddOrSet(key, value);
     }
 
-    public bool TryRemove(string key) => Funcs.Remove(DtsodHandler,key);
+    public bool TryRemove(string key) => Funcs.Remove(UnmanagedPtr,key);
 
     [Obsolete("do you really need to use this? look at TryGet/TryRemove/AddOrSet")]
-    public bool ContainsKey(string key) => Funcs.Contains(DtsodHandler, key);
-    
-    public void Dispose() => Funcs.Free(DtsodHandler);
+    public bool ContainsKey(string key) => Funcs.Contains(UnmanagedPtr, key);
+
+    public override string ToString() => Funcs.Serialize(UnmanagedPtr);
+
+    public void Dispose() => Funcs.Free(UnmanagedPtr);
     
     ~DtsodV24()
     {
@@ -78,9 +83,10 @@ public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
 
         public bool MoveNext()
         {
-            bool r = ++h < Funcs.Height(d.DtsodHandler);
-            if(r) Current = new Autoarr<KVPair>(Funcs.GetRow(d.DtsodHandler,h), false);
-            return r;
+            if(h >= Funcs.Height(d.UnmanagedPtr)) return false;
+            Current = new Autoarr<KVPair>(Funcs.GetRow(d.UnmanagedPtr,h), false);
+            h++;
+            return true;
         }
 
         public void Reset() => h = 0;
