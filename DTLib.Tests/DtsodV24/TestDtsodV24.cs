@@ -68,6 +68,7 @@ public static class TestDtsodV24
         LogOperationTime( "V23 to V24 conversion", 32, ()=>
             text = DtsodConverter.ConvertVersion(new DtsodV23(_text), DtsodVersion.V24).ToString()
         );
+        File.WriteAllText($"DtsodV24{Путь.Разд}messages.dtsod",text);
         LogOperationTime("V24 deserialization", 64, () => dtsod = new DtsodV24(text));
         LogOperationTime("V24 serialization", 64, () => text = dtsod.ToString());
         Info.Log("g", "test completed");

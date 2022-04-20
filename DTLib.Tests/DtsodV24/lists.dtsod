@@ -1,5 +1,5 @@
 uints: [10,20,30,0,0 ];
-floats: [8.2,5.225,-0.9993];
+floats: [8.2f,5.225f,-0.9993f];
 strings: ["aaa","bbb","ccc"];
 things: ["aaa",true,-122];
 $complex: {
