@@ -65,48 +65,6 @@ public struct Unitype
             default: throw new Exception($"can't box value of type {TypeCode}");
         }
     }
-    
-    /*public Unitype(bool v) : this()
-    {
-        TypeCode = KerepTypeCode.Bool;
-        Bool = v;
-    }
-    public Unitype(int v) : this()
-    {
-        TypeCode = KerepTypeCode.Int64;
-        Int64 = v;
-    }
-    public Unitype(uint v) : this()
-    {
-        TypeCode = KerepTypeCode.UInt64;
-        UInt64 = v;
-    }
-    public Unitype(double v) : this()
-    {
-        TypeCode = KerepTypeCode.Float64;
-        Float64 = v;
-    }
-    public Unitype(string s) : this()
-    {
-        TypeCode = KerepTypeCode.CharPtr;
-        VoidPtr = s.ToHGlobalUTF8();
-    }
-    
-    public Unitype(Autoarr<Unitype> v) : this()
-    {
-        TypeCode = KerepTypeCode.AutoarrUnitypePtr;
-        VoidPtr = v.UnmanagedPtr;
-    }
-    public Unitype(Autoarr<KVPair> v) : this()
-    {
-        TypeCode = KerepTypeCode.AutoarrKVPairPtr;
-        VoidPtr = v.UnmanagedPtr;
-    }
-    public Unitype(DtsodV24 v) : this()
-    {
-        TypeCode = KerepTypeCode.HashtablePtr;
-        VoidPtr = v.UnmanagedPtr;
-    }*/
 
     public dynamic ToDynamic()
     {

@@ -4,7 +4,7 @@ using Funcs=DTLib.Dtsod.V24.DtsodV24Functions;
 
 namespace DTLib.Dtsod.V24;
 
-public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
+public class DtsodV24 : IDtsod, IEnumerable<KVPair>, IDisposable
 {
     public DtsodVersion Version => DtsodVersion.V24;
     public readonly DtsodPtr UnmanagedPtr;
@@ -29,7 +29,9 @@ public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
     public IDictionary<string, dynamic> ToDictionary()
     {
         DtsodDict<string, dynamic> dict = new();
-        throw new NotImplementedException();
+        foreach (var p in this)
+                dict.Add(p.key,p.value.ToDynamic());
+        return dict;
     }
 
 
@@ -68,31 +70,41 @@ public class DtsodV24 : IDtsod, IEnumerable<Autoarr<KVPair>>, IDisposable
     }
 
 
-    public IEnumerator<Autoarr<KVPair>> GetEnumerator() => new DtsodV24Enumerator(this);
+    public IEnumerator<KVPair> GetEnumerator() => new DtsodV24Enumerator(this);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    class DtsodV24Enumerator: IEnumerator<Autoarr<KVPair>>
+    class DtsodV24Enumerator: IEnumerator<KVPair>
     {
         private readonly DtsodV24 d;
         private ushort h;
+        private IEnumerator<KVPair> arEnumerator;
         
         public DtsodV24Enumerator(DtsodV24 _d) => d = _d;
-        
-        public void Dispose() { }
 
+        bool NextAr()
+        {
+            if (h >= Funcs.Height(d.UnmanagedPtr)) return false;
+            var ar = new Autoarr<KVPair>(Funcs.GetRow(d.UnmanagedPtr, h), false);
+            arEnumerator = ar.GetEnumerator();
+            h++;
+            return true;
+        }
+        
         public bool MoveNext()
         {
-            if(h >= Funcs.Height(d.UnmanagedPtr)) return false;
-            Current = new Autoarr<KVPair>(Funcs.GetRow(d.UnmanagedPtr,h), false);
-            h++;
+            if(arEnumerator==null)
+                NextAr();
+            while(!arEnumerator.MoveNext()) 
+                if(!NextAr()) return false;
+            Current = arEnumerator.Current;
             return true;
         }
 
         public void Reset() => h = 0;
-
-        public Autoarr<KVPair> Current { get; private set; }
-
+        public KVPair Current { get; private set; }
         object IEnumerator.Current => Current;
+        
+        public void Dispose() { }
     }
 }

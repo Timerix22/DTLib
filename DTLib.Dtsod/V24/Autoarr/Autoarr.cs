@@ -46,18 +46,13 @@ public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
 
     public void Dispose()
     {
-        Funcs.Free(UnmanagedPtr);
+        if(AutoDispose) 
+            Funcs.Free(UnmanagedPtr);
     }
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        return new AutoarrEnumerator(this);
-    }
+    public IEnumerator<T> GetEnumerator() => new AutoarrEnumerator(this);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(T value)
     {
@@ -79,17 +74,12 @@ public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
         private readonly Autoarr<T> arr;
         private uint index;
 
-        public AutoarrEnumerator(Autoarr<T> ar)
-        {
-            arr = ar;
-        }
+        public AutoarrEnumerator(Autoarr<T> ar) => arr = ar;
 
         public T Current { get; private set; }
         object IEnumerator.Current => Current;
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         public bool MoveNext()
         {

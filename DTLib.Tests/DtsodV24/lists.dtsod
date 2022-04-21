@@ -12,4 +12,5 @@ $complex: {
     e:005;
     f:-1f;
 };
-list_of_lists: [ ["sss"]];
+list_of_lists: [ [ "sss" ] ];
+blank_list: [];

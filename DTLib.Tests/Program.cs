@@ -28,10 +28,11 @@ public static class Program
         Console.Title="tester";
         try
         {
-            TestPInvoke.TestAll();
+            /*TestPInvoke.TestAll();
             TestAutoarr.TestAll();
             TestDtsodV23.TestAll();
-            TestDtsodV24.TestAll();
+            TestDtsodV24.TestAll();*/
+            TestDtsodV24.TestLists();
         }
         catch (Exception ex)
         { Info.Log("r", ex.ToString()); }
