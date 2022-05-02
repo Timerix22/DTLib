@@ -53,7 +53,6 @@ public static class TestDtsodV24
                 }
             }
         }
-        Info.Log("y",dtsod.ToString());
         Info.Log("g", "test completed");
     }
 

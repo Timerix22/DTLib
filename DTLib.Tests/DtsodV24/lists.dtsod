@@ -14,3 +14,11 @@ $complex: {
 };
 list_of_lists: [ [ "sss" ] ];
 blank_list: [];
+qqq: [
+    {
+        
+    },
+    {
+        q: 0.0f;
+    }
+];
