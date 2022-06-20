@@ -144,4 +144,6 @@ public static class StringConverter
         if (max * length != s.Length) parts.Add(s.Substring(max * length, s.Length - max * length));
         return parts;
     }
+
+    public static bool IsNullOrEmpty(this string s) => String.IsNullOrEmpty(s);
 }

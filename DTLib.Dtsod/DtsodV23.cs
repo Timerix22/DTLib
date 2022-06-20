@@ -151,7 +151,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 List<dynamic> list = new();
                 while (true)
                 {
-                    list.Add(ReadValue(out bool _eol));
+                    var item = ReadValue(out bool _eol);
+                    if(item!=null)
+                        list.Add(item);
                     if (_eol) break;
                 }
 
@@ -239,6 +241,12 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                         break;
                     case ';':
                     case ',':
+                        if(b.Length == 0)
+                        {
+                            if(endOfList)
+                                return null;
+                            throw new Exception("zero length value");
+                        }
                         string str = b.ToString();
                         b.Clear();
                         return ParseValue(str);
@@ -287,35 +295,35 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
         { typeof(double), (val, b) => b.Append(val.ToString(CultureInfo.InvariantCulture)) },
         { typeof(decimal), (val, b) => b.Append(val.ToString(CultureInfo.InvariantCulture)).Append("de") }
     };
-    short tabscount = -1;
-    protected StringBuilder Serialize(DtsodV23 dtsod, StringBuilder b = null)
-    {
+    
+    protected StringBuilder Serialize(DtsodV23 dtsod, ref int tabscount, StringBuilder b = null)
+    {;
         tabscount++;
         if (b is null) b = new StringBuilder();
         foreach (var pair in dtsod)
         {
             b.Append('\t', tabscount).Append(pair.Key).Append(": ");
-            SerializeType(pair.Value);
+            SerializeType(pair.Value, ref tabscount);
             b.Append(";\n");
 
-            void SerializeType(dynamic value)
+            void SerializeType(dynamic value, ref int tabscount)
             {
                 if (value is null) b.Append("null");
+                else if (value is DtsodV23 _dtsod)
+                {
+                    b.Append("{\n");
+                    Serialize(_dtsod, ref tabscount, b);
+                    b.Append('}');
+                }
                 else if (value is IList _list)
                 {
                     b.Append('[');
                     foreach (object el in _list)
                     {
-                        SerializeType(el);
+                        SerializeType(el, ref tabscount);
                         b.Append(',');
                     }
                     b.Remove(b.Length - 1, 1).Append(']');
-                }
-                else if (value is DtsodV23 _dtsod)
-                {
-                    b.Append("{\n");
-                    Serialize(_dtsod, b);
-                    b.Append('}');
                 }
                 else TypeSerializeFuncs[value.GetType()].Invoke(value, b);
             }
@@ -323,6 +331,18 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
         tabscount--;
         return b;
     }
-    
-    public override string ToString() => Serialize(this).ToString();
+
+    public override string ToString()
+    {
+        int tabscount = -1;
+        return Serialize(this, ref tabscount).ToString();
+    }
+
+    ///serializes dtsod as part of list
+    public string ToString(string partialListName) 
+    {
+        int tabscount = 0;
+        var builder = new StringBuilder().Append('$').Append(partialListName).Append(":\n{\n");
+        return Serialize(this, ref tabscount, builder).Append("};\n").ToString();
+    }
 }
