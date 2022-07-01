@@ -11,7 +11,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 		<Configurations>Debug;Release</Configurations>
-		<Platforms>AnyCPU</Platforms>
+		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
 	</PropertyGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">

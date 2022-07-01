@@ -1,6 +1,4 @@
-﻿using System.Xml.Serialization;
-
-namespace DTLib.Dtsod;
+﻿namespace DTLib.Dtsod.ClassSerializer;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
 public class DtsodSerializableAttribute : Attribute

@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <LangVersion>10</LangVersion>
+        <LangVersion>preview</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
         <DebugType>portable</DebugType>
-        <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Platforms>AnyCPU</Platforms>
+        <Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
