@@ -18,7 +18,7 @@ public static class TestDtsodV24
     public static void TestBaseTypes()
     {
         Info.Log("c", "-----[TestDtsodV24/TestBaseTypes]-----");
-        DtsodV24 dtsod = new(File.ReadAllText($"DtsodV24{Путь.Разд}base_types.dtsod"));
+        DtsodV24 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}base_types.dtsod"));
         foreach (var pair in dtsod)
             Info.LogNoTime("b", pair.ToString());
         Info.Log("g", "test completed");
@@ -27,7 +27,7 @@ public static class TestDtsodV24
     public static void TestComplexes()
     {
         Info.Log("c", "-----[TestDtsodV24/TestComplexes]-----");
-        DtsodV24 dtsod = new(File.ReadAllText($"DtsodV24{Путь.Разд}complexes.dtsod"));
+        DtsodV24 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}complexes.dtsod"));
         Info.Log("h", dtsod.ToString());
         Info.Log("g", "test completed");
     }
@@ -35,7 +35,7 @@ public static class TestDtsodV24
     public static void TestLists()
     {
         Info.Log("c", "-------[TestDtsodV24/TestLists]-------");
-        DtsodV24 dtsod = new(File.ReadAllText($"DtsodV24{Путь.Разд}lists.dtsod"));
+        DtsodV24 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}lists.dtsod"));
         foreach (KVPair pair in dtsod)
         {
             var list = new Autoarr<Unitype>(pair.value.VoidPtr, false);
@@ -60,7 +60,7 @@ public static class TestDtsodV24
     {
         Info.Log("c", "--[TestDtsodV24/TestReSerialization]--");
         var dtsod = new DtsodV24(new DtsodV24(new DtsodV24(
-            new DtsodV24(File.ReadAllText($"DtsodV24{Путь.Разд}complexes.dtsod")).ToString()).ToString()).ToString());
+            new DtsodV24(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}complexes.dtsod")).ToString()).ToString()).ToString());
         Info.Log("h", dtsod.ToString());
         Info.Log("g", "test completed");
     }
@@ -69,12 +69,12 @@ public static class TestDtsodV24
     {
         Info.Log("c", "-------[TestDtsodV24/TestSpeed]-------");
         IDtsod dtsod=null;
-        string _text = File.ReadAllText($"DtsodV23{Путь.Разд}messages.dtsod");
+        string _text = File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV23{Путь.Разд}messages.dtsod");
         string text = "";
         LogOperationTime( "V23 to V24 conversion", 32, ()=>
             text = DtsodConverter.ConvertVersion(new DtsodV23(_text), DtsodVersion.V24).ToString()
         );
-        File.WriteAllText($"DtsodV24{Путь.Разд}messages.dtsod",text);
+        File.WriteAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}messages.dtsod",text);
         LogOperationTime("V24 deserialization", 64, () => dtsod = new DtsodV24(text));
         LogOperationTime("V24 serialization", 64, () => text = dtsod.ToString());
         Info.Log("g", "test completed");

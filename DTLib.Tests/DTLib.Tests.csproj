@@ -11,7 +11,7 @@
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 		<RootNamespace>DTLib.Tests</RootNamespace>
 		<Configurations>Debug;Release;Release-net48</Configurations>
-		<Platforms>AnyCPU</Platforms>
+		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
 	</PropertyGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
@@ -28,22 +28,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Include="DtsodV23\*">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Include="DtsodV30\*">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="DtsodV24\base_types.dtsod">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="DtsodV24\complexes.dtsod">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="DtsodV24\lists.dtsod">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="DtsodV24\messages.dtsod">
+	  <None Update="Dtsod\TestResources\**\*">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
