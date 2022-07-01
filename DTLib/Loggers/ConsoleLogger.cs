@@ -3,13 +3,13 @@
 namespace DTLib.Loggers;
 
 // вывод лога в консоль и файл
-public class DefaultLogger : BaseLogger
+public class ConsoleLogger : BaseLogger
 {
-    public DefaultLogger() => Logfile = "";
-    public DefaultLogger(string logfile) : base(logfile) { }
+    public ConsoleLogger() : base() {}
+    public ConsoleLogger(string logfile) : base(logfile){}
+    public ConsoleLogger(string dir, string programName) : base(dir, programName) {}
 
-    public DefaultLogger(string dir, string programName) : base(dir, programName) { }
-
+    
     public override void Log(params string[] msg)
     {
         lock (statelocker) if (!IsEnabled) return;
@@ -18,22 +18,28 @@ public class DefaultLogger : BaseLogger
         LogNoTime(msg);
     }
 
+    
+    readonly object consolelocker = new();
+    
     public void LogNoTime(params string[] msg)
     {
         lock (statelocker) if (!IsEnabled) return;
         msg[msg.Length - 1] += '\n';
-        ColoredConsole.Write(msg);
+        lock (consolelocker)
+            ColoredConsole.Write(msg);
         if (WriteToFile)
         {
             if (msg.Length == 1)
-                lock (Logfile) File.AppendAllText(Logfile, msg[0]);
+                lock (LogfileStream) LogfileStream.Write(msg[0].ToBytes());
             else
             {
                 StringBuilder strB = new();
                 for (ushort i = 0; i < msg.Length; i++)
                     strB.Append(msg[++i]);
-                lock (Logfile) File.AppendAllText(Logfile, strB.ToString());
+                lock (LogfileStream) LogfileStream.Write(strB.ToString().ToBytes());
             }
         }
     }
+    
+    public void LogAsync(params string[] msg) => Task.Run(() => Log(msg));
 }

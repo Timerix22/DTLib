@@ -17,7 +17,7 @@ namespace DTLib.Tests;
 
 public static class Program
 {
-    public static readonly DefaultLogger Info = new();
+    public static readonly ConsoleLogger Info = new();
     public static void Main()
     {
         Info.Enable();

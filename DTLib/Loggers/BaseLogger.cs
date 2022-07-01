@@ -1,14 +1,24 @@
-﻿namespace DTLib.Loggers;
+﻿using System.IO;
+using File = DTLib.Filesystem.File;
 
-public abstract class BaseLogger
+namespace DTLib.Loggers;
+
+public abstract class BaseLogger : IDisposable
 {
     public BaseLogger() { }
-    public BaseLogger(string logfile) => (Logfile, WriteToFile) = (logfile,true);
+    public BaseLogger(string logfile)
+    {
+        WriteToFile=true;
+        LogfileName = logfile;
+        LogfileStream = File.OpenWrite(logfile);
+    }
+
     public BaseLogger(string dir, string programName)
         : this($"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_')) { }
 
 
-    public string Logfile { get; init; }
+    public string LogfileName;
+    public FileStream LogfileStream { get; init; }
     public bool IsEnabled { get; private set; } = false;
     public bool WriteToFile { get; private set; } = false;
     protected readonly object statelocker = new();
@@ -16,4 +26,12 @@ public abstract class BaseLogger
     public void Enable() { lock (statelocker) IsEnabled = true; }
 
     public abstract void Log(params string[] msg);
+
+    public virtual void Dispose()
+    {
+        LogfileStream?.Flush();
+        LogfileStream?.Close();
+    }
+
+    ~BaseLogger() => Dispose();
 }
