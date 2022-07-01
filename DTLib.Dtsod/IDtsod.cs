@@ -4,7 +4,7 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using System.Text;
 global using DTLib.Extensions;
-global using static DTLib.PublicLog;
+global using static DTLib.Logging.PublicLog;
 
 namespace DTLib.Dtsod;
 

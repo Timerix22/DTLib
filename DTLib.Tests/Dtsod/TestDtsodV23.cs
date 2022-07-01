@@ -19,7 +19,7 @@ public static class TestDtsodV23
         Info.Log("c", "-----[TestDtsodV23/TestBaseTypes]-----");
         DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV23{Путь.Разд}base_types.dtsod"));
         foreach (var pair in dtsod)
-            Info.LogNoTime("b", pair.Value.GetType().Name + ' ', "w", pair.Key + ' ', "c", pair.Value.ToString());
+            Info.Log("b", pair.Value.GetType().Name + ' ', "w", pair.Key + ' ', "c", pair.Value.ToString());
         Info.Log("g", "test completed");
     }
     public static void TestLists()
@@ -28,10 +28,10 @@ public static class TestDtsodV23
         DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV23{Путь.Разд}lists.dtsod"));
         foreach (var pair in dtsod)
         {
-            Info.LogNoTime("b",  pair.Value.GetType().Name + ' ', "w", pair.Key, "c",
+            Info.Log("b",  pair.Value.GetType().Name + ' ', "w", pair.Key, "c",
                 $" count: {pair.Value.Count}");
             foreach (var el in pair.Value)
-                Info.LogNoTime("b", '\t'+el.GetType().Name + ' ', "c", el.ToString());
+                Info.Log("b", '\t'+el.GetType().Name + ' ', "c", el.ToString());
         }
         Info.Log("g", "test completed");
     }
@@ -40,11 +40,13 @@ public static class TestDtsodV23
     {
         Info.Log("c", "-----[TestDtsodV23/TestComplexes]-----");
         DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV23{Путь.Разд}complexes.dtsod"));
-        foreach (var pair in dtsod)
+        foreach (var complex in dtsod)
         {
-            Info.LogNoTime("b", pair.Value.GetType().Name + ' ', "w", pair.Key, 
-                "b", " length: ", "c", pair.Value.Keys.Count.ToString() + "\n\t",
-                "y", pair.Value.ToString().Replace("\n","\n\t"));
+            Info.Log("b", complex.Value.GetType().Name + ' ', "w", complex.Key,
+                "b", " size: ", "c", complex.Value.Keys.Count.ToString());
+            foreach (var pair in (DtsodV23) complex.Value)
+                Info.Log("b", '\t' + pair.Value.GetType().Name + ' ', "w", pair.Key + ' ',
+                    "c", pair.Value.ToString());
         }
         Info.Log("g", "test completed");
     }

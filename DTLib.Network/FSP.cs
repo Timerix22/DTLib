@@ -151,16 +151,15 @@ public class FSP
             Debug("b", "file <", "c", fileOnClient, "b", ">...  ");
             if (!File.Exists(fileOnClient))
             {
-                DebugNoTime("y", "doesn't exist");
+                Debug("y", "doesn't exist");
                 DownloadFile(dirOnServer + fileOnServer, fileOnClient);
             }
             else if (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer])
             {
-                DebugNoTime("y", "outdated");
+                Debug("y", "outdated");
                 DownloadFile(dirOnServer + fileOnServer, fileOnClient);
             }
-            else
-                DebugNoTime("g", "without changes");
+            else Debug("g", "without changes");
         }
         // удаление лишних файлов
         if (delete_excess)
@@ -201,9 +200,5 @@ public class FSP
     static void Debug(params string[] msg)
     {
         if (debug) Log(msg);
-    }
-    static void DebugNoTime(params string[] msg)
-    {
-        if (debug) LogNoTime(msg);
     }
 }

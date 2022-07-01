@@ -20,7 +20,7 @@ public static class TestDtsodV24
         Info.Log("c", "-----[TestDtsodV24/TestBaseTypes]-----");
         DtsodV24 dtsod = new(File.ReadAllText($"Dtsod{Путь.Разд}TestResources{Путь.Разд}DtsodV24{Путь.Разд}base_types.dtsod"));
         foreach (var pair in dtsod)
-            Info.LogNoTime("b", pair.ToString());
+            Info.Log("b", pair.ToString());
         Info.Log("g", "test completed");
     }
 
@@ -39,16 +39,16 @@ public static class TestDtsodV24
         foreach (KVPair pair in dtsod)
         {
             var list = new Autoarr<Unitype>(pair.value.VoidPtr, false);
-            Info.LogNoTime("b",  pair.key.ToStringUTF8(), "w", $" length: {list.Length}");
+            Info.Log("b",  pair.key.ToStringUTF8(), "w", $" length: {list.Length}");
             foreach (var el in list)
             {
-                Info.LogNoTime("h", '\t' + el.ToString());
+                Info.Log("h", '\t' + el.ToString());
                 if (el.TypeCode == KerepTypeCode.AutoarrUnitypePtr)
                 {
                     var ar = new Autoarr<Unitype>(el.VoidPtr, false);
                     foreach (var k in ar)
                     {
-                        Info.LogNoTime($"\t\t{k.ToString()}");
+                        Info.Log($"\t\t{k.ToString()}");
                     }
                 }
             }

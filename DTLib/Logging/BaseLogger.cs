@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using File = DTLib.Filesystem.File;
 
-namespace DTLib.Loggers;
+namespace DTLib.Logging;
 
 public abstract class BaseLogger : IDisposable
 {
@@ -15,15 +15,25 @@ public abstract class BaseLogger : IDisposable
 
     public BaseLogger(string dir, string programName)
         : this($"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_')) { }
+    
+    public string LogfileName { get; protected set; }
+    public FileStream LogfileStream { get; protected set; }
 
+    protected readonly object _statelocker = new();
+    
+    private bool _isEnabled=true;
+    public bool IsEnabled
+    {
+        get { lock (_statelocker) return _isEnabled; }
+        set { lock (_statelocker) _isEnabled = value; }
+    }
 
-    public string LogfileName;
-    public FileStream LogfileStream { get; init; }
-    public bool IsEnabled { get; private set; } = false;
-    public bool WriteToFile { get; private set; } = false;
-    protected readonly object statelocker = new();
-    public void Disable() { lock (statelocker) IsEnabled = false; }
-    public void Enable() { lock (statelocker) IsEnabled = true; }
+    private bool _writeToFile;
+    public bool WriteToFile 
+    {
+        get { lock (_statelocker) return _writeToFile; }
+        set { lock (_statelocker) _writeToFile = value; }
+    }
 
     public abstract void Log(params string[] msg);
 

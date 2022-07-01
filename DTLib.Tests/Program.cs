@@ -8,9 +8,9 @@ global using DTLib;
 global using DTLib.Extensions;
 global using DTLib.Filesystem;
 global using DTLib.Dtsod;
-global using static DTLib.Loggers.LogFunctions;
+global using static DTLib.Logging.Tester;
 global using static DTLib.Tests.Program;
-using DTLib.Loggers;
+using DTLib.Logging;
 
 
 namespace DTLib.Tests;
@@ -20,9 +20,7 @@ public static class Program
     public static readonly ConsoleLogger Info = new();
     public static void Main()
     {
-        Info.Enable();
         PublicLog.LogEvent += Info.Log;
-        PublicLog.LogNoTimeEvent += Info.LogNoTime;
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
         Console.Title="tester";
