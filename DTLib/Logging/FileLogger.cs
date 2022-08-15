@@ -11,7 +11,7 @@ public class FileLogger : IDisposable
     }
 
     public FileLogger(string dir, string programName)
-        : this($"{dir}\\{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_')) { }
+        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now}.log".Replace(':', '-').Replace(' ', '_')) { }
     
     public string LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }

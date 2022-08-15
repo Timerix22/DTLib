@@ -137,10 +137,10 @@ public class FSP
 
     public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
     {
-        if (!dirOnClient.EndsWith("\\"))
-            dirOnClient += "\\";
-        if (!dirOnServer.EndsWith("\\"))
-            dirOnServer += "\\";
+        if (!dirOnClient.EndsWith(Путь.Разд))
+            dirOnClient += Путь.Разд;
+        if (!dirOnServer.EndsWith(Путь.Разд))
+            dirOnServer += Путь.Разд;
         Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">");
         var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
         Debug("g", $"found {manifest.Values.Count} files in manifest");
@@ -177,8 +177,8 @@ public class FSP
 
     public static void CreateManifest(string dir)
     {
-        if (!dir.EndsWith("\\"))
-            dir += "\\";
+        if (!dir.EndsWith(Путь.Разд))
+            dir += Путь.Разд;
         Log($"b", $"creating manifest of {dir}");
         StringBuilder manifestBuilder = new();
         Hasher hasher = new();
