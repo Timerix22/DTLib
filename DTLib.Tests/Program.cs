@@ -17,7 +17,7 @@ namespace DTLib.Tests;
 
 public static class Program
 {
-    public static readonly ConsoleLogger Info = new();
+    public static readonly ConsoleLogger Info = new("logs", "DTLib.Tests");
     public static void Main()
     {
         PublicLog.LogEvent += Info.Log;

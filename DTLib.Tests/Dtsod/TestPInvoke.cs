@@ -19,7 +19,7 @@ public static class TestPInvoke
 
     public static void TestPrintf()
     {
-        Info.Log("c", "---------[TestPInvoke/Printf]---------");
+        Info.Log("c", "---------[TestPInvoke/Printf]---------", "b", "");
         pinvoke_print("ъъ~ 中文");
         Info.Log("g", "test completed");
     }
@@ -29,7 +29,7 @@ public static class TestPInvoke
     
     public static unsafe void TestMarshalling()
     {
-        Info.Log("c", "---------[TestAutoarr/Print]----------");
+        Info.Log("c", "---------[TestAutoarr/TestMarshalling]----------");
         string msg = "ъъ~ 中文";
         test_marshalling(msg, out KVPair* kptr);
         KVPair k = *kptr;

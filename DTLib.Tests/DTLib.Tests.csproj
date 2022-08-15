@@ -20,7 +20,7 @@
 		<Reference Include="System.Dynamic" />
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\DTLib.Network\DTLib.Network.csproj" />
 		<ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
@@ -28,8 +28,12 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Update="Dtsod\TestResources\**\*">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="Dtsod\TestResources\**\*" CopyToOutputDirectory="Always" />
 	</ItemGroup>
+	
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="rm -rf ../bin/" />
+		<Exec Command="cp -r bin/ ../bin/" />
+	</Target>
+
 </Project>
