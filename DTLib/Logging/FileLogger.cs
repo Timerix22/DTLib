@@ -6,7 +6,7 @@ public class FileLogger : IDisposable
 {
     public FileLogger(string logfile)
     {
-        LogfileName = logfile;
+        LogfilePath = logfile;
         LogfileStream = File.OpenAppend(logfile);
     }
 
@@ -14,7 +14,7 @@ public class FileLogger : IDisposable
         : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.log"
             .Replace(':', '-').Replace(' ', '_')) { }
     
-    public string LogfileName { get; protected set; }
+    public string LogfilePath { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }
     protected string LastLogMessageTime;
     
