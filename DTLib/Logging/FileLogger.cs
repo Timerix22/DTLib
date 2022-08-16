@@ -6,15 +6,14 @@ public class FileLogger : IDisposable
 {
     public FileLogger(string logfile)
     {
-        LogfilePath = logfile;
+        LogfileName = logfile;
         LogfileStream = File.OpenAppend(logfile);
     }
 
     public FileLogger(string dir, string programName)
-        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.log"
-            .Replace(':', '-').Replace(' ', '_')) { }
+        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(MyTimeFormat.Instance)}.log") { }
     
-    public string LogfilePath { get; protected set; }
+    public string LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }
     protected string LastLogMessageTime;
     
@@ -23,7 +22,7 @@ public class FileLogger : IDisposable
     {
         lock (LogfileStream)
         {
-            LastLogMessageTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            LastLogMessageTime = DateTime.Now.ToString(MyTimeFormat.Instance);
             LogfileStream.WriteByte('['.ToByte());
             LogfileStream.Write(LastLogMessageTime.ToBytes());
             LogfileStream.Write("]: ".ToBytes());
