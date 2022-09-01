@@ -11,7 +11,7 @@ public class FileLogger : IDisposable
     }
 
     public FileLogger(string dir, string programName)
-        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(MyTimeFormat.Instance)}.log") { }
+        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log") { }
     
     public string LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }
@@ -22,7 +22,7 @@ public class FileLogger : IDisposable
     {
         lock (LogfileStream)
         {
-            LastLogMessageTime = DateTime.Now.ToString(MyTimeFormat.Instance);
+            LastLogMessageTime = DateTime.Now.ToString(MyTimeFormat.ForText);
             LogfileStream.WriteByte('['.ToByte());
             LogfileStream.Write(LastLogMessageTime.ToBytes());
             LogfileStream.Write("]: ".ToBytes());
