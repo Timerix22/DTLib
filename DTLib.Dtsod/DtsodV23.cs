@@ -280,7 +280,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
 
     internal static readonly Dictionary<Type, Action<dynamic, StringBuilder>> TypeSerializeFuncs = new()
     {
-        { typeof(bool), (val, b) => b.Append(val.ToString()) },
+        { typeof(bool), (val, b) => b.Append((bool)val ? "true" : "false") },
         { typeof(char), (val, b) => b.Append('\'').Append(val).Append('\'') },
         { typeof(string), (val, b) => b.Append('"').Append(val.Replace("\\","\\\\").Replace("\"", "\\\"")).Append('"') },
         { typeof(byte), (val, b) => b.Append(val.ToString()).Append('b') },
@@ -318,12 +318,15 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 else if (value is IList _list)
                 {
                     b.Append('[');
-                    foreach (object el in _list)
-                    {
-                        SerializeType(el, ref tabscount);
-                        b.Append(',');
+                    if(_list.Count>0){
+                        foreach (object el in _list)
+                        {
+                            SerializeType(el, ref tabscount);
+                            b.Append(',');
+                        }
+                        b.Remove(b.Length - 1, 1);
                     }
-                    b.Remove(b.Length - 1, 1).Append(']');
+                    b.Append(']');
                 }
                 else TypeSerializeFuncs[value.GetType()].Invoke(value, b);
             }
