@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
     <ItemGroup>
+		<Compile Remove="Ben.Demystifier\**"/>
         <ProjectReference Include="..\DTLib\DTLib.csproj" />
         <ProjectReference Include="Ben.Demystifier\src\Ben.Demystifier\Ben.Demystifier.csproj" />
     </ItemGroup>
