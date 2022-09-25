@@ -1,3 +1,6 @@
 [submodule "kerep"]
 	path = kerep
 	url = https://github.com/Timerix22/kerep.git
+[submodule "DTLib.Exceptions/Ben.Demystifier"]
+	path = DTLib.Exceptions/Ben.Demystifier
+	url = https://github.com/Timerix22/Ben.Demystifier

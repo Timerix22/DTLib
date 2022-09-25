@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<DebugType>portable</DebugType>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
+	</PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DTLib\DTLib.csproj" />
+        <ProjectReference Include="Ben.Demystifier\src\Ben.Demystifier\Ben.Demystifier.csproj" />
+    </ItemGroup>
+</Project>
