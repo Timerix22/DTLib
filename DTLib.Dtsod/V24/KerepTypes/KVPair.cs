@@ -22,6 +22,6 @@ public struct KVPair
     public override string ToString()
     {
         throw new NotImplementedException("Marshal.PtrToStringUTF8 can't get non-ascii chars?");
-        return $"{{{Marshal.PtrToStringUTF8(key)}, {value}}}";
+        //return $"{{{Marshal.PtrToStringUTF8(key)}, {value}}}";
     }
 }

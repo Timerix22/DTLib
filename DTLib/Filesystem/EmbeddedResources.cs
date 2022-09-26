@@ -12,7 +12,7 @@ public static class EmbeddedResources
 
     public static byte[] ReadBynary(string resourcePath, Assembly assembly = null)
     {
-        if (assembly == null) assembly = Assembly.GetCallingAssembly();
+        if (assembly is null) assembly = Assembly.GetCallingAssembly();
         using var reader = new BinaryReader(GetResourceStream(resourcePath, assembly));
         return reader.ReadBytes(int.MaxValue);
     }
@@ -20,7 +20,7 @@ public static class EmbeddedResources
 
     public static string ReadText(string resourcePath, Assembly assembly = null)
     {
-        if (assembly == null) assembly = Assembly.GetCallingAssembly();
+        if (assembly is null) assembly = Assembly.GetCallingAssembly();
         using var reader = new StreamReader(GetResourceStream(resourcePath, assembly));
         return reader.ReadToEnd();
     }
