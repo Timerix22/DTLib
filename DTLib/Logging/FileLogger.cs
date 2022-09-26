@@ -36,6 +36,7 @@ public class FileLogger : IDisposable
                 LogfileStream.Write(strb.ToString().ToBytes());
             }
             LogfileStream.WriteByte('\n'.ToByte());
+            LogfileStream.Flush();
         }
     }
 
