@@ -73,7 +73,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                     case ']':
                     case '{':
                     case '}':
-                        throw new Exception($"DtsodV23.Deserialize() error: unexpected {c}");
+                        throw new Exception($"unexpected {c}");
                     default:
                         b.Append(c);
                         break;
@@ -98,7 +98,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 {
                     prevIsBackslash = c == '\\' && !prevIsBackslash;
                     b.Append(c);
-                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + _text);
+                    if (++i >= text.Length) throw new Exception("end of text\ntext:\n" + _text);
                     c = text[i];
                 }
                 b.Append('"');
@@ -107,9 +107,11 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
             DtsodV23 ReadDtsod()
             {
                 short bracketBalance = 1;
-                c = text[++i];    //пропускает начальный символ '{'
                 while (bracketBalance != 0)
                 {
+                    if (++i >= text.Length) //пропускает начальный символ '{'
+                        throw new Exception("end of text\ntext:\n" + _text);
+                    c = text[i];
                     switch (c)
                     {
                         case ' ':
@@ -136,9 +138,6 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                             b.Append(c);
                             break;
                     }
-
-                    if (++i >= text.Length) throw new Exception("DtsodV23.Deserialize() error: end of text\ntext:\n" + _text);
-                    c = text[i];
                 }
 
                 var __text = b.ToString();
@@ -217,6 +216,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                 };
             }
 
+            object value = null;
             while (++i < text.Length)
             {
                 c = text[i];
@@ -236,32 +236,32 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                     case '\'':
                         b.Append(c).Append(text[++i]);
                         c = text[++i];
-                        if (c != '\'') throw new Exception("after <\'> should be char");
-                        else b.Append(c);
+                        if (c != '\'') 
+                            throw new Exception("after <\'> should be char");
+                        b.Append(c);
                         break;
                     case ';':
                     case ',':
                         if(b.Length == 0)
-                        {
-                            if(endOfList)
-                                return null;
-                            throw new Exception("zero length value");
-                        }
+                            return value;
                         string str = b.ToString();
                         b.Clear();
                         return ParseValue(str);
                     case '[':
-                        return ReadList();
+                        value=ReadList();
+                        goto case ';';
+                        break;
                     case ']':
                         endOfList = true;
                         break;
                     case '{':
-                        return ReadDtsod();
+                        value=ReadDtsod();
+                        break;
                     case '=':
                     case ':':
                     case '}':
                     case '$':
-                        throw new Exception($"DtsodV23.Deserialize() error: unexpected {c}");
+                        throw new Exception($"unexpected {c}");
                     default:
                         b.Append(c);
                         break;
