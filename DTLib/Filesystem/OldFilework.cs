@@ -45,7 +45,7 @@ public static class OldFilework
                             value += st[i];
                     }
                     reader.Close();
-                    //if (value == "") throw new System.Exception($"ReadFromConfig({configfile}, {key}) error: key not found");
+                    //if (value.NullOrEmpty()) throw new System.Exception($"ReadFromConfig({configfile}, {key}) error: key not found");
                     return value;
                 }
             }

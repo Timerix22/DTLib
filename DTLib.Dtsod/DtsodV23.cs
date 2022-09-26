@@ -28,7 +28,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
         while (i < text.Length)
         {
             string name = ReadName();
-            if (name == "") goto end;
+            if (name.IsNullOrEmpty()) goto end;
             dynamic value = ReadValue(out bool _);
             if (partOfDollarList)
             {
@@ -250,7 +250,6 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                     case '[':
                         value=ReadList();
                         goto case ';';
-                        break;
                     case ']':
                         endOfList = true;
                         break;
