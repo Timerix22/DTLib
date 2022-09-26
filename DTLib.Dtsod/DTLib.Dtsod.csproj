@@ -6,7 +6,6 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-        <DebugType>portable</DebugType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
