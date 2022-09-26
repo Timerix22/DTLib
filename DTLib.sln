@@ -17,10 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Dtsod", "DTLib.Dtsod\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Network", "DTLib.Network\DTLib.Network.csproj", "{24B7D0A2-0462-424D-B3F5-29A6655FE472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Exceptions", "DTLib.Exceptions\DTLib.Exceptions.csproj", "{A999EC29-ADBA-4A89-8EBD-E28594F6CE0A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ben.Demystifier", "DTLib.Exceptions\Ben.Demystifier\src\Ben.Demystifier\Ben.Demystifier.csproj", "{001D56C7-08D3-4F24-802C-C11077510D4F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,14 +39,6 @@ Global
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A999EC29-ADBA-4A89-8EBD-E28594F6CE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A999EC29-ADBA-4A89-8EBD-E28594F6CE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A999EC29-ADBA-4A89-8EBD-E28594F6CE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A999EC29-ADBA-4A89-8EBD-E28594F6CE0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{001D56C7-08D3-4F24-802C-C11077510D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{001D56C7-08D3-4F24-802C-C11077510D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{001D56C7-08D3-4F24-802C-C11077510D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{001D56C7-08D3-4F24-802C-C11077510D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
