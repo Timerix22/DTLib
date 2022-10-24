@@ -1,4 +1,5 @@
-﻿namespace DTLib.Filesystem;
+﻿
+namespace DTLib.Filesystem;
 
 public static class File
 {
@@ -59,18 +60,20 @@ public static class File
     public static void AppendAllText(string file, string content) => AppendAllBytes(file, content.ToBytes());
 
     public static System.IO.FileStream OpenRead(string file) =>
-        Exists(file) ? System.IO.File.OpenRead(file) : throw new Exception($"file not found: <{file}>");
+        Exists(file) 
+            ? System.IO.File.Open(file, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite) 
+            : throw new Exception($"file not found: <{file}>");
     public static System.IO.FileStream OpenWrite(string file)
     {
         if (Exists(file))
             Delete(file);
         Create(file);
-        return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate);
+        return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
     }
     public static System.IO.FileStream OpenAppend(string file)
     {
         Create(file);
-        return System.IO.File.Open(file, System.IO.FileMode.Append);
+        return System.IO.File.Open(file, System.IO.FileMode.Append, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
     }
 
     public static void CreateSymlink(string sourceName, string symlinkName)

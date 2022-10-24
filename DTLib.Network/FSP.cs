@@ -54,7 +54,7 @@ public class FSP
     {
         using var fileStream = new System.IO.MemoryStream();
         Download_SharedCode(fileStream, false);
-        byte[] output = fileStream.GetBuffer();
+        byte[] output = fileStream.ToArray();
         fileStream.Close();
         Debug("g", $"   downloaded {BytesDownloaded} of {Filesize} bytes");
         return output;
@@ -177,6 +177,12 @@ public class FSP
 
     public static void CreateManifest(string dir)
     {
+        if(!Directory.Exists(dir))
+        {
+            Directory.Create(dir);
+            Log("y", $"can't create manifest, dir <{dir}> doesn't exist");
+            return;
+        }
         if (!dir.EndsWith(Путь.Разд))
             dir += Путь.Разд;
         Log($"b", $"creating manifest of {dir}");
