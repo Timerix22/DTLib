@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0;net48</TargetFrameworks>
         <LangVersion>preview</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+        <DebugType>embedded</DebugType>
         <Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
     </PropertyGroup>

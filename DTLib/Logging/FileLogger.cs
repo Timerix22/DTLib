@@ -42,8 +42,12 @@ public class FileLogger : IDisposable
 
     public virtual void Dispose()
     {
-        LogfileStream?.Flush();
-        LogfileStream?.Close();
+        try 
+        {
+            LogfileStream?.Flush();
+            LogfileStream?.Close();
+        }
+        catch (ObjectDisposedException) { }
     }
 
     ~FileLogger() => Dispose();

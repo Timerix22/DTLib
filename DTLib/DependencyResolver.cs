@@ -9,7 +9,7 @@ public static class DependencyResolver
     public static void CopyLibs()
     {
         if(DepsCopied) return;
-        string depsdir = "Dependencies" + Путь.Разд;
+        string depsdir = $"Dependencies{Путь.Разд}";
         depsdir += Environment.OSVersion.Platform switch
         {
             PlatformID.Unix => "linux",

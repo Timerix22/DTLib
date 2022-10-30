@@ -2,7 +2,9 @@
 
 public static class StringConverter
 {
+    public static ASCIIEncoding ASCII = new ASCIIEncoding();
     public static Encoding UTF8 = new UTF8Encoding(false);
+    public static Encoding UTF8BOM = new UTF8Encoding(true);
     public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
     public static string BytesToString(this byte[] bytes) => UTF8.GetString(bytes);
 

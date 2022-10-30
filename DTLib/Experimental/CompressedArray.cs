@@ -38,7 +38,8 @@ namespace DTLib.Experimental
                 }
                 Memory = listMem.ToArray();
                 Description = listDesc.ToArray();
-                ColoredConsole.Write("b", "listMem.Count: ", "c", listMem.Count.ToString(), "b", "  listDesc.Count: ", "c", listDesc.Count + "\n");
+                ColoredConsole.Write("b", "listMem.Count: ", "c", listMem.Count.ToString(), "b", "  listDesc.Count: ", "c",
+                    $"{listDesc.Count}\n");
                 for (short i = 0; i < listDesc.Count; i++)
                 {
                     ColoredConsole.Write("y", $"{Description[i]}:{Memory[i]}\n");

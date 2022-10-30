@@ -59,6 +59,14 @@ public static class ColoredConsole
         else throw new Exception("ColoredConsole.Write() error: every text string must have color string before");
     }
 
+    public static void WriteLine() => Console.WriteLine();
+
+    public static void WriteLine(params string[] input)
+    {
+        Write(input);
+        WriteLine();
+    }
+    
     // ввод цветного текста
     public static string Read(string color)
     {

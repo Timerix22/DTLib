@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net48</TargetFrameworks>
 		<LangVersion>preview</LangVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
@@ -8,6 +8,7 @@
 		<!--xxhash uses arithmetic overflow-->
 		<CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugType>embedded</DebugType>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 		<Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
