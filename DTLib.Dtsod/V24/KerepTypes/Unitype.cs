@@ -48,7 +48,7 @@ public struct Unitype
                 Float64 = (double) v;
                 break;
             case KerepTypeCode.CharPtr:
-                VoidPtr = ((string)v).ToHGlobalUTF8();
+                VoidPtr = ((string)v).StringToHGlobalUTF8();
                 break;
             case KerepTypeCode.AutoarrUnitypePtr:
                 TypeCode = KerepTypeCode.AutoarrUnitypePtr;
@@ -75,7 +75,7 @@ public struct Unitype
             case KerepTypeCode.Int64: return Int64;
             case KerepTypeCode.UInt64: return UInt64;
             case KerepTypeCode.Float64: return Float64;
-            case KerepTypeCode.CharPtr: return Marshal.PtrToStringUTF8(VoidPtr);
+            case KerepTypeCode.CharPtr: return VoidPtr.HGlobalUTF8ToString();
             case KerepTypeCode.AutoarrUnitypePtr: return new Autoarr<Unitype>(VoidPtr, false);
             case KerepTypeCode.AutoarrKVPairPtr: return new Autoarr<KVPair>(VoidPtr, false);
             case KerepTypeCode.HashtablePtr: return new DtsodV24(VoidPtr);
@@ -92,7 +92,7 @@ public struct Unitype
             case KerepTypeCode.Int64: return $"{{Int64:{Int64}}}";
             case KerepTypeCode.UInt64: return $"{{UInt64:{UInt64}}}";
             case KerepTypeCode.Float64: return $"{{Float64:{Float64}}}";
-            case KerepTypeCode.CharPtr: return $"{{CharPtr:{Marshal.PtrToStringUTF8(VoidPtr)}}}";
+            case KerepTypeCode.CharPtr: return $"{{CharPtr:{Unmanaged.HGlobalUTF8ToString(VoidPtr)}}}";
             case KerepTypeCode.AutoarrUnitypePtr: return $"{{AutoarrUnitypePtr:{VoidPtr.ToString()}}}";
             case KerepTypeCode.AutoarrKVPairPtr: return $"{{AutoarrKVPairPtr:{VoidPtr.ToString()}}}";
             case KerepTypeCode.HashtablePtr: return $"{{HashtablePtr:{VoidPtr.ToString()}}}";

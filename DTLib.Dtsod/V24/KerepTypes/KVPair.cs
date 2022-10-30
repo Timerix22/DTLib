@@ -15,13 +15,12 @@ public struct KVPair
     }
     public KVPair(string k, Unitype v)
     {
-        key = k.ToHGlobalUTF8();
+        key = k.StringToHGlobalUTF8();
         value = v;
     }
     
     public override string ToString()
     {
-        throw new NotImplementedException("Marshal.PtrToStringUTF8 can't get non-ascii chars?");
-        //return $"{{{Marshal.PtrToStringUTF8(key)}, {value}}}";
+        return $"{{{Unmanaged.HGlobalUTF8ToString(key)}, {value}}}";
     }
 }

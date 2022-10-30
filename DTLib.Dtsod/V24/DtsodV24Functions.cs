@@ -19,7 +19,7 @@ internal static class DtsodV24Functions
     static void TryThrowErrmsg(CharPtr err)
     {
         if (err == IntPtr.Zero) return;
-        string errmsg = Marshal.PtrToStringUTF8(err);
+        string errmsg = Unmanaged.HGlobalUTF8ToString(err);
         Marshal.FreeHGlobal(err);
         throw new Exception(errmsg);
     }
@@ -42,7 +42,7 @@ internal static class DtsodV24Functions
     {
         kerep_DtsodV24_serialize(dtsod, out var text, out var err);
         TryThrowErrmsg(err);
-        return Marshal.PtrToStringUTF8(text);
+        return Unmanaged.HGlobalUTF8ToString(text);
     }
 
     [DllImport(kereplib, CallingConvention = CallingConvention.Cdecl)]
@@ -60,7 +60,7 @@ internal static class DtsodV24Functions
 
     internal static void AddOrSet(DtsodPtr dtsod, string key, Unitype value)
     {
-        IntPtr keyptr = key.ToHGlobalUTF8();
+        IntPtr keyptr = key.StringToHGlobalUTF8();
         kerep_DtsodV24_addOrSet(dtsod, keyptr, value);
     }
 

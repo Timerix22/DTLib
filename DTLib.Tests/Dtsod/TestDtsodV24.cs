@@ -39,7 +39,7 @@ public static class TestDtsodV24
         foreach (KVPair pair in dtsod)
         {
             var list = new Autoarr<Unitype>(pair.value.VoidPtr, false);
-            Info.Log("b",  pair.key.ToStringUTF8(), "w", $" length: {list.Length}");
+            Info.Log("b",  pair.key.HGlobalUTF8ToString(), "w", $" length: {list.Length}");
             foreach (var el in list)
             {
                 Info.Log("h", '\t' + el.ToString());
