@@ -44,30 +44,47 @@ public static class StringConverter
     public static bool StartsWith(this string s, char c) => s[0] == c;
     public static bool EndsWith(this string s, char c) => s[s.Length - 1] == c;
 
-    public static string MergeToString(params object[] parts)
+    public static string MergeToString<TVal>(params TVal[] parts)
     {
+        if (parts.Length == 0)
+            return "";
         StringBuilder builder = new();
         for (int i = 0; i < parts.Length; i++)
             builder.Append(parts[i]);
         return builder.ToString();
     }
-    public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
+    public static string MergeToString<TVal, TSep>(TSep separator, params TVal[] parts)
     {
-        StringBuilder builder = new();
-        foreach (T elem in collection)
-        {
-            builder.Append(elem);
-            builder.Append(separator);
-        }
-        if (builder.Length == 0)
+        if (parts.Length == 0)
             return "";
-        builder.Remove(builder.Length - separator.Length, separator.Length);
+        StringBuilder builder = new();
+        builder.Append(parts[0]);
+        for (int i = 1; i < parts.Length; i++)
+        {
+            builder.Append(separator);
+            builder.Append(parts[i]);
+        }
         return builder.ToString();
     }
-    public static string MergeToString<T>(this IEnumerable<T> collection)
+    
+    public static string MergeToString<TVal, TSep>(this IEnumerable<TVal> collection, TSep separator)
     {
         StringBuilder builder = new();
-        foreach (T elem in collection)
+        using var e = collection.GetEnumerator();
+        if(e.MoveNext()) 
+            builder.Append(e.Current);
+        while (e.MoveNext())
+        {
+            builder.Append(separator);
+            builder.Append(e.Current);
+        }
+        return builder.ToString();
+    }
+    
+    public static string MergeToString<TVal>(this IEnumerable<TVal> collection)
+    {
+        StringBuilder builder = new();
+        foreach (var elem in collection)
             builder.Append(elem);
         return builder.ToString();
     }

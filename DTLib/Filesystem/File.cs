@@ -3,7 +3,7 @@ namespace DTLib.Filesystem;
 
 public static class File
 {
-    public static int GetSize(string file) => new System.IO.FileInfo(file).Length.ToInt();
+    public static long GetSize(string file) => new System.IO.FileInfo(file).Length;
 
     public static bool Exists(string file) => System.IO.File.Exists(file);
 
@@ -32,9 +32,10 @@ public static class File
     public static byte[] ReadAllBytes(string file)
     {
         using System.IO.FileStream stream = OpenRead(file);
-        int size = GetSize(file);
+        int size = GetSize(file).ToInt();
         byte[] output = new byte[size];
-        stream.Read(output, 0, size);
+        if (stream.Read(output, 0, size) < size)
+            throw new Exception("can't read all bytes");
         stream.Close();
         return output;
     }
