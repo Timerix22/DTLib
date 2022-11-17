@@ -35,7 +35,7 @@ public static class BaseConverter
         return output;
     }
 
-    public static byte[] ToBytes(this int num)
+    public static byte[] IntToBytes(this int num)
     {
         List<byte> output = new();
         while (num != 0)

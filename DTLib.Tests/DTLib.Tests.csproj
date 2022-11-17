@@ -21,6 +21,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<ProjectReference Include="..\DTLib.Logging\DTLib.Logging.csproj" />
 		<ProjectReference Include="..\DTLib.Network\DTLib.Network.csproj" />
 		<ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
 		<ProjectReference Include="..\DTLib\DTLib.csproj" />

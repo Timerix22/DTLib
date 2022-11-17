@@ -30,36 +30,36 @@ public static class ColoredConsole
         _ => throw new Exception($"ColoredConsole.ParseColor({color}) error: incorrect color"),
     };
 
+    public static void Write(ConsoleColor color,string msg)
+    {
+        Console.ForegroundColor = color;
+        Console.Write(msg);
+        Console.ForegroundColor = ConsoleColor.Gray;
+    }
+
+    public static void Write(string msg) => Write(ConsoleColor.Gray, msg);
+    
     // вывод цветного текста
     public static void Write(params string[] input)
     {
-        if (input.Length == 1)
+        if (input.Length % 2 != 0)
+            throw new Exception("ColoredConsole.Write() error: every text string must have color string before");
+        
+        for (ushort i = 0; i < input.Length; i++)
         {
-            if (Console.ForegroundColor != ConsoleColor.Gray)
-                Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write(input[0]);
+            Console.ForegroundColor = ParseColor(input[i++]);
+            Console.Write(input[i]);
         }
-        else if (input.Length % 2 == 0)
-        {
-            StringBuilder strB = new();
-            for (ushort i = 0; i < input.Length; i++)
-            {
-                ConsoleColor c = ParseColor(input[i]);
-                if (Console.ForegroundColor != c)
-                {
-                    Console.Write(strB.ToString());
-                    Console.ForegroundColor = c;
-                    strB.Clear();
-                }
-                strB.Append(input[++i]);
-            }
-            if (strB.Length > 0)
-                Console.Write(strB.ToString());
-        }
-        else throw new Exception("ColoredConsole.Write() error: every text string must have color string before");
+        Console.ForegroundColor = ConsoleColor.Gray;
     }
 
     public static void WriteLine() => Console.WriteLine();
+    public static void WriteLine(ConsoleColor color,string msg)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(msg);
+        Console.ForegroundColor = ConsoleColor.Gray;
+    }
 
     public static void WriteLine(params string[] input)
     {
@@ -68,11 +68,13 @@ public static class ColoredConsole
     }
     
     // ввод цветного текста
-    public static string Read(string color)
+    public static string Read(ConsoleColor color)
     {
-        ConsoleColor c = ParseColor(color);
-        if (Console.ForegroundColor != c)
-            Console.ForegroundColor = c;
-        return Console.ReadLine();
+        Console.ForegroundColor = color;
+        var r = Console.ReadLine();
+        Console.ForegroundColor = ConsoleColor.Gray;
+        return r;
     }
+
+    public static string Read(string color) => Read(ParseColor(color));
 }

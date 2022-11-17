@@ -6,7 +6,7 @@ public static class Unmanaged
 {
     public static unsafe IntPtr StringToHGlobalUTF8(this string s)
     {
-        byte[] buf = s.ToBytes();
+        byte[] buf = s.ToBytes(StringConverter.UTF8);
         int bl = buf.Length;
         byte* ptr=(byte*)Marshal.AllocHGlobal(bl + 1);
         for (int i = 0; i < bl; i++)

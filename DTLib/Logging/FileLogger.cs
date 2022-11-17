@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace DTLib.Logging;
+﻿namespace DTLib.Logging;
 
 public class FileLogger : IDisposable
 {
@@ -24,16 +22,16 @@ public class FileLogger : IDisposable
         {
             LastLogMessageTime = DateTime.Now.ToString(MyTimeFormat.ForText);
             LogfileStream.WriteByte('['.ToByte());
-            LogfileStream.Write(LastLogMessageTime.ToBytes());
-            LogfileStream.Write("]: ".ToBytes());
+            LogfileStream.Write(LastLogMessageTime.ToBytes(StringConverter.UTF8));
+            LogfileStream.Write("]: ".ToBytes(StringConverter.UTF8));
             if (msg.Length == 1)
-                LogfileStream.Write(msg[0].ToBytes());
+                LogfileStream.Write(msg[0].ToBytes(StringConverter.UTF8));
             else
             {
                 var strb = new StringBuilder();
                 for (ushort i = 1; i < msg.Length; i += 2)
                     strb.Append(msg[i]);
-                LogfileStream.Write(strb.ToString().ToBytes());
+                LogfileStream.Write(strb.ToString().ToBytes(StringConverter.UTF8));
             }
             LogfileStream.WriteByte('\n'.ToByte());
             LogfileStream.Flush();

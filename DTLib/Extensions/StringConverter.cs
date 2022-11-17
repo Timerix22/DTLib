@@ -2,11 +2,10 @@
 
 public static class StringConverter
 {
-    public static ASCIIEncoding ASCII = new ASCIIEncoding();
     public static Encoding UTF8 = new UTF8Encoding(false);
     public static Encoding UTF8BOM = new UTF8Encoding(true);
-    public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
-    public static string BytesToString(this byte[] bytes) => UTF8.GetString(bytes);
+    public static byte[] ToBytes(this string str, Encoding encoding) => encoding.GetBytes(str);
+    public static string BytesToString(this byte[] bytes, Encoding encoding) => encoding.GetString(bytes);
 
     // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
     public static string HashToString(this byte[] hash)
@@ -51,6 +50,11 @@ public static class StringConverter
             builder.Append(parts[i]);
         return builder.ToString();
     }
+    
+    // String.Join(sep,string...) does some low-level memory manipulations, that are faster than StringBuilder
+    public static string MergeToString(params string[] parts)
+        =>string.Join(null, parts);
+    
     public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
     {
         StringBuilder builder = new();
