@@ -2,10 +2,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DTLib.Logging.New.Microsoft;
 
-internal class MyLoggerWrapper<TCaller> : ILogger<TCaller>
+public class MyLoggerWrapper<TCaller> : global::Microsoft.Extensions.Logging.ILogger<TCaller>
 {
-    private ILogger _logger;
-    public MyLoggerWrapper(ILogger logger)=>
+    private DTLib.Logging.New.ILogger _logger;
+    public MyLoggerWrapper(DTLib.Logging.New.ILogger logger)=>
         _logger = logger;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
