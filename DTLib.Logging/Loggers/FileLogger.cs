@@ -2,6 +2,10 @@
 
 public class FileLogger : ILogger
 {
+    public bool DebugLogEnabled { get; set; } = true;
+    public bool InfoLogEnabled { get; set; } = true;
+    public bool WarnLogEnabled { get; set; } = true;
+    public bool ErrorLogenabled { get; set; } = true;
     public ILogFormat Format { get; }
     
     public string LogfileName { get; protected set; }
@@ -26,6 +30,9 @@ public class FileLogger : ILogger
 
     public void Log(string context, LogSeverity severity, object message, ILogFormat format)
     {
+        if(!this.CheckSeverity(severity))
+            return;
+        
         var msg = format.CreateMessage(context, severity, format).ToBytes(StringConverter.UTF8);
         lock (LogfileStream)
         {

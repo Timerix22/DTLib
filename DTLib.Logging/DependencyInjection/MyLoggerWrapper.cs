@@ -5,14 +5,14 @@ namespace DTLib.Logging.DependencyInjection;
 
 public class MyLoggerWrapper<TCaller> : Microsoft.Extensions.Logging.ILogger<TCaller>
 {
-    private DTLib.Logging.New.ILogger _logger;
+    public DTLib.Logging.New.ILogger Logger;
     public MyLoggerWrapper(DTLib.Logging.New.ILogger logger)=>
-        _logger = logger;
+        Logger = logger;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
         string message = formatter(state, exception);
-        _logger.Log(typeof(TCaller).Name, LogSeverity_FromLogLevel(logLevel), message);
+        Logger.Log(typeof(TCaller).Name, LogSeverity_FromLogLevel(logLevel), message);
     }
 
     private bool _isEnabled=true;
