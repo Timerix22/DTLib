@@ -1,8 +1,9 @@
+using DTLib.Logging.New;
 using Microsoft.Extensions.Logging;
 
-namespace DTLib.Logging.New.Microsoft;
+namespace DTLib.Logging.DependencyInjection;
 
-public class MyLoggerWrapper<TCaller> : global::Microsoft.Extensions.Logging.ILogger<TCaller>
+public class MyLoggerWrapper<TCaller> : Microsoft.Extensions.Logging.ILogger<TCaller>
 {
     private DTLib.Logging.New.ILogger _logger;
     public MyLoggerWrapper(DTLib.Logging.New.ILogger logger)=>
