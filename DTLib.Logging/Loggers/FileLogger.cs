@@ -2,7 +2,7 @@
 
 public class FileLogger : ILogger
 {
-    public bool DebugLogEnabled { get; set; } = true;
+    public bool DebugLogEnabled { get; set; } = false;
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogenabled { get; set; } = true;
