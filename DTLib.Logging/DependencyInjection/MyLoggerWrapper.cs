@@ -12,7 +12,7 @@ public class MyLoggerWrapper<TCaller> : Microsoft.Extensions.Logging.ILogger<TCa
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
         string message = formatter(state, exception);
-        _logger.Log(nameof(TCaller), LogSeverity_FromLogLevel(logLevel), message);
+        _logger.Log(typeof(TCaller).Name, LogSeverity_FromLogLevel(logLevel), message);
     }
 
     private bool _isEnabled=true;

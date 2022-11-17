@@ -20,7 +20,7 @@ public class DefaultLogFormat : ILogFormat
         if (PrintTimeStamp) 
             sb.Append('[').Append(DateTime.Now.ToString(MyTimeFormat.ForText)).Append(']');
         if (PrintContext && PrintSeverity) 
-            sb.Append('[').Append(context).Append('/').Append(severity.ToString().Append(']'));
+            sb.Append('[').Append(context).Append('/').Append(severity.ToString()).Append(']');
         else if(PrintContext) 
             sb.Append('[').Append(context).Append(']');
         else if(PrintSeverity) 
