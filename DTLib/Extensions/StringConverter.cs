@@ -51,9 +51,9 @@ public static class StringConverter
         return builder.ToString();
     }
     
-    // String.Join(string...) does some low-level memory manipulations, that are faster than StringBuilder
-    public static string MergeToString(string part0, params string[] parts)
-        =>string.Join(part0, parts);
+    // String.Join(sep,string...) does some low-level memory manipulations, that are faster than StringBuilder
+    public static string MergeToString(params string[] parts)
+        =>string.Join(null, parts);
     
     public static string MergeToString<T>(this IEnumerable<T> collection, string separator)
     {
