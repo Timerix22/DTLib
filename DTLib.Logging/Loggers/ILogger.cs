@@ -9,7 +9,6 @@ public interface ILogger : IDisposable
     bool WarnLogEnabled { get; set; }
     bool ErrorLogenabled { get; set; }
     
-    void Log(string context, LogSeverity severity, object message);
     void Log(string context, LogSeverity severity, object message, ILogFormat format);
     
 }

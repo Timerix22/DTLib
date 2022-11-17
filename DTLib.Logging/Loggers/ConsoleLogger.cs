@@ -27,9 +27,6 @@ public class ConsoleLogger : ILogger
         lock (consolelocker) 
             ColoredConsole.Write(ColorFromSeverity(severity),msg);
     }
-    
-    public void Log(string context, LogSeverity severity, object message)
-        => Log(context, severity, message, Format);
 
     private static ConsoleColor ColorFromSeverity(LogSeverity severity)
         => severity switch

@@ -10,17 +10,18 @@ global using DTLib.Filesystem;
 global using DTLib.Dtsod;
 global using static DTLib.Tests.TesterLog;
 global using static DTLib.Tests.Program;
-using DTLib.Logging;
+using DTLib.Logging.New;
 
 
 namespace DTLib.Tests;
 
 public static class Program
 {
-    public static readonly ConsoleLogger Info = new("logs", "DTLib.Tests");
+    public static readonly Logging.ConsoleLogger OldLogger = new("logs", "DTLib.Tests");
+    public static readonly ILogger NewLogger = new CompositeLogger(new ConsoleLogger(), new FileLogger(OldLogger.LogfileName));
     public static void Main()
     {
-        PublicLog.LogEvent += Info.Log;
+        Logging.PublicLog.LogEvent += OldLogger.Log;
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
         Console.Title="tester";
@@ -32,7 +33,7 @@ public static class Program
             TestDtsodV24.TestAll();
         }
         catch (Exception ex)
-        { Info.Log("r", ex.ToString()); }
+        { NewLogger.LogException("Main", ex); }
         Console.ResetColor();
     }
 }

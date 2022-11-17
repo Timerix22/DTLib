@@ -15,24 +15,24 @@ public static class TestAutoarr
 
     public static void Fill(Autoarr<KVPair> ar)
     {
-        Info.Log("c", "----------[TestAutoarr/Fill]----------");
+        OldLogger.Log("c", "----------[TestAutoarr/Fill]----------");
         for(uint i=0;i<ar.MaxLength;i++)
             ar.Add(new KVPair($"key_{i}",new Unitype(i)));
-        Info.Log("g", "test completed");
+        OldLogger.Log("g", "test completed");
     }
 
     public static void Print(Autoarr<KVPair> ar)
     {
-        Info.Log("c", "----------[TestAutoarr/Print]---------");
+        OldLogger.Log("c", "----------[TestAutoarr/Print]---------");
         foreach (KVPair pair in ar) 
-            Info.Log("h", pair.ToString());
-        Info.Log("g", "test completed");
+            OldLogger.Log("h", pair.ToString());
+        OldLogger.Log("g", "test completed");
     }
 
     public static void Free(Autoarr<KVPair> ar)
     {
-        Info.Log("c", "----------[TestAutoarr/Free]----------");
+        OldLogger.Log("c", "----------[TestAutoarr/Free]----------");
         ar.Dispose();
-        Info.Log("g", "test completed");
+        OldLogger.Log("g", "test completed");
     }
 }

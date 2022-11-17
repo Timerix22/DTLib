@@ -32,10 +32,6 @@ public class CompositeLogger : ILogger
             _loggers[i].Log(context, severity, message, format);
     }
 
-    public void Log(string context, LogSeverity severity, object message)
-        => Log(context, severity, message, Format);
-    
-    
     public void Dispose()
     {
         for (int i = 0; i < _loggers.Length; i++)

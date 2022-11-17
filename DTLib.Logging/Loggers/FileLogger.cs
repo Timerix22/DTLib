@@ -33,23 +33,19 @@ public class FileLogger : ILogger
         if(!this.CheckSeverity(severity))
             return;
         
-        var msg = format.CreateMessage(context, severity, format).ToBytes(StringConverter.UTF8);
+        var msg = format.CreateMessage(context, severity, message);
         lock (LogfileStream)
         {
-            LogfileStream.Write(msg);
+            LogfileStream.Write(msg.ToBytes(StringConverter.UTF8));
             LogfileStream.Flush();
         }
     }
-    
-    public void Log(string context, LogSeverity severity, object message)
-        => Log(context, severity, message, Format);
 
     public virtual void Dispose()
     {
         try 
         {
             LogfileStream?.Flush();
-            LogfileStream?.Close();
             LogfileStream?.Dispose();
         }
         catch (ObjectDisposedException) { }
