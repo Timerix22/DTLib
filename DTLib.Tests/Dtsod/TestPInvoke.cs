@@ -28,7 +28,7 @@ public static class TestPInvoke
     }
     
     [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
-    static extern void pinvoke_print([MarshalAs(UnmanagedType.LPUTF8Str)] string msg);
+    static extern void pinvoke_print([MarshalAs(UnmanagedType.LPStr)] string msg);
 
     public static void TestPrintf()
     {
@@ -38,7 +38,7 @@ public static class TestPInvoke
     }
     
     [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
-    static extern unsafe void test_marshalling([MarshalAs(UnmanagedType.LPUTF8Str)] string text, out IntPtr kptr);
+    static extern unsafe void test_marshalling([MarshalAs(UnmanagedType.LPStr)] string text, out IntPtr kptr);
     
     public static unsafe void TestMarshalling()
     {
