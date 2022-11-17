@@ -8,7 +8,7 @@ global using DTLib;
 global using DTLib.Extensions;
 global using DTLib.Filesystem;
 global using DTLib.Dtsod;
-global using static DTLib.Logging.Tester;
+global using static DTLib.Tests.TesterLog;
 global using static DTLib.Tests.Program;
 using DTLib.Logging;
 

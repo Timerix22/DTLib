@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
+using DTLib.Logging;
 
-namespace DTLib.Logging;
+namespace DTLib.Tests;
 
-public static class Tester
+public static class TesterLog
 {
     public static void LogOperationTime(string op_name, int repeats, Action operation)
     {
@@ -13,6 +13,6 @@ public static class Tester
             operation();
         clock.Stop();
         double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
-        Log("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(MyTimeFormat.ForText),"y"," seconds");
+        PublicLog.Log("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(MyTimeFormat.ForText),"y"," seconds");
     }
 }

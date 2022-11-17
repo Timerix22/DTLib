@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Dtsod", "DTLib.Dtsod\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Network", "DTLib.Network\DTLib.Network.csproj", "{24B7D0A2-0462-424D-B3F5-29A6655FE472}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Logging", "DTLib.Logging\DTLib.Logging.csproj", "{00B76172-32BB-4B72-9891-47FAEF63386C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24B7D0A2-0462-424D-B3F5-29A6655FE472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00B76172-32BB-4B72-9891-47FAEF63386C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00B76172-32BB-4B72-9891-47FAEF63386C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00B76172-32BB-4B72-9891-47FAEF63386C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00B76172-32BB-4B72-9891-47FAEF63386C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
