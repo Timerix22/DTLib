@@ -42,6 +42,12 @@ public static class ColoredConsole
     // вывод цветного текста
     public static void Write(params string[] input)
     {
+        if (input.Length == 1)
+        {
+            Write(input[0]);
+            return;
+        }
+        
         if (input.Length % 2 != 0)
             throw new Exception("ColoredConsole.Write() error: every text string must have color string before");
         
