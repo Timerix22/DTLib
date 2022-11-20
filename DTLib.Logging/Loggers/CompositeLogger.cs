@@ -5,13 +5,57 @@ namespace DTLib.Logging.New;
 /// </summary>
 public class CompositeLogger : ILogger
 {
-    public bool DebugLogEnabled { get; set; } = false;
-    public bool InfoLogEnabled { get; set; } = true;
-    public bool WarnLogEnabled { get; set; } = true;
-    public bool ErrorLogenabled { get; set; } = true;
+    public bool DebugLogEnabled
+    {
+        get => _debugLogEnabled;
+        set
+        {
+            _debugLogEnabled = value;
+            for (int i = 0; i < _loggers.Length; i++)
+                _loggers[i].DebugLogEnabled = value;
+        }
+    }
+
+    public bool InfoLogEnabled
+    {
+        get => _infoLogEnabled;
+        set
+        {
+            _infoLogEnabled = true;
+            for (int i = 0; i < _loggers.Length; i++)
+                _loggers[i].InfoLogEnabled = value;
+        }
+    }
+
+    public bool WarnLogEnabled
+    {
+        get => _warnLogEnabled;
+        set
+        {
+            _warnLogEnabled = value;
+            for (int i = 0; i < _loggers.Length; i++)
+                _loggers[i].WarnLogEnabled = value;
+        }
+    }
+
+    public bool ErrorLogenabled
+    {
+        get => _errorLogenabled;
+        set
+        {
+            _errorLogenabled = value;
+            for (int i = 0; i < _loggers.Length; i++)
+                _loggers[i].ErrorLogenabled = value;
+        }
+    }
+
     public ILogFormat Format { get; }
     
     protected ILogger[] _loggers;
+    private bool _debugLogEnabled = false;
+    private bool _infoLogEnabled = true;
+    private bool _warnLogEnabled = true;
+    private bool _errorLogenabled = true;
 
     public CompositeLogger(ILogFormat format, params ILogger[] loggers)
     {
@@ -25,6 +69,7 @@ public class CompositeLogger : ILogger
     
     public void Log(string context, LogSeverity severity, object message, ILogFormat format)
     {
+        Console.WriteLine(severity.ToString().ToUpper());
         if(!this.CheckSeverity(severity))
             return;
         
@@ -34,9 +79,7 @@ public class CompositeLogger : ILogger
 
     public void Dispose()
     {
-        for (int i = 0; i < _loggers.Length; i++)
-        {
+        for (int i = 0; i < _loggers.Length; i++) 
             _loggers[i].Dispose();
-        }
     }
 }
