@@ -69,7 +69,6 @@ public class CompositeLogger : ILogger
     
     public void Log(string context, LogSeverity severity, object message, ILogFormat format)
     {
-        Console.WriteLine(severity.ToString().ToUpper());
         if(!this.CheckSeverity(severity))
             return;
         
