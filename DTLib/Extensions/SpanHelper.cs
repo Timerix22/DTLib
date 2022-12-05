@@ -1,6 +1,6 @@
 namespace DTLib.Extensions;
 
-#if NETSTANDARD2_1_OR_GREATER || NET2_1_OR_GREATER
+#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
 public static class SpanHelper
 {
     public static ReadOnlySpan<char> After(this ReadOnlySpan<char> span, char c)
