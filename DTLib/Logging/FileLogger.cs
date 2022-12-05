@@ -9,7 +9,7 @@ public class FileLogger : IDisposable
     }
 
     public FileLogger(string dir, string programName)
-        : this($"{dir}{Путь.Разд}{programName}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log") { }
+        : this($"{dir}{Path.Sep}{programName}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log") { }
     
     public string LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }

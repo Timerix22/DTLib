@@ -3,7 +3,7 @@ namespace DTLib.Filesystem;
 
 public static class File
 {
-    public static int GetSize(string file) => new System.IO.FileInfo(file).Length.ToInt();
+    public static long GetSize(string file) => new System.IO.FileInfo(file).Length;
 
     public static bool Exists(string file) => System.IO.File.Exists(file);
 
@@ -12,8 +12,8 @@ public static class File
     {
         if (!Exists(file))
         {
-            if (file.Contains(Путь.Разд))
-                Directory.Create(file.Remove(file.LastIndexOf(Путь.Разд)));
+            if (file.Contains(Path.Sep))
+                Directory.Create(file.Remove(file.LastIndexOf(Path.Sep)));
             using System.IO.FileStream stream = System.IO.File.Create(file);
             stream.Close();
         }
@@ -32,9 +32,10 @@ public static class File
     public static byte[] ReadAllBytes(string file)
     {
         using System.IO.FileStream stream = OpenRead(file);
-        int size = GetSize(file);
+        int size = GetSize(file).ToInt();
         byte[] output = new byte[size];
-        stream.Read(output, 0, size);
+        if (stream.Read(output, 0, size) < size)
+            throw new Exception("can't read all bytes");
         stream.Close();
         return output;
     }
@@ -78,8 +79,8 @@ public static class File
 
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
-        if (symlinkName.Contains(Путь.Разд))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Путь.Разд)));
+        if (symlinkName.Contains(Path.Sep))
+            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
             throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkName}, {sourceName})");
     }
