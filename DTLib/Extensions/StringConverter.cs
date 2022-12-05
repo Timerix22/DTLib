@@ -2,11 +2,10 @@
 
 public static class StringConverter
 {
-    public static ASCIIEncoding ASCII = new ASCIIEncoding();
     public static Encoding UTF8 = new UTF8Encoding(false);
     public static Encoding UTF8BOM = new UTF8Encoding(true);
-    public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
-    public static string BytesToString(this byte[] bytes) => UTF8.GetString(bytes);
+    public static byte[] ToBytes(this string str, Encoding encoding) => encoding.GetBytes(str);
+    public static string BytesToString(this byte[] bytes, Encoding encoding) => encoding.GetString(bytes);
 
     // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
     public static string HashToString(this byte[] hash)
@@ -44,6 +43,10 @@ public static class StringConverter
     public static bool StartsWith(this string s, char c) => s[0] == c;
     public static bool EndsWith(this string s, char c) => s[s.Length - 1] == c;
 
+    // String.Join(sep,string...) does some low-level memory manipulations, that are faster than StringBuilder
+    public static string MergeToString(params string[] parts)
+        =>string.Join(null, parts);
+    
     public static string MergeToString<TVal>(params TVal[] parts)
     {
         if (parts.Length == 0)
