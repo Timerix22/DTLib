@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<TargetFrameworks>net6.0;net48;netstandard2.0</TargetFrameworks>
 		<LangVersion>10</LangVersion>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
@@ -21,6 +21,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<ProjectReference Include="..\DTLib.Logging\DTLib.Logging.csproj" />
 		<ProjectReference Include="..\DTLib.Network\DTLib.Network.csproj" />
 		<ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
 		<ProjectReference Include="..\DTLib\DTLib.csproj" />

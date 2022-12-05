@@ -23,8 +23,8 @@ public class FSP
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
-            MainSocket.SendPackage("requesting file download".ToBytes());
-            MainSocket.SendPackage(filePath_server.ToBytes());
+            MainSocket.SendPackage("requesting file download".ToBytes(StringConverter.UTF8));
+            MainSocket.SendPackage(filePath_server.ToBytes(StringConverter.UTF8));
         }
         DownloadFile(filePath_client);
     }
@@ -44,8 +44,8 @@ public class FSP
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
-            MainSocket.SendPackage("requesting file download".ToBytes());
-            MainSocket.SendPackage(filePath_server.ToBytes());
+            MainSocket.SendPackage("requesting file download".ToBytes(StringConverter.UTF8));
+            MainSocket.SendPackage(filePath_server.ToBytes(StringConverter.UTF8));
         }
         return DownloadFileToMemory();
     }
@@ -65,8 +65,8 @@ public class FSP
         lock (MainSocket)
         {
             BytesDownloaded = 0;
-            Filesize = MainSocket.GetPackage().BytesToString().ToUInt();
-            MainSocket.SendPackage("ready".ToBytes());
+            Filesize = MainSocket.GetPackage().BytesToString(StringConverter.UTF8).ToUInt();
+            MainSocket.SendPackage("ready".ToBytes(StringConverter.UTF8));
             int packagesCount = 0;
             byte[] buffer = new byte[5120];
             int fullPackagesCount = (Filesize / buffer.Length).Truncate();
@@ -89,7 +89,7 @@ public class FSP
             // получение остатка
             if ((Filesize - fileStream.Position) > 0)
             {
-                MainSocket.SendPackage("remain request".ToBytes());
+                MainSocket.SendPackage("remain request".ToBytes(StringConverter.UTF8));
                 buffer = MainSocket.GetPackage();
                 BytesDownloaded += (uint)buffer.Length;
                 fileStream.Write(buffer, 0, buffer.Length);
@@ -109,7 +109,7 @@ public class FSP
         Filesize = File.GetSize(filePath).ToUInt();
         lock (MainSocket)
         {
-            MainSocket.SendPackage(Filesize.ToString().ToBytes());
+            MainSocket.SendPackage(Filesize.ToString().ToBytes(StringConverter.UTF8));
             MainSocket.GetAnswer("ready");
             byte[] buffer = new byte[5120];
             int packagesCount = 0;
@@ -142,7 +142,7 @@ public class FSP
         if (!dirOnServer.EndsWith(Путь.Разд))
             dirOnServer += Путь.Разд;
         Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">");
-        var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString());
+        var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString(StringConverter.UTF8));
         Debug("g", $"found {manifest.Values.Count} files in manifest");
         var hasher = new Hasher();
         foreach (string fileOnServer in manifest.Keys)

@@ -37,19 +37,19 @@ public static class Package
         if (data.Length == 0)
             throw new Exception($"SendPackage() error: package has zero size");
         var list = new List<byte>();
-        byte[] packageSize = data.Length.ToBytes();
+        byte[] packageSize = data.Length.IntToBytes();
         if (packageSize.Length == 1)
             list.Add(0);
         list.AddRange(packageSize);
         list.AddRange(data);
         socket.Send(list.ToArray());
     }
-    public static void SendPackage(this Socket socket, string data) => SendPackage(socket, data.ToBytes());
+    public static void SendPackage(this Socket socket, string data) => SendPackage(socket, data.ToBytes(StringConverter.UTF8));
 
     // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
     public static void GetAnswer(this Socket socket, string answer)
     {
-        string rec = socket.GetPackage().BytesToString();
+        string rec = socket.GetPackage().BytesToString(StringConverter.UTF8);
         if (rec != answer)
             throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
     }
@@ -59,5 +59,5 @@ public static class Package
         socket.SendPackage(request);
         return socket.GetPackage();
     }
-    public static byte[] RequestPackage(this Socket socket, string request) => socket.RequestPackage(request.ToBytes());
+    public static byte[] RequestPackage(this Socket socket, string request) => socket.RequestPackage(request.ToBytes(StringConverter.UTF8));
 }

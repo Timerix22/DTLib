@@ -40,7 +40,7 @@ public static class File
         return output;
     }
 
-    public static string ReadAllText(string file) => ReadAllBytes(file).BytesToString();
+    public static string ReadAllText(string file) => ReadAllBytes(file).BytesToString(StringConverter.UTF8);
 
     public static void WriteAllBytes(string file, byte[] content)
     {
@@ -49,7 +49,7 @@ public static class File
         stream.Close();
     }
 
-    public static void WriteAllText(string file, string content) => WriteAllBytes(file, content.ToBytes());
+    public static void WriteAllText(string file, string content) => WriteAllBytes(file, content.ToBytes(StringConverter.UTF8));
 
     public static void AppendAllBytes(string file, byte[] content)
     {
@@ -58,7 +58,7 @@ public static class File
         stream.Close();
     }
 
-    public static void AppendAllText(string file, string content) => AppendAllBytes(file, content.ToBytes());
+    public static void AppendAllText(string file, string content) => AppendAllBytes(file, content.ToBytes(StringConverter.UTF8));
 
     public static System.IO.FileStream OpenRead(string file) =>
         Exists(file) 
