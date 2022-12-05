@@ -36,4 +36,55 @@ public static class Path
         if (path.Contains(".."))
             throw new Exception($"path <{path}> uses <..>, that's not allowed");
     }
+
+    /// Replaces restricted characters in string
+    public static string CorrectString(string str)
+    {
+#if  NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
+        var a = str.AsSpan();
+#else
+        var a = str.ToArray();
+#endif
+        char[] r = new char[a.Length];
+        for (int i = 0; i < a.Length; i++)
+        {
+            switch (a[i])
+            {
+                case '/':
+                case '\\':
+                case ':':
+                case ';':
+                    r[i] = '-';
+                    break;
+                case '\n':
+                case '\r':
+                case ' ':
+                case '#':
+                case '%':
+                case '&':
+                case '{':
+                case '}':
+                case '<':
+                case '>':
+                case '*':
+                case '?':
+                case '$':
+                case '!':
+                case '\'':
+                case '"':
+                case '@':
+                case '+':
+                case '`':
+                case '|':
+                case '=':
+                    r[i] = '_';
+                    break;
+                default:
+                    r[i] = a[i];
+                    break;
+            }
+        }
+
+        return new string(r);
+    }
 }

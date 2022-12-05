@@ -107,7 +107,7 @@ public static class Directory
     }
 
     // copies directory with symlinks instead of files
-    public static int SymCopy(string srcdir, string newdir)
+    /*public static int SymCopy(string srcdir, string newdir)
     {
         List<string> files = GetAllFiles(srcdir);
         if (!srcdir.EndsWith(Путь.Разд)) srcdir += Путь.Разд;
@@ -116,5 +116,5 @@ public static class Directory
         for (; i < files.Count; i++)
             File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
         return i;
-    }
+    }*/
 }

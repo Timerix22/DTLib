@@ -55,8 +55,10 @@ public class File
     
     public static void Delete(string path) => System.IO.File.Delete(path);
 
-    public void Delete(string path)
+    public static void Copy(string srcPath, string newPath, bool replace = false)
     {
-        
+        System.IO.File.Copy(srcPath, newPath, replace);
     }
+
+    // public void Delete(string path)
 }
