@@ -18,8 +18,8 @@ public class FSP
     // скачивает файл с помощью FSP протокола
     public void DownloadFile(string filePath_server, string filePath_client)
     {
-        Путь.Предупредить(filePath_server);
-        Путь.Предупредить(filePath_client);
+        Path.ThrowIfEscapes(filePath_server);
+        Path.ThrowIfEscapes(filePath_client);
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
@@ -31,7 +31,7 @@ public class FSP
 
     public void DownloadFile(string filePath_client)
     {
-        Путь.Предупредить(filePath_client);
+        Path.ThrowIfEscapes(filePath_client);
         using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
         Download_SharedCode(fileStream, true);
         fileStream.Close();
@@ -40,7 +40,7 @@ public class FSP
 
     public byte[] DownloadFileToMemory(string filePath_server)
     {
-        Путь.Предупредить(filePath_server);
+        Path.ThrowIfEscapes(filePath_server);
         lock (MainSocket)
         {
             Debug("b", $"requesting file download: {filePath_server}");
@@ -102,7 +102,7 @@ public class FSP
     // отдаёт файл с помощью FSP протокола
     public void UploadFile(string filePath)
     {
-        Путь.Предупредить(filePath);
+        Path.ThrowIfEscapes(filePath);
         BytesUploaded = 0;
         Debug("b", $"uploading file {filePath}");
         using System.IO.FileStream fileStream = File.OpenRead(filePath);
@@ -137,10 +137,10 @@ public class FSP
 
     public void DownloadByManifest(string dirOnServer, string dirOnClient, bool overwrite = false, bool delete_excess = false)
     {
-        if (!dirOnClient.EndsWith(Путь.Разд))
-            dirOnClient += Путь.Разд;
-        if (!dirOnServer.EndsWith(Путь.Разд))
-            dirOnServer += Путь.Разд;
+        if (!dirOnClient.EndsWith(Path.Sep))
+            dirOnClient += Path.Sep;
+        if (!dirOnServer.EndsWith(Path.Sep))
+            dirOnServer += Path.Sep;
         Debug("b", "downloading manifest <", "c", dirOnServer + "manifest.dtsod", "b", ">");
         var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString(StringConverter.UTF8));
         Debug("g", $"found {manifest.Values.Count} files in manifest");
@@ -183,8 +183,8 @@ public class FSP
             Log("y", $"can't create manifest, dir <{dir}> doesn't exist");
             return;
         }
-        if (!dir.EndsWith(Путь.Разд))
-            dir += Путь.Разд;
+        if (!dir.EndsWith(Path.Sep))
+            dir += Path.Sep;
         Log($"b", $"creating manifest of {dir}");
         StringBuilder manifestBuilder = new();
         Hasher hasher = new();

@@ -1,8 +1,8 @@
 using System.IO;
 
-namespace DTLib.Filesystem.New;
+namespace DTLib.Experimental;
 
-public class File
+public class FileInstance
 {
     public enum FileOpenMode
     {
@@ -22,9 +22,11 @@ public class File
     public readonly FileStream Stream;
     public string Name;
     
-    public File(string path, FileOpenMode mode)
+    public FileInstance(string path, FileOpenMode mode)
     {
-        if(!Exists(path))
+        if (path.IsNullOrEmpty())
+            throw new NullReferenceException("path is null");
+        if(!System.IO.File.Exists(path))
         {
             if (mode == FileOpenMode.Read)
                 throw new Exception($"file <{path}> is not found");
@@ -40,25 +42,4 @@ public class File
             _ => throw new Exception($"unknown file mode: {mode}")
         };
     }
-
-    public static bool Exists(string path) => System.IO.File.Exists(path);
-    
-    public static void Create(string path)
-    {
-        if (Exists(path)) 
-            throw new Exception($"file <{path} already exists");
-        int sepIndex = path.LastIndexOf(Path.Sep);
-        if (sepIndex>-1)
-            Directory.Create(path.Remove(sepIndex));
-        System.IO.File.Create(path).Close();
-    }
-    
-    public static void Delete(string path) => System.IO.File.Delete(path);
-
-    public static void Copy(string srcPath, string newPath, bool replace = false)
-    {
-        System.IO.File.Copy(srcPath, newPath, replace);
-    }
-
-    // public void Delete(string path)
 }

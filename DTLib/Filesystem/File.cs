@@ -12,8 +12,8 @@ public static class File
     {
         if (!Exists(file))
         {
-            if (file.Contains(Путь.Разд))
-                Directory.Create(file.Remove(file.LastIndexOf(Путь.Разд)));
+            if (file.Contains(Path.Sep))
+                Directory.Create(file.Remove(file.LastIndexOf(Path.Sep)));
             using System.IO.FileStream stream = System.IO.File.Create(file);
             stream.Close();
         }
@@ -79,8 +79,8 @@ public static class File
 
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
-        if (symlinkName.Contains(Путь.Разд))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Путь.Разд)));
+        if (symlinkName.Contains(Path.Sep))
+            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
             throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkName}, {sourceName})");
     }

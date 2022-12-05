@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace DTLib.Filesystem.New;
+namespace DTLib.Filesystem;
 
 public static class Path
 {
@@ -50,33 +50,17 @@ public static class Path
         {
             switch (a[i])
             {
-                case '/':
-                case '\\':
-                case ':':
-                case ';':
+                case '/': case '\\':
+                case ':': case ';':
                     r[i] = '-';
                     break;
-                case '\n':
-                case '\r':
-                case ' ':
-                case '#':
-                case '%':
-                case '&':
-                case '{':
-                case '}':
-                case '<':
-                case '>':
-                case '*':
-                case '?':
-                case '$':
-                case '!':
-                case '\'':
-                case '"':
-                case '@':
-                case '+':
-                case '`':
-                case '|':
-                case '=':
+                case '\n': case '\r': case ' ':
+                case '#': case '%': case '&':
+                case '{': case '}': case '<':
+                case '>': case '*': case '?':
+                case '$': case '!': case '\'':
+                case '"': case '@': case '+':
+                case '`': case '|': case '=':
                     r[i] = '_';
                     break;
                 default:
