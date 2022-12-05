@@ -3,11 +3,12 @@ namespace DTLib.Filesystem;
 
 public static class File
 {
+    /// возвращает размер файла в байтах
     public static long GetSize(string file) => new System.IO.FileInfo(file).Length;
 
     public static bool Exists(string file) => System.IO.File.Exists(file);
 
-    // если файл не существует, создаёт файл, создаёт папки из его пути
+    /// если файл не существует, создаёт файл с папками из его пути и закрывает этот фвйл
     public static void Create(string file)
     {
         if (!Exists(file))

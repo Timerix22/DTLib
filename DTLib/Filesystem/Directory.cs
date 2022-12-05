@@ -4,7 +4,7 @@ public static class Directory
 {
     public static bool Exists(string dir) => System.IO.Directory.Exists(dir);
 
-    // создает папку, если её не существует
+    /// создает папку, если её не существует
     public static void Create(string dir)
     {
         if (!Exists(dir))
@@ -15,7 +15,7 @@ public static class Directory
             System.IO.Directory.CreateDirectory(dir);
         }
     }
-    // копирует все файлы и папки
+    /// копирует все файлы и папки
     public static void Copy(string source_dir, string new_dir, bool owerwrite = false)
     {
         Create(new_dir);
@@ -27,7 +27,7 @@ public static class Directory
             File.Copy(files[i], files[i].Replace(source_dir, new_dir), owerwrite);
     }
 
-    // копирует все файлы и папки и выдаёт список конфликтующих файлов
+    /// копирует все файлы и папки и выдаёт список конфликтующих файлов
     public static void Copy(string source_dir, string new_dir, out List<string> conflicts, bool owerwrite = false)
     {
         conflicts = new List<string>();
@@ -45,7 +45,7 @@ public static class Directory
         }
     }
 
-    // удаляет папку со всеми подпапками и файлами
+    /// удаляет папку со всеми подпапками и файлами
     public static void Delete(string dir)
     {
         var subdirs = new List<string>();
@@ -67,7 +67,7 @@ public static class Directory
     public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(dir, searchPattern);
     public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(dir);
 
-    // выдает список всех файлов
+    /// выдает список всех файлов
     public static List<string> GetAllFiles(string dir)
     {
         var all_files = new List<string>();
@@ -80,7 +80,7 @@ public static class Directory
         return all_files;
     }
 
-    // выдает список всех файлов и подпапок в папке
+    /// выдает список всех файлов и подпапок в папке
     public static List<string> GetAllFiles(string dir, ref List<string> all_subdirs)
     {
         var all_files = new List<string>();
@@ -106,7 +106,7 @@ public static class Directory
             throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
     }
 
-    // copies directory with symlinks instead of files
+    /// copies directory with symlinks instead of files
     public static int SymCopy(string srcdir, string newdir)
     {
         List<string> files = GetAllFiles(srcdir);
