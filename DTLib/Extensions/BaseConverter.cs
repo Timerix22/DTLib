@@ -7,6 +7,7 @@ global using System.Threading.Tasks;
 global using DTLib.Extensions;
 global using DTLib.Filesystem;
 global using static DTLib.Logging.PublicLog;
+using System.Globalization;
 
 namespace DTLib.Extensions;
 
@@ -23,7 +24,10 @@ public static class BaseConverter
     public static uint ToUInt<T>(this T input) => Convert.ToUInt32(input);
     public static long ToLong<T>(this T input) => Convert.ToInt64(input);
     public static ulong ToULong<T>(this T input) => Convert.ToUInt64(input);
-    public static float ToFloat(this string input) => float.Parse(input, System.Globalization.CultureInfo.InvariantCulture);
+    public static float ToFloat(this string input) => float.Parse(input, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
+    public static float ToFloat(this ReadOnlySpan<char> input) => float.Parse(input, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+#endif
     public static double ToDouble<T>(this T input) => Convert.ToDouble(input, System.Globalization.CultureInfo.InvariantCulture);
     public static decimal ToDecimal<T>(this T input) => Convert.ToDecimal(input, System.Globalization.CultureInfo.InvariantCulture);
 
