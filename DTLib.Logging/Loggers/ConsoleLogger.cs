@@ -3,7 +3,12 @@
 // вывод лога в консоль и файл
 public class ConsoleLogger : ILogger
 {
-    public bool DebugLogEnabled { get; set; } = false;
+    public bool DebugLogEnabled { get; set; } = 
+#if DEBUG
+        true;
+#else 
+        false;
+#endif
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogenabled { get; set; } = true;

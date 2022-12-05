@@ -52,7 +52,12 @@ public class CompositeLogger : ILogger
     public ILogFormat Format { get; }
     
     protected ILogger[] _loggers;
-    private bool _debugLogEnabled = false;
+    private bool _debugLogEnabled =
+#if DEBUG
+        true;
+#else 
+        false;
+#endif
     private bool _infoLogEnabled = true;
     private bool _warnLogEnabled = true;
     private bool _errorLogenabled = true;
