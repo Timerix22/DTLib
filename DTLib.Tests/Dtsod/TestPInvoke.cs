@@ -14,7 +14,7 @@ public static class TestPInvoke
         TestMarshalling();
     }
 
-    static public void TestUTF8()
+    public static void TestUTF8()
     {
         OldLogger.Log("c", "--------[TestPInvoke/TestUTF8]--------", "b", "");
         IntPtr ptr;

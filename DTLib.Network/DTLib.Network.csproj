@@ -1,25 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net48;netstandard2.0</TargetFrameworks>
-        <LangVersion>preview</LangVersion>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <Nullable>disable</Nullable>
-        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+        <!--package info-->
+        <PackageId>DTLib.Network</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Timerix</Authors>
+        <Description>Some sick network protocols</Description>
+        <RepositoryType>GIT</RepositoryType>
+        <RepositoryUrl>https://github.com/Timerix22/DTLib</RepositoryUrl>
+        <Configuration>Release</Configuration>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <!--compilation properties-->
+        <TargetFrameworks>net6.0;netstandard2.0;net48</TargetFrameworks>
         <DebugType>embedded</DebugType>
-        <Configurations>Debug;Release;Release-net48</Configurations>
-		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
+        <!--language features-->
+        <LangVersion>10</LangVersion>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
-    
-    <ItemGroup>
-        <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
-        <ProjectReference Include="..\DTLib\DTLib.csproj" />
-    </ItemGroup>
-    
+
+    <!--external dependencies-->
     <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
         <Reference Include="System.Net" />
         <Reference Include="System.Net.Http" />
         <Reference Include="Microsoft.CSharp" />
     </ItemGroup>
-    
+
+    <!--DTLib dependencies-->
+    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <ProjectReference Include="..\DTLib\DTLib.csproj" />
+        <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+        <PackageReference Include="DTLib.Dtsod" Version="1.0.0"/>
+    </ItemGroup>
 </Project>

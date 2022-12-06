@@ -12,7 +12,7 @@ public static class DtsodConverter
             DtsodVersion.V23 => new DtsodV23(src.ToDictionary()),
             DtsodVersion.V24 => new DtsodV24(src.ToDictionary()),
 #if DEBUG
-            DtsodVersion.V30 => new DtsodV30(src.ToDictionary()),
+            //DtsodVersion.V30 => new DtsodV30(src.ToDictionary()),
 #endif
             _ => throw new Exception($"DtsodConverter.Convert() error: unknown target version <{targetVersion}>"),
         };

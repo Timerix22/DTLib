@@ -1,18 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
 	<PropertyGroup>
+		<!--compilation properties-->
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net6.0;net48;netstandard2.0</TargetFrameworks>
-		<LangVersion>10</LangVersion>
-		<ImplicitUsings>false</ImplicitUsings>
-		<Nullable>disable</Nullable>
-		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<TargetFrameworks>net6.0;netstandard2.0;net48</TargetFrameworks>
 		<DebugType>embedded</DebugType>
-		<Configurations>Debug;Release;Release-net48</Configurations>
-		<Platforms>AnyCPU;x64;x86;arm64</Platforms>
+		<!--language features-->
+		<LangVersion>10</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-	
+
+	<!--external dependencies-->
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
 		<Reference Include="System.Net" />
 		<Reference Include="System.Net.Http" />
@@ -20,15 +19,20 @@
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
 	
-	<ItemGroup>
+	<!--DTLib dependencies-->
+	<ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<ProjectReference Include="..\DTLib.Logging\DTLib.Logging.csproj" />
 		<ProjectReference Include="..\DTLib.Network\DTLib.Network.csproj" />
 		<ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
 		<ProjectReference Include="..\DTLib\DTLib.csproj" />
 	</ItemGroup>
-	
-	<ItemGroup>
-		<None Update="Dtsod\TestResources\**\*" CopyToOutputDirectory="Always" />
+	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+		<PackageReference Include="DTLib.Network" Version="1.0.0"/>
+		<PackageReference Include="DTLib.Logging" Version="1.0.0"/>
 	</ItemGroup>
 
+	<!--project files-->
+	<ItemGroup>
+		<None Update="Dtsod\TestResources\**\*" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
 </Project>

@@ -1,36 +1,52 @@
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace DTLib;
 
 public static class DependencyResolver
 {
-    private static bool DepsCopied=false;
-    
+    private static object locker = new object();
+
+    private static bool DepsCopied = false;
+
     public static void CopyLibs()
     {
-        if(DepsCopied) return;
-        string depsdir = $"Dependencies{Path.Sep}";
-        depsdir += Environment.OSVersion.Platform switch
+        lock (locker)
         {
-            PlatformID.Unix => "linux",
-            PlatformID.Win32NT => "windows",
-            _=> throw new Exception($"unsupported os {Environment.OSVersion.Platform}")
-        };
-        depsdir += Path.Sep;
-        depsdir += RuntimeInformation.ProcessArchitecture switch
-        {
-            Architecture.X64 => "x64",
-            Architecture.X86 => "x86",
-            Architecture.Arm64 => "arm64",
-            Architecture.Arm => "arm",
-            _=> throw new Exception($"unsupported platform {RuntimeInformation.ProcessArchitecture}")
-        };
-        foreach (var file in Directory.GetAllFiles(depsdir))
-        {
-            var extracted = file.Substring(file.LastIndexOf(Path.Sep) + 1);
-            File.Copy(file,extracted, true);
-            Log("g",$"{extracted} copied");
+            if (DepsCopied) return;
+
+            var os = Environment.OSVersion.Platform switch
+            {
+                PlatformID.Unix => "linux",
+                PlatformID.Win32NT => "win",
+                _ => throw new Exception($"unsupported os {Environment.OSVersion.Platform}")
+            };
+            var arch = RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X64 => "x64",
+                Architecture.X86 => "x86",
+                Architecture.Arm64 => "arm64",
+                Architecture.Arm => "arm",
+                _ => throw new Exception($"unsupported platform {RuntimeInformation.ProcessArchitecture}")
+            };
+
+            string[] possibleLibDirs =
+            {
+                Path.Concat("runtimes", $"{os}"),
+                Path.Concat("runtimes", $"{os}", "native"),
+                Path.Concat("runtimes", $"{os}-{arch}"),
+                Path.Concat("runtimes", $"{os}-{arch}", "native")
+            };
+            foreach (string dir in possibleLibDirs)
+                if (Directory.Exists(dir))
+                    foreach (var file in Directory.GetFiles(dir))
+                    {
+                        var extracted = file.Substring(file.LastIndexOf(Path.Sep) + 1);
+                        File.Copy(file, extracted, true);
+                        Log("g", $"{file} extracted");
+                    }
+
+            DepsCopied = true;
         }
-        DepsCopied = true;
     }
 }

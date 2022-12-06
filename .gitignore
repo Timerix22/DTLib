@@ -8,6 +8,7 @@
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+nuget/
 
 # IDE files
 .vs/
@@ -16,6 +17,7 @@
 .idea/
 .editorconfig
 *.user
+*.DotSettings
 
 #backups
 .old*/
