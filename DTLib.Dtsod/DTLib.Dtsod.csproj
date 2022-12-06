@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net48;netstandard2.0</TargetFrameworks>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>10</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,9 +29,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Dependencies\**\*">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Dependencies\**\*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <Compile Remove="Experimental/**/*"/>
+        <None Include="Experimental/**/*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Experimental" />
     </ItemGroup>
     
 </Project>
