@@ -16,11 +16,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Remove="Ben.Demystifier\**" />
-        <None Remove="Ben.Demystifier\**" />
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\DTLib\DTLib.csproj" />
-      <ProjectReference Include="Ben.Demystifier\src\Ben.Demystifier\Ben.Demystifier.csproj" />
+      <ProjectReference Include="..\DTLib.Ben.Demystifier\DTLib.Ben.Demystifier.csproj" />
     </ItemGroup>
 </Project>

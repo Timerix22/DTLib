@@ -1,4 +1,4 @@
-using Ben.Demystifier;
+using DTLib.Ben.Demystifier;
 
 namespace DTLib.Logging.New;
 

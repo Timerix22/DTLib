@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTLib", "DTLib\DTLib.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTLib.Tests", "DTLib.Tests\DTLib.Tests.csproj", "{72BA37EF-07EC-4D34-966A-20D5E83ADB32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Dtsod", "DTLib.Dtsod\DTLib.Dtsod.csproj", "{ADE425F5-8645-47F0-9AA8-33FA748D36BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Network", "DTLib.Network\DTLib.Network.csproj", "{24B7D0A2-0462-424D-B3F5-29A6655FE472}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Logging", "DTLib.Logging\DTLib.Logging.csproj", "{00B76172-32BB-4B72-9891-47FAEF63386C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Ben.Demystifier", "DTLib.Ben.Demystifier\DTLib.Ben.Demystifier.csproj", "{AC7CB524-4D59-42E0-9F96-1C201A92494B}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6308F24E-A4FF-46B3-B72F-30E05DDCB1D5}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -14,14 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitmodules = .gitmodules
 		LICENSE = LICENSE
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Dtsod", "DTLib.Dtsod\DTLib.Dtsod.csproj", "{ADE425F5-8645-47F0-9AA8-33FA748D36BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Network", "DTLib.Network\DTLib.Network.csproj", "{24B7D0A2-0462-424D-B3F5-29A6655FE472}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Logging", "DTLib.Logging\DTLib.Logging.csproj", "{00B76172-32BB-4B72-9891-47FAEF63386C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ben.Demystifier", "DTLib.Logging\Ben.Demystifier\src\Ben.Demystifier\Ben.Demystifier.csproj", "{AC7CB524-4D59-42E0-9F96-1C201A92494B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
