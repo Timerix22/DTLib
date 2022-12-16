@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Network</PackageId>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <Authors>Timerix</Authors>
         <Description>Some sick network protocols</Description>
         <RepositoryType>GIT</RepositoryType>
@@ -31,6 +31,6 @@
         <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib.Dtsod" Version="1.0.1"/>
+        <PackageReference Include="DTLib.Dtsod" Version="1.0.2" />
     </ItemGroup>
 </Project>
