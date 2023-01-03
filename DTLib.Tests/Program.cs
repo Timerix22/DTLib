@@ -17,14 +17,17 @@ namespace DTLib.Tests;
 
 public static class Program
 {
-    public static readonly Logging.ConsoleLogger OldLogger = new("logs", "DTLib.Tests");
-    public static readonly ILogger NewLogger = new CompositeLogger(new ConsoleLogger(), new FileLogger(OldLogger.LogfileName));
+    public static Logging.ConsoleLogger OldLogger = new("logs", "DTLib.Tests");
+    public static ILogger Logger;
     public static void Main()
     {
-        Logging.PublicLog.LogEvent += OldLogger.Log;
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
-        Console.Title="tester";
+        Logger=new CompositeLogger(new ConsoleLogger(), 
+            new FileLogger("logs", "DTLib.Tests"));
+        var mainContext = new ContextLogger(Logger, "Main");
+        DTLibInternalLogging.SetLogger(Logger);
+        
         try
         {
             TestPInvoke.TestAll();
@@ -33,7 +36,8 @@ public static class Program
             TestDtsodV24.TestAll();
         }
         catch (Exception ex)
-        { NewLogger.LogError("Main", ex); }
+        { mainContext.LogError(ex); }
+        
         Console.ResetColor();
     }
 }
