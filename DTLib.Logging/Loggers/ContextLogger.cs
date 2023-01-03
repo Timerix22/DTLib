@@ -1,12 +1,12 @@
 namespace DTLib.Logging.New;
 
 /// wrapper around ILogger and LoggerExtensions that stores context
-public class LoggerContext
+public class ContextLogger : ILogger
 {
     public ILogger Logger;
     public readonly string Context;
 
-    public LoggerContext(ILogger logger, string context)
+    public ContextLogger(ILogger logger, string context)
     {
         Logger = logger;
         Context = context;
@@ -41,4 +41,41 @@ public class LoggerContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogError(Exception ex)
         => Logger.LogError(Context, ex);
+
+    public void Dispose()
+    {
+        Logger.Dispose();
+    }
+
+    public ILogFormat Format => Logger.Format;
+
+    public bool DebugLogEnabled
+    {
+        get => Logger.DebugLogEnabled;
+        set => Logger.DebugLogEnabled = value;
+    }
+
+    public bool InfoLogEnabled
+    {
+        get => Logger.InfoLogEnabled;
+        set => Logger.InfoLogEnabled = value;
+    }
+
+    public bool WarnLogEnabled
+    {
+        get => Logger.WarnLogEnabled;
+        set => Logger.WarnLogEnabled = value;
+    }
+
+    public bool ErrorLogenabled
+    {
+        get => Logger.ErrorLogenabled;
+        set => Logger.ErrorLogenabled = value;
+    }
+
+    /// Appends subContext to Context
+    public void Log(string subContext, LogSeverity severity, object message, ILogFormat format)
+    {
+        Logger.Log($"{Context}/{subContext}", severity, message, format);
+    }
 }
