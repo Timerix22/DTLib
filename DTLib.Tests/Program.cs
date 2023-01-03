@@ -33,7 +33,7 @@ public static class Program
             TestDtsodV24.TestAll();
         }
         catch (Exception ex)
-        { NewLogger.LogException("Main", ex); }
+        { NewLogger.LogError("Main", ex); }
         Console.ResetColor();
     }
 }

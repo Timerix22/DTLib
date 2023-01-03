@@ -28,7 +28,7 @@
 	</ItemGroup>
 	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
 		<PackageReference Include="DTLib.Network" Version="1.0.2" />
-		<PackageReference Include="DTLib.Logging" Version="1.0.2" />
+		<PackageReference Include="DTLib.Logging" Version="1.0.3" />
 	</ItemGroup>
 
 	<!--project files-->

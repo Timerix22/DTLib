@@ -28,12 +28,17 @@ public class LoggerContext
     public void LogWarn(object message)
         => Logger.LogWarn(Context, message);
     
+    /// uses Ben.Demystifier to serialize exception
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void LogWarn(Exception ex)
+        => Logger.LogWarn(Context, ex);
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogError(object message)
         => Logger.LogError(Context, message);
     
     /// uses Ben.Demystifier to serialize exception
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void LogException(Exception ex)
-        => Logger.LogException(Context, ex);
+    public void LogError(Exception ex)
+        => Logger.LogError(Context, ex);
 }
