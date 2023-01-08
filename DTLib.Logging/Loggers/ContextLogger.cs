@@ -3,79 +3,79 @@ namespace DTLib.Logging.New;
 /// wrapper around ILogger and LoggerExtensions that stores context
 public class ContextLogger : ILogger
 {
-    public ILogger Logger;
+    public ILogger ParentLogger;
     public readonly string Context;
 
-    public ContextLogger(ILogger logger, string context)
+    public ContextLogger(ILogger parentLogger, string context)
     {
-        Logger = logger;
+        ParentLogger = parentLogger;
         Context = context;
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Log(LogSeverity severity, object message)
-        => Logger.Log(Context, severity, message);
+        => ParentLogger.Log(Context, severity, message);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogDebug(object message)
-        => Logger.LogDebug(Context, message);
+        => ParentLogger.LogDebug(Context, message);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogInfo(object message)
-        => Logger.LogInfo(Context, message);
+        => ParentLogger.LogInfo(Context, message);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogWarn(object message)
-        => Logger.LogWarn(Context, message);
+        => ParentLogger.LogWarn(Context, message);
     
     /// uses Ben.Demystifier to serialize exception
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogWarn(Exception ex)
-        => Logger.LogWarn(Context, ex);
+        => ParentLogger.LogWarn(Context, ex);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogError(object message)
-        => Logger.LogError(Context, message);
+        => ParentLogger.LogError(Context, message);
     
     /// uses Ben.Demystifier to serialize exception
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LogError(Exception ex)
-        => Logger.LogError(Context, ex);
+        => ParentLogger.LogError(Context, ex);
 
     public void Dispose()
     {
-        Logger.Dispose();
+        ParentLogger.Dispose();
     }
 
-    public ILogFormat Format => Logger.Format;
+    public ILogFormat Format => ParentLogger.Format;
 
     public bool DebugLogEnabled
     {
-        get => Logger.DebugLogEnabled;
-        set => Logger.DebugLogEnabled = value;
+        get => ParentLogger.DebugLogEnabled;
+        set => ParentLogger.DebugLogEnabled = value;
     }
 
     public bool InfoLogEnabled
     {
-        get => Logger.InfoLogEnabled;
-        set => Logger.InfoLogEnabled = value;
+        get => ParentLogger.InfoLogEnabled;
+        set => ParentLogger.InfoLogEnabled = value;
     }
 
     public bool WarnLogEnabled
     {
-        get => Logger.WarnLogEnabled;
-        set => Logger.WarnLogEnabled = value;
+        get => ParentLogger.WarnLogEnabled;
+        set => ParentLogger.WarnLogEnabled = value;
     }
 
     public bool ErrorLogenabled
     {
-        get => Logger.ErrorLogenabled;
-        set => Logger.ErrorLogenabled = value;
+        get => ParentLogger.ErrorLogenabled;
+        set => ParentLogger.ErrorLogenabled = value;
     }
 
     /// Appends subContext to Context
     public void Log(string subContext, LogSeverity severity, object message, ILogFormat format)
     {
-        Logger.Log($"{Context}/{subContext}", severity, message, format);
+        ParentLogger.Log($"{Context}/{subContext}", severity, message, format);
     }
 }
