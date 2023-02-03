@@ -1,4 +1,4 @@
-﻿namespace DTLib;
+﻿namespace DTLib.Console;
 
 //
 // вывод и ввод цветного текста в консоли
@@ -32,9 +32,9 @@ public static class ColoredConsole
 
     public static void Write(ConsoleColor color,string msg)
     {
-        Console.ForegroundColor = color;
-        Console.Write(msg);
-        Console.ForegroundColor = ConsoleColor.Gray;
+        System.Console.ForegroundColor = color;
+        System.Console.Write(msg);
+        System.Console.ForegroundColor = ConsoleColor.Gray;
     }
 
     public static void Write(string msg) => Write(ConsoleColor.Gray, msg);
@@ -53,18 +53,18 @@ public static class ColoredConsole
         
         for (ushort i = 0; i < input.Length; i++)
         {
-            Console.ForegroundColor = ParseColor(input[i++]);
-            Console.Write(input[i]);
+            System.Console.ForegroundColor = ParseColor(input[i++]);
+            System.Console.Write(input[i]);
         }
-        Console.ForegroundColor = ConsoleColor.Gray;
+        System.Console.ForegroundColor = ConsoleColor.Gray;
     }
 
-    public static void WriteLine() => Console.WriteLine();
+    public static void WriteLine() => System.Console.WriteLine();
     public static void WriteLine(ConsoleColor color,string msg)
     {
-        Console.ForegroundColor = color;
-        Console.WriteLine(msg);
-        Console.ForegroundColor = ConsoleColor.Gray;
+        System.Console.ForegroundColor = color;
+        System.Console.WriteLine(msg);
+        System.Console.ForegroundColor = ConsoleColor.Gray;
     }
 
     public static void WriteLine(params string[] input)
@@ -76,9 +76,9 @@ public static class ColoredConsole
     // ввод цветного текста
     public static string Read(ConsoleColor color)
     {
-        Console.ForegroundColor = color;
-        var r = Console.ReadLine();
-        Console.ForegroundColor = ConsoleColor.Gray;
+        System.Console.ForegroundColor = color;
+        var r = System.Console.ReadLine();
+        System.Console.ForegroundColor = ConsoleColor.Gray;
         return r;
     }
 

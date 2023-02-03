@@ -27,14 +27,12 @@
 		<ProjectReference Include="..\DTLib\DTLib.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-		<PackageReference Include="DTLib.Network" Version="1.0.2" />
+		<PackageReference Include="DTLib.Network" Version="1.0.3" />
+		<PackageReference Include="DTLib.Logging" Version="1.0.7" />
 	</ItemGroup>
 
 	<!--project files-->
 	<ItemGroup>
 		<None Update="Dtsod\TestResources\**\*" CopyToOutputDirectory="PreserveNewest" />
-	</ItemGroup>
-	<ItemGroup>
-	  <PackageReference Include="DTLib.Logging" Version="1.0.6" />
 	</ItemGroup>
 </Project>

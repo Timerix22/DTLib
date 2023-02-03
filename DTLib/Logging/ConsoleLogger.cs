@@ -1,4 +1,6 @@
-﻿namespace DTLib.Logging;
+﻿using DTLib.Console;
+
+namespace DTLib.Logging;
 
 // вывод лога в консоль и файл
 public class ConsoleLogger : FileLogger
@@ -23,7 +25,7 @@ public class ConsoleLogger : FileLogger
         lock (consolelocker)
         {
             ColoredConsole.Write(msg);
-            Console.WriteLine();
+            System.Console.WriteLine();
         }
     }
 }
