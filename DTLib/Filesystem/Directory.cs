@@ -2,11 +2,12 @@
 
 public static class Directory
 {
-    public static bool Exists(string dir) => System.IO.Directory.Exists(dir);
+    public static bool Exists(string dir) => System.IO.Directory.Exists(Path.FixSeparators(dir));
 
     /// создает папку, если её не существует
     public static void Create(string dir)
     {
+        dir = Path.FixSeparators(dir);
         if (!Exists(dir))
         {
             // проверяет существование папки, в которой нужно создать dir
@@ -46,26 +47,11 @@ public static class Directory
     }
 
     /// удаляет папку со всеми подпапками и файлами
-    public static void Delete(string dir)
-    {
-        var subdirs = new List<string>();
-        List<string> files = GetAllFiles(dir, ref subdirs);
-        for (int i = 0; i < files.Count; i++)
-            File.Delete(files[i]);
-        for (int i = subdirs.Count - 1; i >= 0; i--)
-        {
-            Log($"deleting {subdirs[i]}");
-            if (Exists(subdirs[i]))
-                System.IO.Directory.Delete(subdirs[i], true);
-        }
-        Log($"deleting {dir}");
-        if (Exists(dir))
-            System.IO.Directory.Delete(dir, true);
-    }
+    public static void Delete(string dir) => System.IO.Directory.Delete(Path.FixSeparators(dir), true);
 
-    public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(dir);
-    public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(dir, searchPattern);
-    public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(dir);
+    public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(Path.FixSeparators(dir));
+    public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(Path.FixSeparators(dir), searchPattern);
+    public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(Path.FixSeparators(dir));
 
     /// выдает список всех файлов
     public static List<string> GetAllFiles(string dir)
@@ -100,21 +86,11 @@ public static class Directory
 
     public static void CreateSymlink(string sourceName, string symlinkName)
     {
+        sourceName = Path.FixSeparators(sourceName);
+        symlinkName = Path.FixSeparators(symlinkName);
         if (symlinkName.Contains(Path.Sep))
             Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
         if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
             throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
-    }
-
-    /// copies directory with symlinks instead of files
-    public static int SymCopy(string srcdir, string newdir)
-    {
-        List<string> files = GetAllFiles(srcdir);
-        if (!srcdir.EndsWith(Path.Sep)) srcdir += Path.Sep;
-        if (!newdir.EndsWith(Path.Sep)) newdir += Path.Sep;
-        int i = 0;
-        for (; i < files.Count; i++)
-            File.CreateSymlink(files[i], files[i].Replace(srcdir, newdir));
-        return i;
     }
 }
