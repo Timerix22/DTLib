@@ -87,10 +87,9 @@ public class LaunchArgumentParser
     /// <exception cref="ExitAfterHelpException">happens after help message is displayed</exception>
     public void ParseAndHandle(string[] args)
     {
-        if (args.Length == 0 && ExitIfNoArgs)
-        {
+        // show help and throw
+        if (args.Length == 0 && ExitIfNoArgs) 
             HelpHandler();
-        }
         
         for (int i = 0; i < args.Length; i++)
         {
@@ -100,11 +99,18 @@ public class LaunchArgumentParser
             {
                 if (i+1 >= args.Length)
                     throw new Exception($"argument <{args[i]}> should have a parameter after it");
-                arg.HandlerWithArg(args[++i]);
+                i++; // next arg
+                arg.Handler = () => arg.HandlerWithArg(args[i]);
             }
-            else if (arg.Handler is not null)
-                arg.Handler();
-            else throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+            else if (arg.Handler is null)  throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+        }
+        
+        // ascending sort by priority
+        argList.Sort((a0, a1) => a0.Priority-a1.Priority);
+        // finally executing handlers
+        foreach (var a in argList)
+        {
+            a.Handler!();
         }
     }
 }

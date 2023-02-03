@@ -8,18 +8,20 @@ public class LaunchArgument
     public string? ParamName;
     public Action? Handler;
     public Action<string>? HandlerWithArg;
+    public int Priority;
     
-    private LaunchArgument(string[] aliases, string description)
+    private LaunchArgument(string[] aliases, string description, int priority)
     {
         Aliases = aliases;
         Description = description;
+        Priority = priority;
     }
     
-    public LaunchArgument(string[] aliases, string description, Action handler) 
-        : this(aliases, description) => Handler = handler;
+    public LaunchArgument(string[] aliases, string description, Action handler, int priority=0) 
+        : this(aliases, description, priority) => Handler = handler;
 
-    public LaunchArgument(string[] aliases, string description, Action<string> handler, string paramName)
-        : this(aliases, description)
+    public LaunchArgument(string[] aliases, string description, Action<string> handler, string paramName, int priority=0)
+        : this(aliases, description, priority)
     {
         HandlerWithArg = handler;
         ParamName = paramName;
