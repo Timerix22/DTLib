@@ -7,6 +7,7 @@
         <Description>Definitely not json</Description>
         <RepositoryType>GIT</RepositoryType>
         <RepositoryUrl>https://github.com/Timerix22/DTLib</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Timerix22/DTLib</PackageProjectUrl>
         <Configuration>Release</Configuration>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <!--compilation properties-->

@@ -2,11 +2,12 @@
 	<PropertyGroup>
 		<!--package info-->
 		<PackageId>DTLib</PackageId>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>Timerix</Authors>
 		<Description>Library for all my C# projects</Description>
 		<RepositoryType>GIT</RepositoryType>
 		<RepositoryUrl>https://github.com/Timerix22/DTLib</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/Timerix22/DTLib</PackageProjectUrl>
 		<Configuration>Release</Configuration>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<!--compilation properties-->
