@@ -12,7 +12,6 @@ global using static DTLib.Tests.TesterLog;
 global using static DTLib.Tests.Program;
 using DTLib.Logging.New;
 
-
 namespace DTLib.Tests;
 
 public static class Program
@@ -21,8 +20,8 @@ public static class Program
     public static ILogger Logger;
     public static void Main()
     {
-        Console.OutputEncoding = Encoding.UTF8;
-        Console.InputEncoding = Encoding.UTF8;
+        System.Console.OutputEncoding = Encoding.UTF8;
+        System.Console.InputEncoding = Encoding.UTF8;
         Logger=new CompositeLogger(new ConsoleLogger(), 
             new FileLogger("logs", "DTLib.Tests"));
         var mainContext = new ContextLogger(Logger, "Main");
@@ -38,6 +37,6 @@ public static class Program
         catch (Exception ex)
         { mainContext.LogError(ex); }
         
-        Console.ResetColor();
+        System.Console.ResetColor();
     }
 }

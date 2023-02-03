@@ -1,4 +1,6 @@
-﻿namespace DTLib.Logging.New;
+﻿using DTLib.Console;
+
+namespace DTLib.Logging.New;
 
 // вывод лога в консоль и файл
 public class ConsoleLogger : ILogger
