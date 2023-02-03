@@ -23,7 +23,7 @@ public class LaunchArgumentParser
     public string CreateHelpArgMessage(string argAlias)
     {
         StringBuilder b = new();
-        var arg = Get(argAlias);
+        var arg = Parse(argAlias);
         arg.AppendHelpInfo(b);
         return b.ToString();
     }
@@ -51,6 +51,12 @@ public class LaunchArgumentParser
         Add(helpArg);
     }
 
+    public LaunchArgumentParser WithNoExit()
+    {
+        ExitIfNoArgs = false;
+        return this;
+    }
+
     public LaunchArgumentParser(ICollection<LaunchArgument> arguments) : this()
     {
         foreach (var arg in arguments) 
@@ -69,7 +75,7 @@ public class LaunchArgumentParser
             argDict.Add(arg.Aliases[a], arg);
     }
     
-    public LaunchArgument Get(string argAlias)
+    public LaunchArgument Parse(string argAlias)
     {
         // different argument providing patterns
         if (!argDict.TryGetValue(argAlias, out var arg) &&    // arg
@@ -90,10 +96,12 @@ public class LaunchArgumentParser
         // show help and throw
         if (args.Length == 0 && ExitIfNoArgs) 
             HelpHandler();
+
+        List<LaunchArgument> execQueue = new();
         
         for (int i = 0; i < args.Length; i++)
         {
-            LaunchArgument arg = Get(args[i]);
+            LaunchArgument arg = Parse(args[i]);
 
             if (arg.HandlerWithArg is not null)
             {
@@ -103,14 +111,14 @@ public class LaunchArgumentParser
                 arg.Handler = () => arg.HandlerWithArg(args[i]);
             }
             else if (arg.Handler is null)  throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+            
+            execQueue.Add(arg);
         }
         
         // ascending sort by priority
-        argList.Sort((a0, a1) => a0.Priority-a1.Priority);
+        execQueue.Sort((a0, a1) => a0.Priority-a1.Priority);
         // finally executing handlers
-        foreach (var a in argList)
-        {
+        foreach (var a in execQueue) 
             a.Handler!();
-        }
     }
 }

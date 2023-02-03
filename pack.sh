@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -ex
+dotnet pack -c Release -o ./nuget_new/
+rm ./nuget_new/DTLib.Tests.*
 rm -rf nuget
-mkdir nuget
-dotnet pack -c Release -o ./nuget/
-rm ./nuget/DTLib.Tests.*
+mv nuget_new nuget
 ls nuget

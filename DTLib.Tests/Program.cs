@@ -10,6 +10,7 @@ global using DTLib.Filesystem;
 global using DTLib.Dtsod;
 global using static DTLib.Tests.TesterLog;
 global using static DTLib.Tests.Program;
+using DTLib.Console;
 using DTLib.Logging.New;
 
 namespace DTLib.Tests;
@@ -18,7 +19,7 @@ public static class Program
 {
     public static Logging.ConsoleLogger OldLogger = new("logs", "DTLib.Tests");
     public static ILogger Logger;
-    public static void Main()
+    public static void Main(string[] args)
     {
         System.Console.OutputEncoding = Encoding.UTF8;
         System.Console.InputEncoding = Encoding.UTF8;
@@ -29,11 +30,14 @@ public static class Program
         
         try
         {
+            new LaunchArgumentParser().WithNoExit().ParseAndHandle(args);
             TestPInvoke.TestAll();
             TestAutoarr.TestAll();
             TestDtsodV23.TestAll();
             TestDtsodV24.TestAll();
         }
+        catch(LaunchArgumentParser.ExitAfterHelpException)
+        { }
         catch (Exception ex)
         { mainContext.LogError(ex); }
         
