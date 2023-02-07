@@ -108,7 +108,8 @@ public class LaunchArgumentParser
                 if (i+1 >= args.Length)
                     throw new Exception($"argument <{args[i]}> should have a parameter after it");
                 i++; // next arg
-                arg.Handler = () => arg.HandlerWithArg(args[i]);
+                var i1 = i;
+                arg.Handler = () => arg.HandlerWithArg(args[i1]);
             }
             else if (arg.Handler is null)  throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
             

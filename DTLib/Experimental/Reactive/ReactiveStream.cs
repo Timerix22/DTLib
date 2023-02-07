@@ -1,9 +1,7 @@
 ﻿namespace DTLib.Experimental.Reactive
 {
-    public class ReactiveStream<T> : IEnumerable<TimeSignedObject<T>>, IList<TimeSignedObject<T>>
+    public class ReactiveStream<T> : IList<TimeSignedObject<T>>
     {
-        public ReactiveStream() { }
-
         List<TimeSignedObject<T>> _storage = new();
         List<TimeSignedObject<T>> Storage
         {

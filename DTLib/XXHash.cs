@@ -27,7 +27,7 @@ sealed class XXHash32 : HashAlgorithm
     {
         if (BitConverter.IsLittleEndian)
         {
-            FuncGetLittleEndianUInt32 = new Func<byte[], int, uint>((x, i) =>
+            FuncGetLittleEndianUInt32 = (x, i) =>
             {
                 unsafe
                 {
@@ -36,12 +36,12 @@ sealed class XXHash32 : HashAlgorithm
                         return *(uint*)(array + i);
                     }
                 }
-            });
-            FuncGetFinalHashUInt32 = new Func<uint, uint>(i => (i & 0x000000FFU) << 24 | (i & 0x0000FF00U) << 8 | (i & 0x00FF0000U) >> 8 | (i & 0xFF000000U) >> 24);
+            };
+            FuncGetFinalHashUInt32 = i => (i & 0x000000FFU) << 24 | (i & 0x0000FF00U) << 8 | (i & 0x00FF0000U) >> 8 | (i & 0xFF000000U) >> 24;
         }
         else
         {
-            FuncGetLittleEndianUInt32 = new Func<byte[], int, uint>((x, i) =>
+            FuncGetLittleEndianUInt32 = (x, i) =>
             {
                 unsafe
                 {
@@ -50,8 +50,8 @@ sealed class XXHash32 : HashAlgorithm
                         return (uint)(array[i++] | (array[i++] << 8) | (array[i++] << 16) | (array[i] << 24));
                     }
                 }
-            });
-            FuncGetFinalHashUInt32 = new Func<uint, uint>(i => i);
+            };
+            FuncGetFinalHashUInt32 = i => i;
         }
     }
 
@@ -102,8 +102,7 @@ sealed class XXHash32 : HashAlgorithm
     /// <param name="cbSize">The number of bytes in the byte array to use as data.</param>
     protected override void HashCore(byte[] array, int ibStart, int cbSize)
     {
-        if (State != 1)
-            State = 1;
+        State = 1;
         int size = cbSize - ibStart;
         _RemainingLength = size & 15;
         if (cbSize >= 16)

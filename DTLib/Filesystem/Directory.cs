@@ -2,56 +2,85 @@
 
 public static class Directory
 {
-    public static bool Exists(string dir) => System.IO.Directory.Exists(Path.FixSeparators(dir));
+    public static bool Exists(string dir, bool separatorsFixed)
+    {
+        if(!separatorsFixed)
+            dir = Path.FixSeparators(dir);
+        return System.IO.Directory.Exists(dir);
+    }
 
     /// создает папку, если её не существует
-    public static void Create(string dir)
+    public static void Create(string dir, bool separatorsFixed)
     {
-        dir = Path.FixSeparators(dir);
+        if(!separatorsFixed) 
+            dir = Path.FixSeparators(dir);
         if (!Exists(dir))
         {
             // проверяет существование папки, в которой нужно создать dir
-            if (dir.Contains(Path.Sep) && !Exists(dir.Remove(dir.LastIndexOf(Path.Sep))))
-                Create(dir.Remove(dir.LastIndexOf(Path.Sep)));
-            System.IO.Directory.CreateDirectory(dir);
+            if (dir.Contains(Path.Sep))
+            {
+                string parentDir = dir.Remove(dir.LastIndexOf(Path.Sep));
+                if(!Exists(parentDir,true))
+                    Create(parentDir,true);
+            }
+            else System.IO.Directory.CreateDirectory(dir);
         }
     }
     /// копирует все файлы и папки
-    public static void Copy(string source_dir, string new_dir, bool owerwrite = false)
+    public static void Copy(string source_dir, string new_dir, bool owerwrite)
     {
-        Create(new_dir);
-        var subdirs = new List<string>();
-        List<string> files = GetAllFiles(source_dir, ref subdirs);
-        for (int i = 0; i < subdirs.Count; i++)
-            Create(subdirs[i].Replace(source_dir, new_dir));
-        for (int i = 0; i < files.Count; i++)
-            File.Copy(files[i], files[i].Replace(source_dir, new_dir), owerwrite);
+        Copy_internal(source_dir, new_dir, owerwrite, null);
     }
 
     /// копирует все файлы и папки и выдаёт список конфликтующих файлов
-    public static void Copy(string source_dir, string new_dir, out List<string> conflicts, bool owerwrite = false)
+    public static void Copy(string source_dir, string new_dir, bool owerwrite, out List<string> conflicts)
     {
         conflicts = new List<string>();
-        var subdirs = new List<string>();
-        List<string> files = GetAllFiles(source_dir, ref subdirs);
+        Copy_internal(source_dir, new_dir, owerwrite, conflicts);
+    }
+
+    private static void Copy_internal(string source_dir, string new_dir, bool owerwrite, List<string> conflicts)
+    {
+        bool countConflicts = conflicts is null;
+        List<string> files = GetAllFiles(source_dir);
         Create(new_dir);
-        for (int i = 0; i < subdirs.Count; i++)
-            Create(subdirs[i].Replace(source_dir, new_dir));
         for (int i = 0; i < files.Count; i++)
         {
-            string newfile = files[i].Replace(source_dir, new_dir);
-            if (File.Exists(newfile))
-                conflicts.Add(newfile);
+            string newfile = Path.ReplaceBase(files[i], source_dir, new_dir);
+            if (countConflicts && File.Exists(newfile))
+                conflicts!.Add(newfile);
             File.Copy(files[i], newfile, owerwrite);
         }
     }
 
     /// удаляет папку со всеми подпапками и файлами
-    public static void Delete(string dir) => System.IO.Directory.Delete(Path.FixSeparators(dir), true);
+    public static void Delete(string dir, bool separatorsFixed)
+    {
+        if(!separatorsFixed)
+            dir = Path.FixSeparators(dir);
+        System.IO.Directory.Delete(dir, true);
+    }
 
-    public static string[] GetFiles(string dir) => System.IO.Directory.GetFiles(Path.FixSeparators(dir));
-    public static string[] GetFiles(string dir, string searchPattern) => System.IO.Directory.GetFiles(Path.FixSeparators(dir), searchPattern);
-    public static string[] GetDirectories(string dir) => System.IO.Directory.GetDirectories(Path.FixSeparators(dir));
+    public static string[] GetFiles(string dir, bool separatorsFixed)
+    {
+        if (!separatorsFixed)
+            dir = Path.FixSeparators(dir);
+        return System.IO.Directory.GetFiles(dir);
+    }
+
+    public static string[] GetFiles(string dir, string searchPattern, bool separatorsFixed)
+    {
+        if (!separatorsFixed)
+            dir = Path.FixSeparators(dir);
+        return System.IO.Directory.GetFiles(dir, searchPattern);
+    }
+
+    public static string[] GetDirectories(string dir, bool separatorsFixed)
+    {
+        if (!separatorsFixed)
+            dir = Path.FixSeparators(dir);
+        return System.IO.Directory.GetDirectories(dir);
+    }
 
     /// выдает список всех файлов
     public static List<string> GetAllFiles(string dir)
@@ -84,13 +113,15 @@ public static class Directory
 
     public static string GetCurrent() => System.IO.Directory.GetCurrentDirectory();
 
-    public static void CreateSymlink(string sourceName, string symlinkName)
+    public static void CreateSymlink(string sourcePath, string symlinkPath, bool separatorsFixed)
     {
-        sourceName = Path.FixSeparators(sourceName);
-        symlinkName = Path.FixSeparators(symlinkName);
-        if (symlinkName.Contains(Path.Sep))
-            Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
-        if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.Directory))
-            throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkName}, {sourceName})");
+        if (!separatorsFixed)
+        {
+            sourcePath = Path.FixSeparators(sourcePath);
+            symlinkPath = Path.FixSeparators(symlinkPath);
+        }
+        Create(Path.ParentDir(symlinkPath, true), true);
+        if (!Symlink.CreateSymbolicLink(symlinkPath, sourcePath, Symlink.SymlinkTarget.Directory))
+            throw new InvalidOperationException($"some error occured while creating symlink\nDirectory.CreateSymlink({symlinkPath}, {sourcePath})");
     }
 }

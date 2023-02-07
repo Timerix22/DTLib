@@ -1,6 +1,6 @@
+#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
 namespace DTLib.Extensions;
 
-#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
 public static class SpanHelper
 {
     public static ReadOnlySpan<T> After<T>(this ReadOnlySpan<T> span, T c) where T : IEquatable<T>

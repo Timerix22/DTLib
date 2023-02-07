@@ -10,8 +10,6 @@ public class Hasher
     readonly HashAlgorithm sha256 = SHA256.Create();
     readonly HashAlgorithm xxh32 = XXHash32.Create();
 
-    public Hasher() { }
-
     // хеш массива
     public byte[] Hash(byte[] input) => sha256.ComputeHash(input);
 

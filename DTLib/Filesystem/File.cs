@@ -1,33 +1,55 @@
-﻿
-namespace DTLib.Filesystem;
+﻿namespace DTLib.Filesystem;
 
 public static class File
 {
     /// возвращает размер файла в байтах
-    public static long GetSize(string file) => new System.IO.FileInfo(Path.FixSeparators(file)).Length;
+    public static long GetSize(string file, bool separatorsFixed)
+    {
+        if (!separatorsFixed)
+            file = Path.FixSeparators(file);
+        return new System.IO.FileInfo(file).Length;
+    }
 
-    public static bool Exists(string file) => System.IO.File.Exists(Path.FixSeparators(file));
+    public static bool Exists(string file, bool separatorsFixed)
+    {
+        if (!separatorsFixed)
+            file = Path.FixSeparators(file);
+        return System.IO.File.Exists(file);
+    }
 
     /// если файл не существует, создаёт файл с папками из его пути и закрывает этот фвйл
-    public static void Create(string file)
+    public static void Create(string file, bool separatorsFixed)
     {
-        file = Path.FixSeparators(file);
-        if (!Exists(file))
+        if (!separatorsFixed)
+            file = Path.FixSeparators(file);
+        if (!Exists(file, true))
         {
-            if (file.Contains(Path.Sep))
-                Directory.Create(file.Remove(file.LastIndexOf(Path.Sep)));
+            Directory.Create(Path.ParentDir(file, true), true);
             using System.IO.FileStream stream = System.IO.File.Create(file);
             stream.Close();
         }
     }
 
-    public static void Copy(string srcPath, string newPath, bool overwrite = false)
+    public static void Copy(string srcPath, string newPath, bool overwrite = false, bool separatorsFixed)
     {
-        srcPath = Path.FixSeparators(srcPath);
-        newPath = Path.FixSeparators(newPath);
-        if (!overwrite && Exists(newPath))
-            throw new Exception($"file <{newPath}> alredy exists");
-        System.IO.File.Copy(srcPath, newPath, overwrite);
+        if (!separatorsFixed)
+        {
+            srcPath = Path.FixSeparators(srcPath);
+            newPath = Path.FixSeparators(newPath);
+        }
+
+        if (Exists(newPath))
+        {
+            if(overwrite) System.IO.File.Delete(newPath);
+            else throw new Exception($"file <{newPath}> alredy exists");
+        }
+        else Directory.Create(Path.ParentDir(newPath, true));
+        using var srcFile=System.IO.File.Open(srcPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
+        using var newFile=System.IO.File.Open(newPath, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
+        srcFile.CopyTo(newFile);
+        srcFile.Close();
+        newFile.Flush();
+        newFile.Close();
     }
 
     public static void Delete(string file) => System.IO.File.Delete(Path.FixSeparators(file));
@@ -70,8 +92,7 @@ public static class File
     {
         file = Path.FixSeparators(file);
         if (Exists(file))
-            return System.IO.File.Open(file, System.IO.FileMode.Open, System.IO.FileAccess.Read,
-                System.IO.FileShare.ReadWrite);
+            return System.IO.File.Open(file, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
         throw new Exception($"file not found: <{file}>");
     }
 

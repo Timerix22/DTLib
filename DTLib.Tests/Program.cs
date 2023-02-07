@@ -30,6 +30,18 @@ public static class Program
         
         try
         {
+            string path = "file";
+            string path2 = path + "_temp";
+            // Ensure that the target does not exist.
+            File.Delete(path2);
+            // Copy the file.
+            File.Copy(path, path2);
+            System.Console.WriteLine("{0} was copied to {1}.", path, path2);
+            // Delete the newly created file.
+            File.Delete(path2);
+            System.Console.WriteLine("{0} was successfully deleted.", path2);
+            return;
+            
             new LaunchArgumentParser().WithNoExit().ParseAndHandle(args);
             TestPInvoke.TestAll();
             TestAutoarr.TestAll();
