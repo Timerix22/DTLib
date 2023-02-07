@@ -3,60 +3,45 @@
 public static class File
 {
     /// возвращает размер файла в байтах
-    public static long GetSize(string file, bool separatorsFixed)
-    {
-        if (!separatorsFixed)
-            file = Path.FixSeparators(file);
-        return new System.IO.FileInfo(file).Length;
-    }
+    public static long GetSize(IOPath file) => new System.IO.FileInfo(file.Str).Length;
 
-    public static bool Exists(string file, bool separatorsFixed)
+    public static bool Exists(IOPath file)
     {
-        if (!separatorsFixed)
-            file = Path.FixSeparators(file);
-        return System.IO.File.Exists(file);
+        if (System.IO.File.Exists(file.Str)) return true;
+        return false;
     }
 
     /// если файл не существует, создаёт файл с папками из его пути и закрывает этот фвйл
-    public static void Create(string file, bool separatorsFixed)
+    public static void Create(IOPath file)
     {
-        if (!separatorsFixed)
-            file = Path.FixSeparators(file);
-        if (!Exists(file, true))
-        {
-            Directory.Create(Path.ParentDir(file, true), true);
-            using System.IO.FileStream stream = System.IO.File.Create(file);
-            stream.Close();
-        }
+        if (Exists(file)) return;
+        
+        Directory.Create(file.ParentDir());
+        using System.IO.FileStream stream = System.IO.File.Create(file.Str);
+        stream.Close();
     }
 
-    public static void Copy(string srcPath, string newPath, bool overwrite = false, bool separatorsFixed)
+    public static void Copy(IOPath srcPath, IOPath newPath, bool overwrite)
     {
-        if (!separatorsFixed)
-        {
-            srcPath = Path.FixSeparators(srcPath);
-            newPath = Path.FixSeparators(newPath);
-        }
-
         if (Exists(newPath))
         {
-            if(overwrite) System.IO.File.Delete(newPath);
+            if(overwrite) System.IO.File.Delete(newPath.Str);
             else throw new Exception($"file <{newPath}> alredy exists");
         }
-        else Directory.Create(Path.ParentDir(newPath, true));
-        using var srcFile=System.IO.File.Open(srcPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
-        using var newFile=System.IO.File.Open(newPath, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
+        else Directory.Create(newPath.ParentDir());
+        using var srcFile=System.IO.File.Open(srcPath.Str, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
+        using var newFile=System.IO.File.Open(newPath.Str, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
         srcFile.CopyTo(newFile);
         srcFile.Close();
         newFile.Flush();
         newFile.Close();
     }
 
-    public static void Delete(string file) => System.IO.File.Delete(Path.FixSeparators(file));
+    public static void Delete(IOPath file) => System.IO.File.Delete(file.Str);
 
-    public static byte[] ReadAllBytes(string file)
+    public static byte[] ReadAllBytes(IOPath file)
     {
-        file = Path.FixSeparators(file);
+        
         using System.IO.FileStream stream = OpenRead(file);
         int size = GetSize(file).ToInt();
         byte[] output = new byte[size];
@@ -66,58 +51,52 @@ public static class File
         return output;
     }
 
-    public static string ReadAllText(string file) => ReadAllBytes(file).BytesToString(StringConverter.UTF8);
+    public static string ReadAllText(IOPath file) => ReadAllBytes(file).BytesToString(StringConverter.UTF8);
 
-    public static void WriteAllBytes(string file, byte[] content)
+    public static void WriteAllBytes(IOPath file, byte[] content)
     {
-        file = Path.FixSeparators(file);
         using System.IO.FileStream stream = OpenWrite(file);
         stream.Write(content, 0, content.Length);
         stream.Close();
     }
 
-    public static void WriteAllText(string file, string content) => WriteAllBytes(file, content.ToBytes(StringConverter.UTF8));
+    public static void WriteAllText(IOPath file, string content) => WriteAllBytes(file, content.ToBytes(StringConverter.UTF8));
 
-    public static void AppendAllBytes(string file, byte[] content)
+    public static void AppendAllBytes(IOPath file, byte[] content)
     {
-        file = Path.FixSeparators(file);
         using System.IO.FileStream stream = OpenAppend(file);
         stream.Write(content, 0, content.Length);
         stream.Close();
     }
 
-    public static void AppendAllText(string file, string content) => AppendAllBytes(file, content.ToBytes(StringConverter.UTF8));
+    public static void AppendAllText(IOPath file, string content) => AppendAllBytes(file, content.ToBytes(StringConverter.UTF8));
 
-    public static System.IO.FileStream OpenRead(string file)
+    public static System.IO.FileStream OpenRead(IOPath file)
     {
-        file = Path.FixSeparators(file);
-        if (Exists(file))
-            return System.IO.File.Open(file, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
-        throw new Exception($"file not found: <{file}>");
+        if (!Exists(file)) 
+            throw new Exception($"file not found: <{file}>");
+        return System.IO.File.Open(file.Str, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
     }
 
-    public static System.IO.FileStream OpenWrite(string file)
+    public static System.IO.FileStream OpenWrite(IOPath file)
     {
-        file = Path.FixSeparators(file);
         if (Exists(file))
             Delete(file);
         Create(file);
-        return System.IO.File.Open(file, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
+        return System.IO.File.Open(file.Str, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
     }
-    public static System.IO.FileStream OpenAppend(string file)
+    public static System.IO.FileStream OpenAppend(IOPath file)
     {
-        file = Path.FixSeparators(file);
+        
         Create(file);
-        return System.IO.File.Open(file, System.IO.FileMode.Append, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
+        return System.IO.File.Open(file.Str, System.IO.FileMode.Append, System.IO.FileAccess.Write, System.IO.FileShare.ReadWrite);
     }
 
-    public static void CreateSymlink(string sourceName, string symlinkName)
+    public static void CreateSymlink(IOPath sourcePath, IOPath symlinkPath)
     {
-        sourceName = Path.FixSeparators(sourceName);
-        symlinkName = Path.FixSeparators(symlinkName);
-        if (symlinkName.Contains(Path.Sep))
-            Directory.Create(symlinkName.Remove(symlinkName.LastIndexOf(Path.Sep)));
-        if (!Symlink.CreateSymbolicLink(symlinkName, sourceName, Symlink.SymlinkTarget.File))
-            throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkName}, {sourceName})");
+        if (symlinkPath.Contains(Path.Sep))
+            Directory.Create(symlinkPath.ParentDir());
+        if (!Symlink.CreateSymbolicLink(symlinkPath.Str, sourcePath.Str, Symlink.SymlinkTarget.File))
+            throw new InvalidOperationException($"some error occured while creating symlink\nFile.CreateSymlink({symlinkPath}, {sourcePath})");
     }
 }

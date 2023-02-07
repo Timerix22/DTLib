@@ -29,10 +29,10 @@ public static class DependencyResolver
                 _ => throw new Exception($"unsupported platform {RuntimeInformation.ProcessArchitecture}")
             };
 
-            string[] possibleLibDirs =
+            IOPath[] possibleLibDirs = new []
             {
-                Path.Concat("runtimes", $"{os}"),
-                Path.Concat("runtimes", $"{os}", "native"),
+                Path.Concat("runtimes", os),
+                Path.Concat("runtimes", os, "native"),
                 Path.Concat("runtimes", $"{os}-{arch}"),
                 Path.Concat("runtimes", $"{os}-{arch}", "native")
             };

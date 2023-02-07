@@ -1,73 +1,32 @@
+#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
+    #define USE_SPAN
+#endif
+
 using System.Runtime.CompilerServices;
 
 namespace DTLib.Filesystem;
 
 public static class Path
 {
-    
     public static readonly char Sep = Environment.OSVersion.Platform == PlatformID.Win32NT ? '\\' : '/';
-    private static readonly char NotSep = Environment.OSVersion.Platform == PlatformID.Win32NT ? '/' : '\\' ;
+    public static readonly char NotSep = Environment.OSVersion.Platform == PlatformID.Win32NT ? '/' : '\\' ;
     
-    /// does not correct separators, use Resolve for correction
-    /// <see cref="Resolve(string[])"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Concat(string path, string addition)
-    {
-        if (!path.EndsWith(Sep) && !addition.StartsWith(Sep))
-            path += Sep;
-        return path + addition;
-    }
-
-    /// <inheritdoc cref="Concat(string,string)"/>
-    public static string Concat(params string[] parts)
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.Append(parts[0]);
-        for (int i = 1; i < parts.Length; i++)
-        {
-            char lastC = builder[builder.Length - 1];
-            if(lastC!=Sep && lastC!=NotSep)
-                builder.Append(Sep);
-            builder.Append(parts[i]);
-        }
-        return builder.ToString();
-    }
-
-    public static string FixSeparators(string path)
-    {
-        var chars = path.ToCharArray();
-        int length = path.Length;
-        for(int i=0; i<length; i++)
-            if (chars[i] == NotSep)
-                chars[i] = Sep;
-        return new string(chars);
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Resolve(params string[] parts) => FixSeparators(Concat(parts));
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Resolve(string path, string addition) => FixSeparators(Concat(path, addition));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ThrowIfEscapes(string path)
+    public static void ThrowIfEscapes(this IOPath path)
     {
-        if (path.Contains(".."))
+        if (path.Str.Contains(".."))
             throw new Exception($"path <{path}> uses <..>, that's not allowed");
     }
-
+    
     /// Replaces restricted characters in string
-    public static string CorrectString(string str)
+    public static IOPath ReplaceRestrictedChars(string str)
     {
-#if  NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
-        var a = str.AsSpan();
-#else
-        var a = str.ToArray();
-#endif
-        char[] r = new char[a.Length];
-        for (int i = 0; i < a.Length; i++)
+        char[] r = str.ToCharArray();
+        
+        for (int i = 0; i < str.Length; i++)
         {
-            switch (a[i])
+            switch (r[i])
             {
                 case '/': case '\\':
                 case ':': case ';':
@@ -82,44 +41,93 @@ public static class Path
                 case '`': case '|': case '=':
                     r[i] = '_';
                     break;
-                default:
-                    r[i] = a[i];
-                    break;
             }
         }
 
-        return new string(r);
+        return new IOPath(r);
     }
 
-    public static string FileName(string path, bool separatorsFixed)
+#if  !USE_SPAN
+    private static unsafe void  CopyTo(this string s, char* b)
     {
-        if(!separatorsFixed)
-            path = FixSeparators(path);
+        for (int i = 0; i < s.Length; i++)
+            b[i] = s[i];
+    }
+#endif
+    
+    public static IOPath Concat(params IOPath[] parts)
+    {
+#if  USE_SPAN
+        Span<bool> 
+#else
+        unsafe
+        {
+            bool*
+#endif
+                needSeparator = stackalloc bool[parts.Length-1];
+            int lengthSum = 0;
+            for (int i = 0; i < parts.Length-1; i++)
+            {
+                lengthSum += parts[i].Length;
+                if (!parts[i].Str.EndsWith(Sep) && !parts[i + 1].Str.StartsWith(Sep))
+                {
+                    needSeparator[i] = true;
+                    lengthSum++;
+                }
+                else needSeparator[i] = false;
+            }
+            lengthSum += parts[parts.Length-1].Length;
+#if USE_SPAN
+            Span<char> 
+#else
+            char*
+#endif
+                buffer = stackalloc char[lengthSum];
+            parts[0].Str.CopyTo(buffer);
+            int copiedChars = parts[0].Length;
+            for (int i = 1; i < parts.Length; i++)
+            {
+                if (needSeparator[i-1])
+                    buffer[copiedChars++] = Sep;
+#if USE_SPAN
+                parts[i].Str.CopyTo(buffer.Slice(copiedChars));
+#else
+                parts[i].Str.CopyTo(buffer+copiedChars);
+#endif
+                copiedChars += parts[i].Length;
+            }
+        
+            return new IOPath(new string(buffer), true);
+#if !USE_SPAN
+        }
+#endif
+    }
+
+    public static IOPath FileName(this IOPath path)
+    {
         int i = path.LastIndexOf(Sep);
         if (i == -1) return path;
         return path.Substring(i+1);
     }
     
-    public static string Extension(string path)
+    public static IOPath Extension(this IOPath path)
     {
         int i = path.LastIndexOf('.');
         if (i == -1) return FileName(path);
         return path.Substring(i + 1);
     }
 
-    public static string ParentDir(string path, bool separatorsFixed)
+    public static IOPath ParentDir(this IOPath path)
     {
-        if(!separatorsFixed)
-            path = FixSeparators(path);
         int i = path.LastIndexOf(Sep);
         if (i == path.Length - 1) // ends with separator
-            i = path.LastIndexOf(Sep, 0, i);
+            i = path.LastIndexOf(Sep, i-1);
         if (i == -1) // no parent dir
             return $".{Sep}";
-        return path.Substring(0, i);
+        return path.Remove(i+1);
     }
 
-    public static string ReplaceBase(string path, string baseDir, string otherDir)
+    public static IOPath ReplaceBase(this IOPath path, IOPath baseDir, IOPath otherDir)
     {
         if (!path.StartsWith(baseDir))
             throw new Exception($"path <{path}> doesnt starts with <{baseDir}");
