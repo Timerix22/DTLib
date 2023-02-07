@@ -30,15 +30,6 @@ public static class Program
         
         try
         {
-            IOPath path = "file";
-            IOPath path2 = "dir/"+ path + "_temp";
-            File.Create(path);
-            File.Copy(path, path2, true);
-            System.Console.WriteLine("{0} was copied to {1}.", path, path2);
-            Directory.Copy(path2.ParentDir(), "dir2/c/", true);
-            System.Console.WriteLine($"dir/c/:\n"+Directory.GetAllFiles("dir2\\c").MergeToString("\n\t"));
-            return;
-            
             new LaunchArgumentParser().WithNoExit().ParseAndHandle(args);
             TestPInvoke.TestAll();
             TestAutoarr.TestAll();

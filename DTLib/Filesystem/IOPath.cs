@@ -93,9 +93,8 @@ public readonly struct IOPath
     public IOPath Substring(int startIndex, int count) => new(Str.Substring(startIndex, count), true);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public IOPath Replace(char oldChar, char newChar) => new(Str.Replace(oldChar, newChar), true);
-    [Obsolete("use different replace methods")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IOPath Replace(string oldStr, string newStr) => new(Str.Replace(oldStr, newStr), true);
+    public IOPath ReplaceAnywhere(string oldStr, string newStr) => new(Str.Replace(oldStr, newStr), true);
 
     ///<inheritdoc cref="string.IndexOf(char)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

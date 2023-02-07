@@ -103,9 +103,12 @@ public static class Path
 #endif
     }
 
-    public static IOPath FileName(this IOPath path)
+    /// returns just dir name or file name with extension
+    public static IOPath LastName(this IOPath path)
     {
         int i = path.LastIndexOf(Sep);
+        if (i == path.Length - 1) // ends with separator
+            i = path.LastIndexOf(Sep, i-1);
         if (i == -1) return path;
         return path.Substring(i+1);
     }
@@ -113,7 +116,7 @@ public static class Path
     public static IOPath Extension(this IOPath path)
     {
         int i = path.LastIndexOf('.');
-        if (i == -1) return FileName(path);
+        if (i == -1) return LastName(path);
         return path.Substring(i + 1);
     }
 
@@ -132,5 +135,13 @@ public static class Path
         if (!path.StartsWith(baseDir))
             throw new Exception($"path <{path}> doesnt starts with <{baseDir}");
         return Concat(otherDir, path.Substring(baseDir.Length));
+    }
+
+    public static IOPath RemoveBase(this IOPath path, IOPath baseDir)
+    {
+        
+        if (!path.StartsWith(baseDir))
+            throw new Exception($"path <{path}> doesnt starts with <{baseDir}");
+        return path.Substring(baseDir.Length);
     }
 }

@@ -36,7 +36,7 @@ public static class DependencyResolver
                 Path.Concat("runtimes", $"{os}-{arch}"),
                 Path.Concat("runtimes", $"{os}-{arch}", "native")
             };
-            foreach (string dir in possibleLibDirs)
+            foreach (var dir in possibleLibDirs)
                 if (Directory.Exists(dir))
                     foreach (var file in Directory.GetFiles(dir))
                     {

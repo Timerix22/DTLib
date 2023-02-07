@@ -42,7 +42,7 @@ public class Hasher
     }
 
     // хеш файла
-    public byte[] HashFile(string filename)
+    public byte[] HashFile(IOPath filename)
     {
         using System.IO.FileStream fileStream = File.OpenRead(filename);
         //var then = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
