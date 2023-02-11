@@ -13,7 +13,7 @@ public class ConsoleLogger : ILogger
 #endif
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
-    public bool ErrorLogenabled { get; set; } = true;
+    public bool ErrorLogEnabled { get; set; } = true;
     public ILogFormat Format { get; }
     
     readonly object consolelocker = new();

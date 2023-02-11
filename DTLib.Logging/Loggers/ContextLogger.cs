@@ -67,10 +67,10 @@ public class ContextLogger : ILogger
         set => ParentLogger.WarnLogEnabled = value;
     }
 
-    public bool ErrorLogenabled
+    public bool ErrorLogEnabled
     {
-        get => ParentLogger.ErrorLogenabled;
-        set => ParentLogger.ErrorLogenabled = value;
+        get => ParentLogger.ErrorLogEnabled;
+        set => ParentLogger.ErrorLogEnabled = value;
     }
 
     /// Appends subContext to Context

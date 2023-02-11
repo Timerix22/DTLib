@@ -16,7 +16,7 @@ internal static class LogSeverityHelper
             LogSeverity.Debug => logger.DebugLogEnabled,
             LogSeverity.Info => logger.InfoLogEnabled,
             LogSeverity.Warn => logger.WarnLogEnabled,
-            LogSeverity.Error => logger.ErrorLogenabled,
+            LogSeverity.Error => logger.ErrorLogEnabled,
             _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, "unknown severity")
         };
 }

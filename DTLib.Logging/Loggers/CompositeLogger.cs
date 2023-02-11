@@ -38,14 +38,14 @@ public class CompositeLogger : ILogger
         }
     }
 
-    public bool ErrorLogenabled
+    public bool ErrorLogEnabled
     {
         get => _errorLogenabled;
         set
         {
             _errorLogenabled = value;
             for (int i = 0; i < _loggers.Length; i++)
-                _loggers[i].ErrorLogenabled = value;
+                _loggers[i].ErrorLogEnabled = value;
         }
     }
 
