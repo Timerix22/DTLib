@@ -5,8 +5,9 @@ public enum DtsodVersion : byte
     V21 = 21,
     V22 = 22,
     V23 = 23,
-    V24 = 24
+    V24 = 24,
+    V25,
 #if DEBUG
-    ,V30 = 30
+    V30 = 30
 #endif
 }

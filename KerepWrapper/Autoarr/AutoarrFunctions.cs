@@ -1,7 +1,9 @@
-using DTLib.Dtsod.V24.KerepTypes;
+using System;
+using DTLib;
+using KerepWrapper.KerepTypes;
 
-namespace DTLib.Dtsod.V24.Autoarr;
-using AutoarrPtr=IntPtr;
+namespace KerepWrapper.Autoarr;
+using AutoarrPtr=DtsodPtr;
 
 public abstract class AutoarrFunctions<T>
 {

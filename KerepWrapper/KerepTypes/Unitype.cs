@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using DTLib.Dtsod.V24.Autoarr;
+using DTLib.Extensions;
+using KerepWrapper.Autoarr;
+using KerepWrapper.Dtsod;
 
-namespace DTLib.Dtsod.V24.KerepTypes;
+namespace KerepWrapper.KerepTypes;
 
 [StructLayout(LayoutKind.Explicit)]
 public struct Unitype
@@ -11,7 +15,7 @@ public struct Unitype
     [FieldOffset(0)] public double Float64;
     [MarshalAs(UnmanagedType.I1)]
     [FieldOffset(0)] public bool Bool;
-    [FieldOffset(0)] public IntPtr VoidPtr;
+    [FieldOffset(0)] public DtsodPtr VoidPtr;
     [FieldOffset(8)] public KerepTypeCode TypeCode;
 
     public Unitype(object v) : this()

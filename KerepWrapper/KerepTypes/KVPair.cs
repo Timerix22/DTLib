@@ -1,14 +1,15 @@
 using System.Runtime.InteropServices;
+using DTLib.Extensions;
 
-namespace DTLib.Dtsod.V24.KerepTypes;
+namespace KerepWrapper.KerepTypes;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct KVPair
 {
-    public IntPtr key;
+    public DtsodPtr key;
     public Unitype value;
 
-    public KVPair(IntPtr k, Unitype v)
+    public KVPair(DtsodPtr k, Unitype v)
     {
         key = k;
         value = v;

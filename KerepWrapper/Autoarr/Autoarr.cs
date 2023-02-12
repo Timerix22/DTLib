@@ -1,6 +1,8 @@
-using System.Runtime.InteropServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace DTLib.Dtsod.V24.Autoarr;
+namespace KerepWrapper.Autoarr;
 
 public class Autoarr<T> : IEnumerable<T>, IDisposable where T : struct
 {

@@ -1,8 +1,12 @@
-using DTLib.Dtsod.V24.Autoarr;
-using DTLib.Dtsod.V24.KerepTypes;
-using Funcs=DTLib.Dtsod.V24.DtsodV24Functions;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using DTLib.Dtsod;
+using KerepWrapper.KerepTypes;
+using KerepWrapper.Autoarr;
+using Funcs=KerepWrapper.Dtsod.DtsodV24Functions;
 
-namespace DTLib.Dtsod.V24;
+namespace KerepWrapper.Dtsod;
 
 public class DtsodV24 : IDtsod, IEnumerable<KVPair>, IDisposable
 {

@@ -1,4 +1,7 @@
-namespace DTLib.Dtsod.V24.KerepTypes;
+using System;
+using System.Collections.Generic;
+
+namespace KerepWrapper.KerepTypes;
 
 public enum KerepTypeCode : byte
 {

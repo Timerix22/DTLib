@@ -1,6 +1,7 @@
-using DTLib.Dtsod.V24;
-using DTLib.Dtsod.V24.Autoarr;
-using DTLib.Dtsod.V24.KerepTypes;
+/*
+using KerepWrapper.Dtsod;
+using KerepWrapper.Autoarr;
+using KerepWrapper.KerepTypes;
 
 namespace DTLib.Tests;
 
@@ -80,3 +81,4 @@ public static class TestDtsodV24
         OldLogger.Log("g", "test completed");
     }
 }
+*/

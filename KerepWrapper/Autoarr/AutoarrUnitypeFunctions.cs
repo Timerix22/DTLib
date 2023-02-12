@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using DTLib.Dtsod.V24.KerepTypes;
+using KerepWrapper.KerepTypes;
 
-namespace DTLib.Dtsod.V24.Autoarr;
+namespace KerepWrapper.Autoarr;
 
 internal class AutoarrUnitypeFunctions : AutoarrFunctions<Unitype>
 {

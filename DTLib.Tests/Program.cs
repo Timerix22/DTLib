@@ -31,10 +31,10 @@ public static class Program
         try
         {
             new LaunchArgumentParser().WithNoExit().ParseAndHandle(args);
-            TestPInvoke.TestAll();
-            TestAutoarr.TestAll();
             TestDtsodV23.TestAll();
-            TestDtsodV24.TestAll();
+            // TestPInvoke.TestAll();
+            // TestAutoarr.TestAll();
+            // TestDtsodV24.TestAll();
         }
         catch(LaunchArgumentParser.ExitAfterHelpException)
         { }

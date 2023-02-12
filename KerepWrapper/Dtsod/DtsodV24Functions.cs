@@ -2,10 +2,13 @@ global using DtsodPtr=System.IntPtr;
 global using AutoarrKVPairPtr=System.IntPtr;
 global using AutoarrUnitypePtr=System.IntPtr;
 global using CharPtr=System.IntPtr;
+using System;
 using System.Runtime.InteropServices;
-using DTLib.Dtsod.V24.KerepTypes;
+using DTLib;
+using DTLib.Extensions;
+using KerepWrapper.KerepTypes;
 
-namespace DTLib.Dtsod.V24;
+namespace KerepWrapper.Dtsod;
 
 internal static class DtsodV24Functions
 {

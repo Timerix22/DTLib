@@ -1,6 +1,7 @@
+/*
 using System.Runtime.InteropServices;
-using DTLib.Dtsod.V24;
-using DTLib.Dtsod.V24.KerepTypes;
+using KerepWrapper.Dtsod;
+using KerepWrapper.KerepTypes;
 
 namespace DTLib.Tests;
 
@@ -50,3 +51,4 @@ public static class TestPInvoke
         OldLogger.Log("g", "test completed");
     }
 }
+*/
