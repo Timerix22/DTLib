@@ -17,7 +17,6 @@ nuget/
 .idea/
 .editorconfig
 *.user
-*.DotSettings
 
 #backups
 .old*/
