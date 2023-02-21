@@ -17,7 +17,7 @@ public static class DTLibInternalLogging
 
     public static void SetLogger(ILogger logger)
     {
-        _loggerContext = new ContextLogger(logger, "DTLib");
+        _loggerContext = new ContextLogger("DTLib",logger);
         PublicLog.LogEvent+=LogHandler;
     }
 

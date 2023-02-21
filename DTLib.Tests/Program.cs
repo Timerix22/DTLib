@@ -25,7 +25,7 @@ public static class Program
         System.Console.InputEncoding = Encoding.UTF8;
         Logger=new CompositeLogger(new ConsoleLogger(), 
             new FileLogger("logs", "DTLib.Tests"));
-        var mainContext = new ContextLogger(Logger, "Main");
+        var mainContext = new ContextLogger("Main", Logger);
         DTLibInternalLogging.SetLogger(Logger);
         
         try

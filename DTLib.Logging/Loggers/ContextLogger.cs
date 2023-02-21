@@ -6,10 +6,16 @@ public class ContextLogger : ILogger
     public ILogger ParentLogger;
     public readonly string Context;
 
-    public ContextLogger(ILogger parentLogger, string context)
+    public ContextLogger(string context,ILogger parentLogger)
     {
         ParentLogger = parentLogger;
         Context = context;
+    }
+
+    /// Appends subContext to Context
+    public void Log(string subContext, LogSeverity severity, object message, ILogFormat format)
+    {
+        ParentLogger.Log($"{Context}/{subContext}", severity, message, format);
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -42,10 +48,7 @@ public class ContextLogger : ILogger
     public void LogError(Exception ex)
         => ParentLogger.LogError(Context, ex);
 
-    public void Dispose()
-    {
-        ParentLogger.Dispose();
-    }
+    public void Dispose() => ParentLogger.Dispose();
 
     public ILogFormat Format => ParentLogger.Format;
 
@@ -71,11 +74,5 @@ public class ContextLogger : ILogger
     {
         get => ParentLogger.ErrorLogEnabled;
         set => ParentLogger.ErrorLogEnabled = value;
-    }
-
-    /// Appends subContext to Context
-    public void Log(string subContext, LogSeverity severity, object message, ILogFormat format)
-    {
-        ParentLogger.Log($"{Context}/{subContext}", severity, message, format);
     }
 }
