@@ -9,6 +9,7 @@
 [Ll]og/
 [Ll]ogs/
 nuget/
+*[-_]tmp/
 
 # IDE files
 .vs/
@@ -20,3 +21,4 @@ nuget/
 
 #backups
 .old*/
+*[-_]old/
