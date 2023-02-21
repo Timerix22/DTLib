@@ -21,20 +21,19 @@ public class FileLogger : IDisposable
         lock (LogfileStream)
         {
             LastLogMessageTime = DateTime.Now.ToString(MyTimeFormat.ForText);
-            LogfileStream.WriteByte('['.ToByte());
-            LogfileStream.Write(LastLogMessageTime.ToBytes(StringConverter.UTF8));
-            LogfileStream.Write("]: ".ToBytes(StringConverter.UTF8));
+            LogfileStream.FluentWriteString("[")
+                .FluentWriteString(LastLogMessageTime)
+                .FluentWriteString("]: ");
             if (msg.Length == 1)
-                LogfileStream.Write(msg[0].ToBytes(StringConverter.UTF8));
+                LogfileStream.FluentWriteString(msg[0]);
             else
             {
                 var strb = new StringBuilder();
                 for (ushort i = 1; i < msg.Length; i += 2)
                     strb.Append(msg[i]);
-                LogfileStream.Write(strb.ToString().ToBytes(StringConverter.UTF8));
+                LogfileStream.FluentWriteString(strb.ToString());
             }
-            LogfileStream.WriteByte('\n'.ToByte());
-            LogfileStream.Flush();
+            LogfileStream.FluentWriteString("\n").Flush();
         }
     }
 

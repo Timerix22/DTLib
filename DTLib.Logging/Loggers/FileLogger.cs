@@ -41,8 +41,7 @@ public class FileLogger : ILogger
         var msg = format.CreateMessage(context, severity, message);
         lock (LogfileStream)
         {
-            LogfileStream.Write(msg.ToBytes(StringConverter.UTF8));
-            LogfileStream.Flush();
+            LogfileStream.FluentWrite(msg.ToBytes(StringConverter.UTF8)).Flush();
         }
     }
 

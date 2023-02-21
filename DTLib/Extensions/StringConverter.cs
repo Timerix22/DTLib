@@ -4,7 +4,9 @@ public static class StringConverter
 {
     public static Encoding UTF8 = new UTF8Encoding(false);
     public static Encoding UTF8BOM = new UTF8Encoding(true);
+    public static byte[] ToBytes(this string str) => UTF8.GetBytes(str);
     public static byte[] ToBytes(this string str, Encoding encoding) => encoding.GetBytes(str);
+    public static string BytesToString(this byte[] bytes) => UTF8.GetString(bytes);
     public static string BytesToString(this byte[] bytes, Encoding encoding) => encoding.GetString(bytes);
 
     // хеш в виде массива байт в строку (хеш изначально не в кодировке UTF8, так что метод выше не работает с ним)
@@ -160,7 +162,7 @@ public static class StringConverter
     public static List<string> SplitToList(this string s, int length)
     {
         List<string> parts = new();
-        int max = (s.Length / length).Truncate();
+        int max = (int)(s.Length / length);
         for (int i = 0; i < max; i++)
             parts.Add(s.Substring(i * length, length));
         if (max * length != s.Length) parts.Add(s.Substring(max * length, s.Length - max * length));

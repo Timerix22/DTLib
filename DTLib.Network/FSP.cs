@@ -69,7 +69,7 @@ public class FSP
             MainSocket.SendPackage("ready".ToBytes(StringConverter.UTF8));
             int packagesCount = 0;
             byte[] buffer = new byte[5120];
-            int fullPackagesCount = (Filesize / buffer.Length).Truncate();
+            int fullPackagesCount = (int)(Filesize / buffer.Length);
             // получение полных пакетов файла
             for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
             {
@@ -113,7 +113,7 @@ public class FSP
             MainSocket.GetAnswer("ready");
             byte[] buffer = new byte[5120];
             int packagesCount = 0;
-            int fullPackagesCount = (Filesize / buffer.Length).Truncate();
+            int fullPackagesCount = (int)(Filesize / buffer.Length);
             // отправка полных пакетов файла
             for (; packagesCount < fullPackagesCount; packagesCount++)
             {

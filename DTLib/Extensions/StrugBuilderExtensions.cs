@@ -8,7 +8,7 @@ public static class StrugBuilderExtensions
             b.Append(array[i]);
         return b;
     }
-    public static StringBuilder AppendArray<TVal,TSep>(this StringBuilder b, TVal[] array, char separator)
+    public static StringBuilder AppendArray<TVal>(this StringBuilder b, TVal[] array, char separator)
     {
         if (array.Length == 0) return b;
         b.Append(array[0]);
@@ -16,7 +16,7 @@ public static class StrugBuilderExtensions
             b.Append(separator).Append(array[i]);
         return b;
     }
-    public static StringBuilder AppendArray<TVal,TSep>(this StringBuilder b, TVal[] array, string separator)
+    public static StringBuilder AppendArray<TVal>(this StringBuilder b, TVal[] array, string separator)
     {
         if (array.Length == 0) return b;
         b.Append(array[0]);
@@ -31,7 +31,7 @@ public static class StrugBuilderExtensions
             b.Append(el);
         return b;
     }
-    public static StringBuilder AppendColletion<TVal, TSep>(this StringBuilder b, IEnumerable<TVal> enumerable, char separator)
+    public static StringBuilder AppendColletion<TVal>(this StringBuilder b, IEnumerable<TVal> enumerable, char separator)
     {
         using IEnumerator<TVal> enumerator = enumerable.GetEnumerator();
         if (!enumerator.MoveNext()) return b;
@@ -40,7 +40,7 @@ public static class StrugBuilderExtensions
             b.Append(separator).Append(enumerator.Current);
         return b;
     }
-    public static StringBuilder AppendColletion<TVal, TSep>(this StringBuilder b, IEnumerable<TVal> enumerable, string separator)
+    public static StringBuilder AppendColletion<TVal>(this StringBuilder b, IEnumerable<TVal> enumerable, string separator)
     {
         using IEnumerator<TVal> enumerator = enumerable.GetEnumerator();
         if (!enumerator.MoveNext()) return b;

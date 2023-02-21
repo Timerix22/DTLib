@@ -8,29 +8,46 @@ global using DTLib.Extensions;
 global using DTLib.Filesystem;
 global using static DTLib.Logging.PublicLog;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace DTLib.Extensions;
 
 public static class BaseConverter
 {
     // сокращение конвертации
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ToBool<T>(this T input) => Convert.ToBoolean(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToChar<T>(this T input) => Convert.ToChar(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte ToByte<T>(this T input) => Convert.ToByte(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ToSByte<T>(this T input) => Convert.ToSByte(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short ToShort<T>(this T input) => Convert.ToInt16(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort ToUShort<T>(this T input) => Convert.ToUInt16(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt<T>(this T input) => Convert.ToInt32(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ToUInt<T>(this T input) => Convert.ToUInt32(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ToLong<T>(this T input) => Convert.ToInt64(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ToULong<T>(this T input) => Convert.ToUInt64(input);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ToFloat(this string input) => float.Parse(input, NumberStyles.Any, CultureInfo.InvariantCulture);
 #if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ToFloat(this ReadOnlySpan<char> input) => float.Parse(input, NumberStyles.Any, CultureInfo.InvariantCulture);
 #endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble<T>(this T input) => Convert.ToDouble(input, CultureInfo.InvariantCulture);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static decimal ToDecimal<T>(this T input) => Convert.ToDecimal(input, CultureInfo.InvariantCulture);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this byte[] bytes)
     {
         int output = 0;
@@ -39,19 +56,25 @@ public static class BaseConverter
         return output;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] IntToBytes(this int num)
     {
         List<byte> output = new();
         while (num != 0)
         {
-            output.Add(ToByte(num % 256));
-            num = (num / 256).Truncate();
+            output.Add((byte)(num % 256));
+            num = (int)(num / 256.0);
         }
         output.Reverse();
         return output.ToArray();
     }
 
-    // Math.Truncate принимает как decimal, так и doublе,
-    // из-за чего вызов метода так: Math.Truncate(10/3) выдаст ошибку "неоднозначный вызов"
-    public static int Truncate<T>(this T number) => Math.Truncate(number.ToDouble()).ToInt();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int TruncateToInt(this double number) => Math.Truncate(number).ToInt();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int TruncateToInt(this decimal number) => Math.Truncate(number).ToInt();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static long TruncateToLong(this double number) => Math.Truncate(number).ToLong();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static long TruncateToLong(this decimal number) => Math.Truncate(number).ToLong();
 }
