@@ -1,12 +1,12 @@
 ﻿namespace DTLib.Dtsod;
 
-public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>, IDictionary
+public abstract class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>, IDictionary
 {
     // да, вместо собственной реализации интерфейса это ссылки на Dictionary
     readonly Dictionary<TKey, TVal> baseDict;
 
-    public DtsodDict() => baseDict = new();
-    public DtsodDict(IDictionary<TKey, TVal> srcDict) => baseDict = new(srcDict);
+    protected DtsodDict() => baseDict = new();
+    protected DtsodDict(IDictionary<TKey, TVal> srcDict) => baseDict = new(srcDict);
 
 
     public virtual TVal this[TKey key]
@@ -20,26 +20,30 @@ public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>, IDictionary
 
     public virtual bool TryGetValue(TKey key, out TVal value) => baseDict.TryGetValue(key, out value);
 
-    public virtual bool TrySetValue(TKey key, TVal value)
+    public bool TrySetValue(TKey key, TVal value)
     {
-        if (ContainsKey(key))
-        {
-            baseDict[key] = value;
-            return true;
-        }
-        else return false;
-    }
-    public virtual void Append(ICollection<KeyValuePair<TKey, TVal>> anotherDtsod)
-    {
-        foreach (KeyValuePair<TKey, TVal> pair in anotherDtsod)
-            Add(pair.Key, pair.Value);
-    }
+        if (!ContainsKey(key)) 
+            return false;
+        baseDict[key] = value;
+        return true;
 
+    }
+    
     public virtual void Add(TKey key, TVal value) => baseDict.Add(key, value);
 
     public virtual void Add(KeyValuePair<TKey, TVal> pair)
        => ((ICollection<KeyValuePair<TKey, TVal>>)baseDict).Add(pair);
 
+    public void Add(object key, object value)
+    {
+        ((IDictionary) baseDict).Add(key, value);
+    }
+    
+    public void Append(IEnumerable<KeyValuePair<TKey, TVal>> anotherDtsod)
+    {
+        foreach (KeyValuePair<TKey, TVal> pair in anotherDtsod)
+            Add(pair);
+    }
 
     public void CopyTo(Array array, int index)
     {
@@ -62,11 +66,6 @@ public class DtsodDict<TKey, TVal> : IDictionary<TKey, TVal>, IDictionary
     {
         get => ((IDictionary) baseDict)[key];
         set => ((IDictionary) baseDict)[key] = value;
-    }
-
-    public void Add(object key, object value)
-    {
-        ((IDictionary) baseDict).Add(key, value);
     }
 
     public virtual void Clear() => baseDict.Clear();

@@ -13,9 +13,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
     public DtsodVersion Version { get; } = DtsodVersion.V23;
     public IDictionary<string, dynamic> ToDictionary() => this;
 
-    public DtsodV23() : base() {}
+    public DtsodV23() {}
     public DtsodV23(IDictionary<string, dynamic> dict) : base(dict) {}
-    public DtsodV23(string serialized) => Append(Deserialize(serialized));
+    public DtsodV23(string serialized) => this.Append(Deserialize(serialized));
 
     static DtsodV23 Deserialize(string _text)
     {
@@ -213,7 +213,7 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                                     }
                                 }
                         }
-                };
+                }
             }
 
             object value = null;
@@ -296,9 +296,9 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
     };
     
     protected StringBuilder Serialize(DtsodV23 dtsod, ref int tabscount, StringBuilder b = null)
-    {;
+    {
         tabscount++;
-        if (b is null) b = new StringBuilder();
+        b ??= new StringBuilder();
         foreach (var pair in dtsod)
         {
             b.Append('\t', tabscount).Append(pair.Key).Append(": ");
