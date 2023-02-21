@@ -13,24 +13,24 @@ public class FileLogger : ILogger
     public bool ErrorLogEnabled { get; set; } = true;
     public ILogFormat Format { get; }
     
-    public string LogfileName { get; protected set; }
+    public IOPath LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }
     
-    public FileLogger(string logfile, ILogFormat format)
+    public FileLogger(IOPath logfile, ILogFormat format)
     {
         Format = format;
         LogfileName = logfile;
         LogfileStream = File.OpenAppend(logfile);
     }
 
-    public FileLogger(string logfile) : this(logfile, new DefaultLogFormat())
+    public FileLogger(IOPath logfile) : this(logfile, new DefaultLogFormat())
     {}
 
-    public FileLogger(string dir, string programName, ILogFormat format)
+    public FileLogger(IOPath dir, IOPath programName, ILogFormat format)
         : this($"{dir}{Path.Sep}{programName}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log", format)
     {}
 
-    public FileLogger(string dir, string programName) : this(dir, programName, new DefaultLogFormat())
+    public FileLogger(IOPath dir, IOPath programName) : this(dir, programName, new DefaultLogFormat())
     {}
 
     public void Log(string context, LogSeverity severity, object message, ILogFormat format)
