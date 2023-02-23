@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DTLib.Dtsod;
+using DTLib.Extensions;
 using KerepWrapper.KerepTypes;
 using KerepWrapper.Autoarr;
 using Funcs=KerepWrapper.Dtsod.DtsodV24Functions;
@@ -32,9 +33,9 @@ public class DtsodV24 : IDtsod, IEnumerable<KVPair>, IDisposable
 
     public IDictionary<string, dynamic> ToDictionary()
     {
-        DtsodDict<string, dynamic> dict = new();
+        Dictionary<string, dynamic> dict = new();
         foreach (var p in this)
-                dict.Add(p.key,p.value.ToDynamic());
+                dict.Add(p.key.HGlobalUTF8ToString(),p.value.ToDynamic());
         return dict;
     }
 

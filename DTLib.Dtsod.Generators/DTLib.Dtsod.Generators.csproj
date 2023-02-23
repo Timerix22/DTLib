@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!--package info-->
+        <PackageId>DTLib.Dtsod.Generators</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Timerix</Authors>
+        <Description>Serializer generators for Dtsod</Description>
+        <RepositoryType>GIT</RepositoryType>
+        <RepositoryUrl>https://github.com/Timerix22/DTLib</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Timerix22/DTLib</PackageProjectUrl>
+        <Configuration>Release</Configuration>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <!--compilation properties-->
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <DebugType>embedded</DebugType>
+        <!--language features-->
+        <LangVersion>preview</LangVersion>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <!--DTLib dependencies-->
+    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <ProjectReference Include="..\DTLib\DTLib.csproj" />
+        <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+        <PackageReference Include="DTLib.Dtsod" Version="1.1.1" />
+    </ItemGroup>
+    
+    <!--source generators-->
+    <PropertyGroup>
+        <CodeAnalysisOutputToConsole>true</CodeAnalysisOutputToConsole>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild> <!-- Generates a package at build -->
+        <IncludeBuildOutput>false</IncludeBuildOutput> <!-- Do not include the generator as a lib dependency -->
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- Package the generator in the analyzer directory of the nuget package -->
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="rm -f bin/$(Configuration)/*.nupkg" />
+    </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="cp bin/$(Configuration)/*.nupkg ../nuget/" />
+    </Target>
+</Project>

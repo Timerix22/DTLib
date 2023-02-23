@@ -29,6 +29,7 @@
 	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
 		<PackageReference Include="DTLib" Version="1.1.2" />
 		<PackageReference Include="DTLib.Dtsod" Version="1.1.1" />
+		<PackageReference Include="DTLib.Dtsod.Generators" Version="0.0.1" />
 		<PackageReference Include="DTLib.Network" Version="1.1.1" />
 		<PackageReference Include="DTLib.Logging" Version="1.1.1" />
 	</ItemGroup>
