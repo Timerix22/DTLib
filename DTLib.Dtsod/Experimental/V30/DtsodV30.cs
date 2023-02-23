@@ -252,7 +252,7 @@ public class DtsodV30 : DtsodDict<string, dynamic>, IDtsod
         return output;
     }
 
-    public override void Append(ICollection<KeyValuePair<string, dynamic>> anotherDtsod) => base.Append(anotherDtsod);//UpdateLazy();
+    // public override void Append(ICollection<KeyValuePair<string, dynamic>> anotherDtsod) => base.Append(anotherDtsod);//UpdateLazy();
 
     public override void Add(string key, dynamic value) => base.Add(key, (object)value);//UpdateLazy();
 

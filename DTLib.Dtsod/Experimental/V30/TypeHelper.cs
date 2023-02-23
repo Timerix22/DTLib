@@ -41,7 +41,7 @@ public class TypeHelper
         { typeof(decimal), "decimal" }
     };
 
-    private DtsodDict<string, Type> ST_extensions = new()
+    private Dictionary<string, Type> ST_extensions = new()
     {
         { "List<bool>", typeof(List<bool>) },
         { "List<char>", typeof(List<char>) },
@@ -58,7 +58,7 @@ public class TypeHelper
         { "List<double>", typeof(List<double>) },
         { "List<decimal>", typeof(List<decimal>) },
     };
-    private DtsodDict<Type, string> TS_extensions = new()
+    private Dictionary<Type, string> TS_extensions = new()
     {
         { typeof(List<bool>), "List<bool>" },
         { typeof(List<char>), "List<char>" },
