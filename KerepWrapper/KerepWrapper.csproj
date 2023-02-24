@@ -12,7 +12,7 @@
         <Configuration>Release</Configuration>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <!--compilation properties-->
-        <TargetFrameworks>net6.0;netstandard2.0;net48</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net48;net6.0;net7.0</TargetFrameworks>
         <DebugType>embedded</DebugType>
         <!--language features-->
         <LangVersion>10</LangVersion>
@@ -35,7 +35,7 @@
         <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib.Dtsod" Version="1.1.0" />
+        <PackageReference Include="DTLib.Dtsod" Version="1.1.3" />
     </ItemGroup>
 
     <!--project files-->
