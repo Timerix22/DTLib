@@ -162,7 +162,7 @@ public static class StringConverter
     public static List<string> SplitToList(this string s, int length)
     {
         List<string> parts = new();
-        int max = (int)(s.Length / length);
+        int max = s.Length / length;
         for (int i = 0; i < max; i++)
             parts.Add(s.Substring(i * length, length));
         if (max * length != s.Length) parts.Add(s.Substring(max * length, s.Length - max * length));

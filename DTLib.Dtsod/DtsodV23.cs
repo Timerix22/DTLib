@@ -202,10 +202,15 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                                     : throw new Exception("can't parse value:" + value_str);
                             default:
                                 if (value_str.Contains('.'))
-                                    return (object)(value_str.ToDouble());
+                                    // ReSharper disable once RedundantCast
+                                    return (object)value_str.ToDouble();
                                 else
                                 {
-                                    try { return (object)(value_str.ToInt()); }
+                                    try
+                                    {
+                                        // ReSharper disable once RedundantCast
+                                        return (object)value_str.ToInt();
+                                    }
                                     catch (FormatException)
                                     {
                                         Log("r", $"can't parse value: {value_str}");

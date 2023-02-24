@@ -4,12 +4,10 @@ namespace DTLib.Logging.DependencyInjection;
 
 public class LoggerService<TCaller> : ServiceDescriptor
 {
-    DTLib.Logging.New.ILogger _logger;
-
+    // ReSharper disable once RedundantNameQualifier
     public LoggerService(DTLib.Logging.New.ILogger logger) : base( 
         typeof(Microsoft.Extensions.Logging.ILogger<TCaller>), 
         new MyLoggerWrapper<TCaller>(logger))
     {
-        _logger = logger;
     }
 }

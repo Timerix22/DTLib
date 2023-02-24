@@ -261,7 +261,7 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                                     break;
                                 default:
                                     throw new Exception($"Dtsod.Parse.ReadValue() error: value= wrong type <u{stringValue[stringValue.Length - 1]}>");
-                            };
+                            }
                         }
                         // short; long; int
                         else
@@ -278,7 +278,7 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                                     break;
                             }
                         break;
-                };
+                }
             }
 
             StringBuilder defaultValueBuilder = new();
@@ -303,7 +303,8 @@ public class DtsodV21 : Dictionary<string, dynamic>, IDtsod
                             case ValueType.Default:
                                 ParseValueToRightType(defaultValueBuilder.ToString());
                                 break;
-                        };
+                        }
+
                         return value;
                     case '[':
                         value = ReadList();

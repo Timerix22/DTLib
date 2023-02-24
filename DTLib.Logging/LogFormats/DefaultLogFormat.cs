@@ -27,7 +27,7 @@ public class DefaultLogFormat : ILogFormat
             sb.Append('[').Append(severity.ToString()).Append(']');
         if (sb.Length != 0) 
             sb.Append(": ");
-        sb.Append(message.ToString());
+        sb.Append(message);
         sb.Append('\n');
         return sb.ToString();
     }

@@ -1,5 +1,6 @@
 using DTLib.Logging.New;
 using Microsoft.Extensions.Logging;
+// ReSharper disable RedundantNameQualifier
 
 namespace DTLib.Logging.DependencyInjection;
 
