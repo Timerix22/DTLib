@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<!--package info-->
 		<PackageId>DTLib</PackageId>
-		<Version>1.1.4</Version>
+		<Version>1.1.5</Version>
 		<Authors>Timerix</Authors>
 		<Description>Library for all my C# projects</Description>
 		<RepositoryType>GIT</RepositoryType>
