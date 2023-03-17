@@ -6,24 +6,33 @@ using System.Runtime.CompilerServices;
 
 namespace DTLib.Filesystem;
 
+/// <summary>
+/// represents filesystem path with proper dir separators and without trailing separator
+/// </summary>
 public readonly struct IOPath
 {
     public readonly string Str;
     
+    public IOPath(char[] path, bool separatorsFixed=false)
+    {
+        Str = separatorsFixed ? new string(path) : FixSeparators(path);
+    }
+    
     public IOPath(string path, bool separatorsFixed=false)
     {
-        if (!separatorsFixed)
-        {
-            var chars = path.ToCharArray();
-            for(int i=0; i<path.Length; i++)
-                if (chars[i] == Path.NotSep)
-                    chars[i] = Path.Sep;
-            Str = new string(chars);
-        }
-        else Str = path;
+        Str = separatorsFixed ? path : FixSeparators(path.ToCharArray());
     }
 
-    public IOPath(char[] path) : this(new string(path)) {}
+    static string FixSeparators(char[] path)
+    {
+        int length = path.Length;
+        if (path[path.Length-1]==Path.Sep || path[path.Length-1]==Path.NotSep)
+            length--; // removing trailing sep
+        for(int i=0; i<length; i++)
+            if (path[i] == Path.NotSep)
+                path[i] = Path.Sep;
+        return new string(path);
+    }
 
     public static IOPath[] ArrayCast(string[] a)
     {
@@ -32,7 +41,7 @@ public readonly struct IOPath
             b[i] = (IOPath)a[i];
         return b;
     }
-    public static IOPath[] ArrayCast(IList<string> a)
+    public static IOPath[] ListCast(IList<string> a)
     {
         IOPath[] b = new IOPath[a.Count];
         for (int i = 0; i < a.Count; i++) 
@@ -41,14 +50,13 @@ public readonly struct IOPath
     }
     
 
-    // public static IOPath operator +(IOPath a, IOPath b) => Concat(a, b);
+    // public static IOPath operator +(IOPath a, IOPath b) => Path.Concat(a, b);
     public static bool operator ==(IOPath a, IOPath b) => a.Str==b.Str;
     public static bool operator !=(IOPath a, IOPath b) => a.Str!=b.Str;
     public static implicit operator IOPath(string s) => new(s);
     public static explicit operator string(IOPath p) => p.Str;
     public override string ToString() => Str;
     public override bool Equals(object obj) => Str.Equals(obj);
-
     public override int GetHashCode() => Str.GetHashCode();
 
     public char this[int i] => Str[i];

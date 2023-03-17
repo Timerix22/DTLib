@@ -139,7 +139,6 @@ public static class Path
 
     public static IOPath RemoveBase(this IOPath path, IOPath baseDir)
     {
-        
         if (!path.StartsWith(baseDir))
             throw new Exception($"path <{path}> doesnt starts with <{baseDir}");
         return path.Substring(baseDir.Length);
