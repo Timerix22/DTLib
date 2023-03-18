@@ -20,6 +20,8 @@ public readonly struct IOPath
     
     public IOPath(string path, bool separatorsFixed=false)
     {
+        if (path.IsNullOrEmpty())
+            throw new Exception("path is null or empty");
         Str = separatorsFixed ? path : FixSeparators(path.ToCharArray());
     }
 

@@ -32,13 +32,14 @@ public static class Path
                 case ':': case ';':
                     r[i] = '-';
                     break;
-                case '\n': case '\r': case ' ':
-                case '#': case '%': case '&':
-                case '{': case '}': case '<':
-                case '>': case '*': case '?':
-                case '$': case '!': case '\'':
-                case '"': case '@': case '+':
-                case '`': case '|': case '=':
+                case '\n': case '\r':  case '\'': 
+                case '"': case '`':
+                    break;
+                case ' ': case '&': case '{': case '}': 
+                case '<': case '>': case '*': case '?':
+                case '$': case '%': case '@': case '|':
+                // case '!':
+                // case '#':
                     r[i] = '_';
                     break;
             }
