@@ -103,16 +103,33 @@ public class LaunchArgumentParser
         {
             LaunchArgument arg = Parse(args[i]);
 
-            if (arg.HandlerWithArg is not null)
+            switch (arg.RequiredArgsCount)
             {
-                if (i+1 >= args.Length)
-                    throw new Exception($"argument <{args[i]}> should have a parameter after it");
-                i++; // next arg
-                var i1 = i;
-                arg.Handler = () => arg.HandlerWithArg(args[i1]);
+                case 0:
+                    if (arg.Handler is null) 
+                        throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+                    break;
+                case 1:
+                {
+                    if (arg.HandlerWithArg1 is null)
+                        throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+                    if (i + 1 >= args.Length)
+                        throw new Exception($"argument <{args[i]}> should have a parameter after it");
+                    string arg1 = args[++i];
+                    arg.Handler = () => arg.HandlerWithArg1(arg1);
+                    break;
+                }
+                case 2:
+                {
+                    if (arg.HandlerWithArg2 is null)
+                        throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
+                    if (i + 2 >= args.Length)
+                        throw new Exception($"argument <{args[i]}> should have two params after it");
+                    string arg1 = args[++i], arg2 = args[++i];
+                    arg.Handler = () => arg.HandlerWithArg2(arg1, arg2);
+                    break;
+                }
             }
-            else if (arg.Handler is null)  throw new NullReferenceException($"argument <{args[i]}> hasn't got any handlers");
-            
             execQueue.Add(arg);
         }
         
