@@ -19,33 +19,38 @@ public static class Path
             throw new Exception($"path <{path}> uses <..>, that's not allowed");
     }
     
-    /// Replaces restricted characters in string
+    /// Replaces characters restricted in filesystem path
     public static IOPath ReplaceRestrictedChars(string str)
     {
         char[] r = str.ToCharArray();
-        
+        StringBuilder b = new(r.Length);
         for (int i = 0; i < str.Length; i++)
         {
-            switch (r[i])
+            char c = r[i];
+            switch (c)
             {
-                case '/': case '\\':
+                case '\n': case '\r':
                 case ':': case ';':
-                    r[i] = '-';
                     break;
-                case '\n': case '\r':  case '\'': 
-                case '"': case '`':
+                case '/': case '\\':
+                    b.Append('-');
                     break;
-                case ' ': case '&': case '{': case '}': 
-                case '<': case '>': case '*': case '?':
-                case '$': case '%': case '@': case '|':
-                // case '!':
-                // case '#':
-                    r[i] = '_';
+                case '<': case '>': 
+                case '?': case '|':
+                    b.Append('_');
+                    break; 
+                case '"':
+                    b.Append('\'');
+                    break;
+                case '*':
+                    b.Append('X');
+                    break;
+                default:
+                    b.Append(c);
                     break;
             }
         }
-
-        return new IOPath(r);
+        return new IOPath(b.ToString(), true);
     }
 
 #if  !USE_SPAN

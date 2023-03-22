@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Logging</PackageId>
-        <Version>1.1.4</Version>
+        <Version>1.1.5</Version>
         <Authors>Timerix</Authors>
         <Description>Loggers with dependency injection</Description>
         <RepositoryType>GIT</RepositoryType>
@@ -30,7 +30,7 @@
         <ProjectReference Include="..\DTLib.Ben.Demystifier\DTLib.Ben.Demystifier.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib" Version="1.1.5" />
+        <PackageReference Include="DTLib" Version="1.1.9" />
         <PackageReference Include="DTLib.Ben.Demystifier" Version="1.0.4" />
     </ItemGroup>
 </Project>

@@ -27,10 +27,10 @@
 		<ProjectReference Include="..\DTLib\DTLib.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-		<PackageReference Include="DTLib" Version="1.1.5" />
-		<PackageReference Include="DTLib.Dtsod" Version="1.1.4" />
-		<PackageReference Include="DTLib.Network" Version="1.1.4" />
-		<PackageReference Include="DTLib.Logging" Version="1.1.4" />
+		<PackageReference Include="DTLib" Version="1.1.9" />
+		<PackageReference Include="DTLib.Dtsod" Version="1.1.5" />
+		<PackageReference Include="DTLib.Network" Version="1.1.5" />
+		<PackageReference Include="DTLib.Logging" Version="1.1.5" />
 	</ItemGroup>
 
 	<!--project files-->
