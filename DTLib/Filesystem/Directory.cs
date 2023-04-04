@@ -54,6 +54,7 @@ public static class Directory
                 Delete(target_path);
             else throw new Exception($"directory {target_path} already exists");
         }
+        else Directory.Create(target_path.ParentDir());
         System.IO.Directory.Move(current_path.Str, target_path.Str);
     }
     
@@ -62,16 +63,16 @@ public static class Directory
         System.IO.Directory.Delete(dir.Str, true);
 
     public static IOPath[] GetFiles(IOPath dir) => 
-        IOPath.ArrayCast(System.IO.Directory.GetFiles(dir.Str));
+        IOPath.ArrayCast(System.IO.Directory.GetFiles(dir.Str), true);
 
     public static IOPath[] GetFiles(IOPath dir, string searchPattern) => 
-        IOPath.ArrayCast(System.IO.Directory.GetFiles(dir.Str, searchPattern));
+        IOPath.ArrayCast(System.IO.Directory.GetFiles(dir.Str, searchPattern), true);
 
     public static IOPath[] GetDirectories(IOPath dir) => 
-        IOPath.ArrayCast(System.IO.Directory.GetDirectories(dir.Str));
+        IOPath.ArrayCast(System.IO.Directory.GetDirectories(dir.Str), true);
 
     public static IOPath[] GetDirectories(IOPath dir, string searchPattern) => 
-        IOPath.ArrayCast(System.IO.Directory.GetDirectories(dir.Str, searchPattern));
+        IOPath.ArrayCast(System.IO.Directory.GetDirectories(dir.Str, searchPattern), true);
 
     /// выдает список всех файлов
     public static List<IOPath> GetAllFiles(IOPath dir)

@@ -40,18 +40,18 @@ public readonly struct IOPath
         return new string(fixed_path);
     }
 
-    public static IOPath[] ArrayCast(string[] a)
+    public static IOPath[] ArrayCast(string[] a, bool correct_separators=false)
     {
         IOPath[] b = new IOPath[a.Length];
-        for (int i = 0; i < a.Length; i++) 
-            b[i] = (IOPath)a[i];
+        for (int i = 0; i < a.Length; i++)
+            b[i] = new IOPath(a[i], correct_separators);
         return b;
     }
-    public static IOPath[] ListCast(IList<string> a)
+    public static IOPath[] ListCast(IList<string> a, bool correct_separators=false)
     {
         IOPath[] b = new IOPath[a.Count];
-        for (int i = 0; i < a.Count; i++) 
-            b[i] = (IOPath)a[i];
+        for (int i = 0; i < a.Count; i++)
+            b[i] = new IOPath(a[i], correct_separators);
         return b;
     }
     
@@ -62,7 +62,12 @@ public readonly struct IOPath
     public static implicit operator IOPath(string s) => new(s);
     public static explicit operator string(IOPath p) => p.Str;
     public override string ToString() => Str;
-    public override bool Equals(object obj) => Str.Equals(obj);
+
+    public override bool Equals(object obj)
+    {
+        if (obj is null) return false;
+        return Str == obj.ToString();
+    }
     public override int GetHashCode() => Str.GetHashCode();
 
     public char this[int i] => Str[i];

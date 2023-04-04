@@ -45,6 +45,7 @@ public static class File
                 Delete(target_path);
             else throw new Exception($"file {target_path} already exists");
         }
+        else Directory.Create(target_path.ParentDir());
         System.IO.File.Move(current_path.Str, target_path.Str);
     }
 
