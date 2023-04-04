@@ -147,6 +147,6 @@ public static class Path
     {
         if (!path.StartsWith(baseDir))
             throw new Exception($"path <{path}> doesnt starts with <{baseDir}");
-        return path.Substring(baseDir.Length);
+        return path.Substring(baseDir.Length+1);
     }
 }

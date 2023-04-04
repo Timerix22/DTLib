@@ -28,12 +28,16 @@ public readonly struct IOPath
     static string FixSeparators(char[] path)
     {
         int length = path.Length;
-        if (path[path.Length-1]==Path.Sep || path[path.Length-1]==Path.NotSep)
+        if (path[length-1] == Path.Sep || path[length-1] == Path.NotSep)
             length--; // removing trailing sep
-        for(int i=0; i<length; i++)
+        char[] fixed_path = new char[length];
+        for (int i = 0; i < length; i++)
+        {
             if (path[i] == Path.NotSep)
-                path[i] = Path.Sep;
-        return new string(path);
+                fixed_path[i] = Path.Sep;
+            else fixed_path[i] = path[i];
+        }
+        return new string(fixed_path);
     }
 
     public static IOPath[] ArrayCast(string[] a)
