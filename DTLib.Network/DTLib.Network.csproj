@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Network</PackageId>
-        <Version>1.1.5</Version>
+        <Version>1.2.0</Version>
         <Authors>Timerix</Authors>
         <Description>Some sick network protocols</Description>
         <RepositoryType>GIT</RepositoryType>

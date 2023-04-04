@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Dtsod</PackageId>
-        <Version>1.1.5</Version>
+        <Version>1.2.0</Version>
         <Authors>Timerix</Authors>
         <Description>Definitely not json</Description>
         <RepositoryType>GIT</RepositoryType>
@@ -33,7 +33,7 @@
         <ProjectReference Include="..\DTLib\DTLib.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib" Version="1.1.9" />
+        <PackageReference Include="DTLib" Version="1.2.0" />
     </ItemGroup>
     
     <!--project files-->
