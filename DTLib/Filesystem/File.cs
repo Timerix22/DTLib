@@ -37,6 +37,17 @@ public static class File
         newFile.Close();
     }
 
+    public static void Move(IOPath current_path, IOPath target_path, bool overwrite)
+    {
+        if (Exists(target_path))
+        {
+            if (overwrite)
+                Delete(target_path);
+            else throw new Exception($"file {target_path} already exists");
+        }
+        System.IO.File.Move(current_path.Str, target_path.Str);
+    }
+
     public static void Delete(IOPath file) => System.IO.File.Delete(file.Str);
 
     public static byte[] ReadAllBytes(IOPath file)

@@ -46,6 +46,17 @@ public static class Directory
         }
     }
 
+    public static void Move(IOPath current_path, IOPath target_path, bool overwrite)
+    {
+        if (Exists(target_path))
+        {
+            if (overwrite)
+                Delete(target_path);
+            else throw new Exception($"directory {target_path} already exists");
+        }
+        System.IO.Directory.Move(current_path.Str, target_path.Str);
+    }
+    
     /// удаляет папку со всеми подпапками и файлами
     public static void Delete(IOPath dir) => 
         System.IO.Directory.Delete(dir.Str, true);
