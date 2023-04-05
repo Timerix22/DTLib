@@ -113,7 +113,7 @@ public readonly struct IOPath
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public IOPath Replace(char oldChar, char newChar) => new(Str.Replace(oldChar, newChar), true);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IOPath ReplaceAnywhere(string oldStr, string newStr) => new(Str.Replace(oldStr, newStr), true);
+    public IOPath Replace(string oldStr, string newStr) => new(Str.Replace(oldStr, newStr), true);
 
     ///<inheritdoc cref="string.IndexOf(char)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
