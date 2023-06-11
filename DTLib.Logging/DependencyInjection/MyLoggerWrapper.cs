@@ -1,4 +1,4 @@
-using DTLib.Logging.New;
+using DTLib.Logging;
 using Microsoft.Extensions.Logging;
 // ReSharper disable RedundantNameQualifier
 
@@ -6,8 +6,8 @@ namespace DTLib.Logging.DependencyInjection;
 
 public class MyLoggerWrapper<TCaller> : Microsoft.Extensions.Logging.ILogger<TCaller>
 {
-    public DTLib.Logging.New.ILogger Logger;
-    public MyLoggerWrapper(DTLib.Logging.New.ILogger logger)=>
+    public DTLib.Logging.ILogger Logger;
+    public MyLoggerWrapper(DTLib.Logging.ILogger logger)=>
         Logger = logger;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)

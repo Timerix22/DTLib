@@ -1,6 +1,6 @@
 using DTLib.Ben.Demystifier;
 
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 public static class LoggerExtensions
 {

@@ -35,7 +35,7 @@
         <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib.Dtsod" Version="1.1.3" />
+        <PackageReference Include="DTLib" Version="1.3.0" />
     </ItemGroup>
 
     <!--project files-->

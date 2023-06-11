@@ -6,7 +6,7 @@ global using System.Text;
 global using System.Threading.Tasks;
 global using DTLib.Extensions;
 global using DTLib.Filesystem;
-global using static DTLib.Logging.PublicLog;
+global using static DTLib.Logging.InternalLog;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 

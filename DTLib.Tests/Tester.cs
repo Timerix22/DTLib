@@ -13,6 +13,6 @@ public static class TesterLog
             operation();
         clock.Stop();
         double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
-        PublicLog.Log("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(MyTimeFormat.ForText),"y"," seconds");
+        InternalLog.Log("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(MyTimeFormat.ForText),"y"," seconds");
     }
 }

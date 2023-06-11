@@ -1,4 +1,4 @@
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 public enum LogSeverity
 {

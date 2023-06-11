@@ -1,4 +1,4 @@
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 /// wrapper around ILogger and LoggerExtensions that stores context
 public class ContextLogger : ILogger
@@ -50,7 +50,11 @@ public class ContextLogger : ILogger
 
     public void Dispose() => ParentLogger.Dispose();
 
-    public ILogFormat Format => ParentLogger.Format;
+    public ILogFormat Format
+    {
+        get => ParentLogger.Format;
+        set => ParentLogger.Format=value;
+    }
 
     public bool DebugLogEnabled
     {

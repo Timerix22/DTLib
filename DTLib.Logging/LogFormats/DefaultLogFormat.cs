@@ -1,4 +1,4 @@
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 public class DefaultLogFormat : ILogFormat
 {
@@ -7,7 +7,7 @@ public class DefaultLogFormat : ILogFormat
     public bool PrintContext { get; set; }
     public bool PrintSeverity { get; set; }
 
-    public DefaultLogFormat(bool printTimeStamp = false, bool printContext = true, bool printSeverity = true)
+    public DefaultLogFormat(bool printTimeStamp = true, bool printContext = true, bool printSeverity = true)
     {
         PrintTimeStamp = printTimeStamp;
         PrintContext = printContext;

@@ -130,7 +130,7 @@ public static class StringConverter
         return o;
     }
 
-    // правильно реагирует на кавычки
+    /// правильно реагирует на кавычки
     public static List<string> SplitToList(this string s, char c, char quot)
     {
         List<string> output = new();
@@ -158,7 +158,7 @@ public static class StringConverter
         return output;
     }
 
-    // разбивает на части указанной длины
+    /// разбивает на части указанной длины
     public static List<string> SplitToList(this string s, int length)
     {
         List<string> parts = new();

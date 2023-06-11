@@ -8,7 +8,7 @@ global using System.Threading.Tasks;
 global using DTLib.Extensions;
 global using DTLib.Filesystem;
 
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 /// this class can be used to setup logger for DTLib debug log messages
 public static class DTLibInternalLogging
@@ -18,7 +18,7 @@ public static class DTLibInternalLogging
     public static void SetLogger(ILogger logger)
     {
         _loggerContext = new ContextLogger("DTLib",logger);
-        PublicLog.LogEvent+=LogHandler;
+        InternalLog.LogEvent+=LogHandler;
     }
 
     private static void LogHandler(string[] msg)

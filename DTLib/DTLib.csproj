@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<!--package info-->
 		<PackageId>DTLib</PackageId>
-		<Version>1.2.3</Version>
+		<Version>1.3.0</Version>
 		<Authors>Timerix</Authors>
 		<Description>Library for all my C# projects</Description>
 		<RepositoryType>GIT</RepositoryType>
@@ -37,5 +37,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Remove="Experimental\ConsoleGUI\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Logging\" />
 	</ItemGroup>
 </Project>

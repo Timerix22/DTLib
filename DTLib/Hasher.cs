@@ -48,7 +48,7 @@ public class Hasher
         //var then = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
         byte[] hash = xxh32.ComputeHash(fileStream);
         //var now = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
-        //PublicLog.Log($"xxh32 hash: {hash.HashToString()} time: {now - then}");
+        //InternalLog.Log($"xxh32 hash: {hash.HashToString()} time: {now - then}");
         fileStream.Close();
         return hash;
     }

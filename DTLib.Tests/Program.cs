@@ -10,21 +10,24 @@ global using DTLib.Filesystem;
 global using DTLib.Dtsod;
 global using static DTLib.Tests.TesterLog;
 global using static DTLib.Tests.Program;
-using DTLib.Console;
-using DTLib.Logging.New;
+global using DTLib.Console;
+global using DTLib.Logging;
 
 namespace DTLib.Tests;
 
 public static class Program
 {
-    public static Logging.ConsoleLogger OldLogger = new("logs", "DTLib.Tests");
-    public static ILogger Logger;
+    public static ILogger Logger = new CompositeLogger(new ConsoleLogger(),
+            new FileLogger("logs", "DTLib.Tests"))
+
+    {
+        DebugLogEnabled = true
+    };
+
     public static void Main(string[] args)
     {
         System.Console.OutputEncoding = Encoding.UTF8;
         System.Console.InputEncoding = Encoding.UTF8;
-        Logger=new CompositeLogger(new ConsoleLogger(), 
-            new FileLogger("logs", "DTLib.Tests"));
         var mainContext = new ContextLogger("Main", Logger);
         DTLibInternalLogging.SetLogger(Logger);
         

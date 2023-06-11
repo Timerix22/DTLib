@@ -1,4 +1,4 @@
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 /// <summary>
 /// This class can be used for unite many loggers into one
@@ -49,7 +49,7 @@ public class CompositeLogger : ILogger
         }
     }
 
-    public ILogFormat Format { get; }
+    public ILogFormat Format { get; set; }
     
     protected ILogger[] _loggers;
     private bool _debugLogEnabled =

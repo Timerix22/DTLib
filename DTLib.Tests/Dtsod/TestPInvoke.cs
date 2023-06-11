@@ -17,7 +17,7 @@ public static class TestPInvoke
 
     public static void TestUTF8()
     {
-        OldLogger.Log("c", "--------[TestPInvoke/TestUTF8]--------", "b", "");
+        Logger.Log("c", "--------[TestPInvoke/TestUTF8]--------", "b", "");
         IntPtr ptr;
         string str="_$\"\\\\'''\ta ыыы000;2;=:%d;```";
         for(int i=0; i<1000; i++)
@@ -25,7 +25,7 @@ public static class TestPInvoke
             ptr = Unmanaged.StringToHGlobalUTF8(str);
             str = Unmanaged.HGlobalUTF8ToString(ptr);
         }
-        OldLogger.Log("y", str);
+        Logger.Log("y", str);
     }
     
     [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
@@ -33,9 +33,9 @@ public static class TestPInvoke
 
     public static void TestPrintf()
     {
-        OldLogger.Log("c", "---------[TestPInvoke/Printf]---------", "b", "");
+        Logger.Log("c", "---------[TestPInvoke/Printf]---------", "b", "");
         pinvoke_print("ъъ~ 中文");
-        OldLogger.Log("g", "test completed");
+        Logger.Log("g", "test completed");
     }
     
     [DllImport("kerep", CallingConvention = CallingConvention.Cdecl)]
@@ -43,12 +43,12 @@ public static class TestPInvoke
     
     public static unsafe void TestMarshalling()
     {
-        OldLogger.Log("c", "---------[TestAutoarr/TestMarshalling]----------");
+        Logger.Log("c", "---------[TestAutoarr/TestMarshalling]----------");
         string msg = "ъъ~ 中文";
         test_marshalling(msg, out var kptr);
         KVPair k = *(KVPair*)kptr;
-        OldLogger.Log("b", k.ToString());
-        OldLogger.Log("g", "test completed");
+        Logger.Log("b", k.ToString());
+        Logger.Log("g", "test completed");
     }
 }
 */

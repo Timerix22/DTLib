@@ -1,4 +1,4 @@
-﻿namespace DTLib.Logging.New;
+﻿namespace DTLib.Logging;
 
 public class FileLogger : ILogger
 {
@@ -11,7 +11,7 @@ public class FileLogger : ILogger
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogEnabled { get; set; } = true;
-    public ILogFormat Format { get; }
+    public ILogFormat Format { get; set; }
     
     public IOPath LogfileName { get; protected set; }
     public System.IO.FileStream LogfileStream { get; protected set; }

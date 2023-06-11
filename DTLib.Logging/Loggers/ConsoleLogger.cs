@@ -1,6 +1,6 @@
 ﻿using DTLib.Console;
 
-namespace DTLib.Logging.New;
+namespace DTLib.Logging;
 
 // вывод лога в консоль и файл
 public class ConsoleLogger : ILogger
@@ -14,7 +14,7 @@ public class ConsoleLogger : ILogger
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogEnabled { get; set; } = true;
-    public ILogFormat Format { get; }
+    public ILogFormat Format { get; set; }
     
     readonly object consolelocker = new();
 
