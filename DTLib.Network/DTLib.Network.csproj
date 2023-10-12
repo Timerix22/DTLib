@@ -15,7 +15,7 @@
         <DebugType>embedded</DebugType>
         <!--language features-->
         <LangVersion>10</LangVersion>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
