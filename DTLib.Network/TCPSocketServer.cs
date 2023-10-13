@@ -98,4 +98,18 @@ public class TCPSocketServer : IDisposable
     }
     
     public void Dispose() => Stop();
+    
+    public void Send(ref byte[] buffer)
+    {
+        if (_mainSocket is null)
+            throw new NullReferenceException("TCP socket is null! You have to call Connect() befure calling Send()");
+        _mainSocket.Send(buffer);
+    }
+
+    public int Recieve(ref byte[] buffer)
+    {
+        if (_mainSocket is null)
+            throw new NullReferenceException("TCP socket is null! You have to call Connect() befure calling Recieve()");
+        return _mainSocket.Receive(buffer);
+    }
 }

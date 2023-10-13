@@ -29,7 +29,7 @@ public class TCPSocketClient : IDisposable
 
     public void Dispose() => Stop();
 
-    public void Send(byte[] buffer)
+    public void Send(ref byte[] buffer)
     {
         if (_mainSocket is null)
             throw new NullReferenceException("TCP socket is null! You have to call Connect() befure calling Send()");
@@ -40,6 +40,6 @@ public class TCPSocketClient : IDisposable
     {
         if (_mainSocket is null)
             throw new NullReferenceException("TCP socket is null! You have to call Connect() befure calling Recieve()");
-        _mainSocket.Receive(buffer);
+        return _mainSocket.Receive(buffer);
     }
 }
