@@ -8,21 +8,43 @@ public static class Package
     // принимает пакет
     public static byte[] GetPackage(this Socket socket)
     {
-        int packageSize = 0;
-        byte[] data = new byte[2];
+        int ppackageLength = 0;
         // цикл выполняется пока не пройдёт 2000 мс
         for (ushort s = 0; s < 400; s += 1)
         {
-            if (packageSize == 0 && socket.Available >= 2)
+            if (ppackageLength == 0 && socket.Available >= 4)
             {
-                socket.Receive(data, data.Length, 0);
-                packageSize = data.ToInt();
+                byte[] ppackageLengthBytes = new byte[4];
+                socket.Receive(ppackageLengthBytes);
+                ppackageLength = BitConverter.ToInt32(ppackageLengthBytes, 0);
             }
-            if (packageSize != 0 && socket.Available >= packageSize)
+            else if (ppackageLength != 0 && socket.Available >= ppackageLength)
             {
-                data = new byte[packageSize];
-                socket.Receive(data, data.Length, 0);
+                var data = new byte[ppackageLength];
+                socket.Receive(data);
                 return data;
+            }
+            else Thread.Sleep(5);
+        }
+        throw new Exception($"GetPackage() error: timeout. socket.Available={socket.Available}");
+    }
+    public static void GetPackage(this Socket socket, byte[] buffer)
+    {
+        int packageLength = 0;
+        // цикл выполняется пока не пройдёт 2000 мс
+        for (ushort s = 0; s < 400; s += 1)
+        {
+            if (packageLength == 0 && socket.Available >= 4)
+            {
+                byte[] ppackageLengthBytes = new byte[4];
+                socket.Receive(ppackageLengthBytes);
+                packageLength = BitConverter.ToInt32(ppackageLengthBytes, 0);
+            }
+            else if (packageLength != 0 && socket.Available >= packageLength)
+            {
+                if (buffer.Length < packageLength)
+                    throw new Exception("buffer length is less than package length");
+                socket.Receive(buffer);
             }
             else Thread.Sleep(5);
         }
@@ -30,26 +52,28 @@ public static class Package
     }
 
     // отправляет пакет
-    public static void SendPackage(this Socket socket, byte[] data)
+    public static void SendPackage(this Socket socket, byte[] data) => SendPackage(socket, data, data.Length);
+    public static void SendPackage(this Socket socket, byte[] buffer, int dataLength)
     {
-        if (data.Length > 65536)
-            throw new Exception($"SendPackage() error: package is too big ({data.Length} bytes)");
-        if (data.Length == 0)
+        if (buffer.Length < dataLength)
+            throw new Exception($"SendPackage() error: buffer is too small ({buffer.Length} bytes of {dataLength})");
+        if (dataLength < 1)
             throw new Exception($"SendPackage() error: package has zero size");
-        var list = new List<byte>();
-        byte[] packageSize = data.Length.IntToBytes();
-        if (packageSize.Length == 1)
-            list.Add(0);
-        list.AddRange(packageSize);
-        list.AddRange(data);
-        socket.Send(list.ToArray());
+        
+        byte[] ppackageLength = BitConverter.GetBytes(buffer.Length);
+        if (ppackageLength.Length != 4)
+            throw new Exception("wrong with int to byte[] conversion");
+        socket.Send(ppackageLength);
+        socket.Send(buffer, 0, dataLength, SocketFlags.None);
     }
-    public static void SendPackage(this Socket socket, string data) => SendPackage(socket, data.ToBytes(StringConverter.UTF8));
+    
+    public static void SendPackage(this Socket socket, string data) 
+        => SendPackage(socket, data.ToBytes());
 
     // получает пакет и выбрасывает исключение, если пакет не соответствует образцу
     public static void GetAnswer(this Socket socket, string answer)
     {
-        string rec = socket.GetPackage().BytesToString(StringConverter.UTF8);
+        string rec = socket.GetPackage().BytesToString();
         if (rec != answer)
             throw new Exception($"GetAnswer() error: invalid answer: <{rec}>");
     }
@@ -59,5 +83,6 @@ public static class Package
         socket.SendPackage(request);
         return socket.GetPackage();
     }
-    public static byte[] RequestPackage(this Socket socket, string request) => socket.RequestPackage(request.ToBytes(StringConverter.UTF8));
+    public static byte[] RequestPackage(this Socket socket, string request) 
+        => socket.RequestPackage(request.ToBytes());
 }

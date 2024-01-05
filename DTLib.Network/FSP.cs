@@ -1,18 +1,24 @@
-﻿using DTLib.Dtsod;
-
-namespace DTLib.Network;
+﻿namespace DTLib.Network;
 
 //
 // передача файлов по сети
 //
 public class FSP
 {
+    public int BufferSize { get; init; } = 512 * 1024;
+    
+    readonly byte[] buffer;
+    
     Socket MainSocket { get; init; }
-    public FSP(Socket _mainSocket) => MainSocket = _mainSocket;
+    public FSP(Socket _mainSocket)
+    {
+        buffer = new byte[BufferSize];
+        MainSocket = _mainSocket;
+    }
 
-    public uint BytesDownloaded { get; private set; }
-    public uint BytesUploaded { get; private set; }
-    public uint Filesize { get; private set; }
+    public long BytesDownloaded { get; private set; }
+    public long BytesUploaded { get; private set; }
+    public long Filesize { get; private set; }
 
     // скачивает файл с помощью FSP протокола
     public void DownloadFile(IOPath filePath_server, IOPath filePath_client)
@@ -21,8 +27,8 @@ public class FSP
         filePath_client.ThrowIfEscapes();
         lock (MainSocket)
         {
-            MainSocket.SendPackage("requesting file download".ToBytes(StringConverter.UTF8));
-            MainSocket.SendPackage(filePath_server.Str.ToBytes(StringConverter.UTF8));
+            MainSocket.SendPackage("requesting file download");
+            MainSocket.SendPackage(filePath_server.Str);
         }
         DownloadFile(filePath_client);
     }
@@ -31,8 +37,7 @@ public class FSP
     {
         filePath_client.ThrowIfEscapes();
         using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
-        Download_SharedCode(fileStream, true);
-        fileStream.Close();
+        Download_SharedCode(fileStream);
     }
 
     public byte[] DownloadFileToMemory(IOPath filePath_server)
@@ -40,8 +45,8 @@ public class FSP
         filePath_server.ThrowIfEscapes();
         lock (MainSocket)
         {
-            MainSocket.SendPackage("requesting file download".ToBytes(StringConverter.UTF8));
-            MainSocket.SendPackage(filePath_server.Str.ToBytes(StringConverter.UTF8));
+            MainSocket.SendPackage("requesting file download");
+            MainSocket.SendPackage(filePath_server.Str);
         }
         return DownloadFileToMemory();
     }
@@ -49,49 +54,30 @@ public class FSP
     public byte[] DownloadFileToMemory()
     {
         using var fileStream = new System.IO.MemoryStream();
-        Download_SharedCode(fileStream, false);
-        byte[] output = fileStream.ToArray();
-        fileStream.Close();
-        return output;
+        Download_SharedCode(fileStream);
+        return fileStream.ToArray();
     }
 
-    private void Download_SharedCode(System.IO.Stream fileStream, bool requiresFlushing)
+    private void Download_SharedCode(System.IO.Stream fileStream)
     {
         lock (MainSocket)
         {
             BytesDownloaded = 0;
-            Filesize = MainSocket.GetPackage().BytesToString(StringConverter.UTF8).ToUInt();
-            MainSocket.SendPackage("ready".ToBytes(StringConverter.UTF8));
-            int packagesCount = 0;
-            byte[] buffer = new byte[5120];
-            int fullPackagesCount = (int)(Filesize / buffer.Length);
-            // получение полных пакетов файла
-            for (byte n = 0; packagesCount < fullPackagesCount; packagesCount++)
+            Filesize = BitConverter.ToInt64(MainSocket.GetPackage(), 0);
+            if (Filesize < 0)
+                throw new Exception("FileSize < 0");
+            MainSocket.SendPackage("ready");
+            int recievedCount;
+            do
             {
-                buffer = MainSocket.GetPackage();
-                BytesDownloaded += (uint)buffer.Length;
-                fileStream.Write(buffer, 0, buffer.Length);
-                if (requiresFlushing)
-                {
-                    if (n == 100)
-                    {
-                        fileStream.Flush();
-                        n = 0;
-                    }
-                    else n++;
-                }
-            }
-            // получение остатка
-            if ((Filesize - fileStream.Position) > 0)
-            {
-                MainSocket.SendPackage("remain request".ToBytes(StringConverter.UTF8));
-                buffer = MainSocket.GetPackage();
-                BytesDownloaded += (uint)buffer.Length;
-                fileStream.Write(buffer, 0, buffer.Length);
-            }
+                recievedCount = MainSocket.Receive(buffer);
+                fileStream.Write(buffer, 0, recievedCount);
+                BytesDownloaded += recievedCount;
+            } while (recievedCount == buffer.Length);
+
+            if (BytesDownloaded != Filesize)
+                throw new Exception($"expected {Filesize} bytes, but downloaded {BytesDownloaded} bytes");
         }
-        if (requiresFlushing)
-            fileStream.Flush();
     }
 
     // отдаёт файл с помощью FSP протокола
@@ -100,31 +86,21 @@ public class FSP
         filePath.ThrowIfEscapes();
         BytesUploaded = 0;
         using System.IO.FileStream fileStream = File.OpenRead(filePath);
-        Filesize = File.GetSize(filePath).ToUInt();
+        Filesize = fileStream.Length;
         lock (MainSocket)
         {
-            MainSocket.SendPackage(Filesize.ToString().ToBytes(StringConverter.UTF8));
+            MainSocket.SendPackage(BitConverter.GetBytes(Filesize));
             MainSocket.GetAnswer("ready");
-            byte[] buffer = new byte[5120];
-            int packagesCount = 0;
-            int fullPackagesCount = (int)(Filesize / buffer.Length);
-            // отправка полных пакетов файла
-            for (; packagesCount < fullPackagesCount; packagesCount++)
+            int readCount;
+            do
             {
-                fileStream.Read(buffer, 0, buffer.Length);
-                MainSocket.SendPackage(buffer);
-                BytesUploaded += (uint)buffer.Length;
-            }
-            // отправка остатка
-            if ((Filesize - fileStream.Position) > 0)
-            {
-                MainSocket.GetAnswer("remain request");
-                buffer = new byte[(Filesize - fileStream.Position).ToInt()];
-                fileStream.Read(buffer, 0, buffer.Length);
-                MainSocket.SendPackage(buffer);
-                BytesUploaded += (uint)buffer.Length;
-            }
+                readCount = fileStream.Read(buffer, 0, buffer.Length);
+                MainSocket.Send(buffer, 0, readCount, SocketFlags.None);
+                BytesUploaded += readCount;
+            } while (readCount == buffer.Length);
+            
+            if (BytesUploaded != Filesize)
+                throw new Exception($"expected {Filesize} bytes, but uploaded {BytesDownloaded} bytes");
         }
-        fileStream.Close();
     }
 }
