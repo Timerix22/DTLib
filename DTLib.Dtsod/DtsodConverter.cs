@@ -16,12 +16,12 @@ public static class DtsodConverter
         };
 
     // заменяет дефолтные значения на пользовательские
-    public static DtsodV23 UpdateByDefault(DtsodV23 old, DtsodV23 updatedDefault, string contextName="")
+    public static DtsodV23 UpdateByDefault(DtsodV23 old, DtsodV23 updatedDefault, string contextName = "")
     {
         DtsodV23 updated = new();
-        foreach (KeyValuePair<string,dynamic> p in updatedDefault)
+        foreach (KeyValuePair<string, dynamic> p in updatedDefault)
         {
-            string keyWithContext=contextName+"."+p.Key;
+            string keyWithContext = contextName + "." + p.Key;
             if (old.TryGetValue(p.Key, out var oldValue))
             {
                 if (oldValue.GetType() != p.Value.GetType())
@@ -29,27 +29,16 @@ public static class DtsodConverter
                         "uncompatible config value type\n  " +
                         $"<{keyWithContext}>: {oldValue} is {oldValue.GetType()}, " +
                         $"must be {p.Value.GetType()}");
-                else 
+                if (oldValue is DtsodV23)
                 {
-                    if(oldValue!=p.Value)
-                        Log("y", $"<{keyWithContext}> old: {oldValue} new: {p.Value}");
-                    if(oldValue is DtsodV23){
-                        var subdtsod=UpdateByDefault(oldValue, p.Value, keyWithContext);
-                        updated.Add(p.Key,subdtsod);
-                    }
-                    else if(oldValue is IList)
-                    {
-                        Log("y", $"can't automatically update list <{keyWithContext}>, do it manually");
-                        updated.Add(p.Key,oldValue);
-                    }
-                    else updated.Add(p.Key,oldValue);
+                    var subdtsod = UpdateByDefault(oldValue, p.Value, keyWithContext);
+                    updated.Add(p.Key, subdtsod);
                 }
+                else if (oldValue is IList)
+                    updated.Add(p.Key, oldValue);
+                else updated.Add(p.Key, oldValue);
             }
-            else 
-            {
-                Log("y", $"<{keyWithContext}> new: {p.Value}");
-                updated.Add(p.Key,p.Value);
-            }
+            else updated.Add(p.Key, p.Value);
         }
 
         return updated;

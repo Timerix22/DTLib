@@ -42,7 +42,6 @@ public static class DependencyResolver
                     {
                         var extracted = file.Substring(file.LastIndexOf(Path.Sep) + 1);
                         File.Copy(file, extracted, true);
-                        Log("g", $"{file} extracted");
                     }
 
             DepsCopied = true;

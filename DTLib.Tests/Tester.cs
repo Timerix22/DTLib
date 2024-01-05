@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using DTLib.Logging;
 
 namespace DTLib.Tests;
 
@@ -13,6 +12,6 @@ public static class TesterLog
             operation();
         clock.Stop();
         double time=(double)(clock.ElapsedTicks)/Stopwatch.Frequency/repeats;
-        InternalLog.Log("y",$"operation ","b",op_name,"y"," lasted ","b",time.ToString(MyTimeFormat.ForText),"y"," seconds");
+        Logger.LogInfo(nameof(TesterLog), $"operation {op_name} lasted {time.ToString(MyTimeFormat.ForText)} seconds");
     }
 }

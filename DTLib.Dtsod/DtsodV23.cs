@@ -213,7 +213,6 @@ public class DtsodV23 : DtsodDict<string, dynamic>, IDtsod
                                     }
                                     catch (FormatException)
                                     {
-                                        Log("r", $"can't parse value: {value_str}");
                                         return null;
                                     }
                                 }

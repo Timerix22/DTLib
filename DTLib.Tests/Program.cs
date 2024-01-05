@@ -29,7 +29,6 @@ public static class Program
         System.Console.OutputEncoding = Encoding.UTF8;
         System.Console.InputEncoding = Encoding.UTF8;
         var mainContext = new ContextLogger("Main", Logger);
-        DTLibInternalLogging.SetLogger(Logger);
         
         try
         {
