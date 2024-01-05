@@ -10,9 +10,9 @@ public class FSP
     Socket MainSocket { get; init; }
     public FSP(Socket _mainSocket) => MainSocket = _mainSocket;
 
-    public uint BytesDownloaded;
-    public uint BytesUploaded;
-    public uint Filesize;
+    public uint BytesDownloaded { get; private set; }
+    public uint BytesUploaded { get; private set; }
+    public uint Filesize { get; private set; }
 
     // скачивает файл с помощью FSP протокола
     public void DownloadFile(IOPath filePath_server, IOPath filePath_client)
@@ -126,50 +126,5 @@ public class FSP
             }
         }
         fileStream.Close();
-    }
-
-    public void DownloadByManifest(IOPath dirOnServer, IOPath dirOnClient, bool overwrite = false, bool delete_excess = false)
-    {
-        var manifest = new DtsodV23(DownloadFileToMemory(dirOnServer + "manifest.dtsod").BytesToString(StringConverter.UTF8));
-        var hasher = new Hasher();
-        foreach (var fileOnServer in manifest.Keys)
-        {
-            IOPath fileOnClient = Path.Concat(dirOnClient, fileOnServer);
-            if (!File.Exists(fileOnClient) || (overwrite && hasher.HashFile(fileOnClient).HashToString() != manifest[fileOnServer]))
-                DownloadFile(Path.Concat(dirOnServer, fileOnServer), fileOnClient);
-        }
-        // удаление лишних файлов
-        if (delete_excess)
-        {
-            foreach (var file in Directory.GetAllFiles(dirOnClient))
-            {
-                if (!manifest.ContainsKey(file.Str.Remove(0, dirOnClient.Length))) 
-                    File.Delete(file);
-            }
-        }
-    }
-
-    public static void CreateManifest(IOPath dir)
-    {
-        if(!Directory.Exists(dir))
-        {
-            Directory.Create(dir);
-            return;
-        }
-        
-        StringBuilder manifestBuilder = new();
-        Hasher hasher = new();
-        if (Directory.GetFiles(dir).Contains(dir + "manifest.dtsod"))
-            File.Delete(dir + "manifest.dtsod");
-        foreach (var _file in Directory.GetAllFiles(dir))
-        {
-            var file = _file.Remove(0, dir.Length);
-            manifestBuilder.Append(file);
-            manifestBuilder.Append(": \"");
-            byte[] hash = hasher.HashFile(Path.Concat(dir, file));
-            manifestBuilder.Append(hash.HashToString());
-            manifestBuilder.Append("\";\n");
-        }
-        File.WriteAllText(dir + "manifest.dtsod", manifestBuilder.ToString());
     }
 }
