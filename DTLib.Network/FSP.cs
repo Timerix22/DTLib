@@ -37,7 +37,7 @@ public class FSP
     {
         filePath_client.ThrowIfEscapes();
         using System.IO.Stream fileStream = File.OpenWrite(filePath_client);
-        Download_SharedCode(fileStream);
+        DownloadToStream(fileStream);
     }
 
     public byte[] DownloadFileToMemory(IOPath filePath_server)
@@ -54,11 +54,11 @@ public class FSP
     public byte[] DownloadFileToMemory()
     {
         using var fileStream = new System.IO.MemoryStream();
-        Download_SharedCode(fileStream);
+        DownloadToStream(fileStream);
         return fileStream.ToArray();
     }
 
-    private void Download_SharedCode(System.IO.Stream fileStream)
+    public void DownloadToStream(System.IO.Stream fileStream)
     {
         lock (MainSocket)
         {
@@ -67,13 +67,13 @@ public class FSP
             if (Filesize < 0)
                 throw new Exception("FileSize < 0");
             MainSocket.SendPackage("ready");
-            int recievedCount;
-            do
+            
+            while (BytesDownloaded < Filesize)
             {
-                recievedCount = MainSocket.Receive(buffer);
+                int recievedCount = MainSocket.Receive(buffer);
                 fileStream.Write(buffer, 0, recievedCount);
                 BytesDownloaded += recievedCount;
-            } while (recievedCount == buffer.Length);
+            }
 
             if (BytesDownloaded != Filesize)
                 throw new Exception($"expected {Filesize} bytes, but downloaded {BytesDownloaded} bytes");
@@ -91,13 +91,13 @@ public class FSP
         {
             MainSocket.SendPackage(BitConverter.GetBytes(Filesize));
             MainSocket.GetAnswer("ready");
-            int readCount;
-            do
+            
+            while (BytesUploaded < Filesize)
             {
-                readCount = fileStream.Read(buffer, 0, buffer.Length);
+                int readCount = fileStream.Read(buffer, 0, buffer.Length);
                 MainSocket.Send(buffer, 0, readCount, SocketFlags.None);
                 BytesUploaded += readCount;
-            } while (readCount == buffer.Length);
+            }
             
             if (BytesUploaded != Filesize)
                 throw new Exception($"expected {Filesize} bytes, but uploaded {BytesDownloaded} bytes");
