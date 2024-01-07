@@ -58,15 +58,20 @@ public class FSP
         return fileStream.ToArray();
     }
 
+    private static readonly byte[] fspHeaderStrBytes = "FSP_file_size:".ToBytes();
     public void DownloadToStream(System.IO.Stream fileStream)
     {
         lock (MainSocket)
         {
             BytesDownloaded = 0;
-            Filesize = BitConverter.ToInt64(MainSocket.GetPackage(), 0);
+            var fspHeader = MainSocket.GetPackage();
+            if (!fspHeader.StartsWith(fspHeaderStrBytes))
+                throw new Exception(
+                    $"invalid fsp header: '{fspHeader.BytesToString()}' " +
+                    $"({fspHeader.MergeToString(',')})");
+            Filesize = BitConverter.ToInt64(fspHeader, fspHeaderStrBytes.Length);
             if (Filesize < 0)
                 throw new Exception("FileSize < 0");
-            MainSocket.SendPackage("ready");
             
             while (BytesDownloaded < Filesize)
             {
@@ -89,8 +94,11 @@ public class FSP
         Filesize = fileStream.Length;
         lock (MainSocket)
         {
-            MainSocket.SendPackage(BitConverter.GetBytes(Filesize));
-            MainSocket.GetAnswer("ready");
+            byte[] filesizeBytes = BitConverter.GetBytes(Filesize);
+            byte[] fspHeader = new byte[fspHeaderStrBytes.Length + filesizeBytes.Length];
+            fspHeaderStrBytes.CopyTo(fspHeader, 0);
+            filesizeBytes.CopyTo(fspHeader, fspHeaderStrBytes.Length);
+            MainSocket.SendPackage(fspHeader);
             
             while (BytesUploaded < Filesize)
             {
