@@ -5,11 +5,7 @@ public static class File
     /// возвращает размер файла в байтах
     public static long GetSize(IOPath file) => new System.IO.FileInfo(file.Str).Length;
 
-    public static bool Exists(IOPath file)
-    {
-        if (System.IO.File.Exists(file.Str)) return true;
-        return false;
-    }
+    public static bool Exists(IOPath file) => System.IO.File.Exists(file.Str);
 
     /// если файл не существует, создаёт файл с папками из его пути и закрывает этот фвйл
     public static void Create(IOPath file)

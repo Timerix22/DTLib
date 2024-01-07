@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KerepWrapper", "KerepWrappe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.Logging.Microsoft", "DTLib.Logging.Microsoft\DTLib.Logging.Microsoft.csproj", "{9CCBAFA1-F191-4CEC-A4FA-CFF9F6CA081F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTLib.XXHash", "DTLib.XXHash\DTLib.XXHash\DTLib.XXHash.csproj", "{C7029741-816D-41B2-A2C4-E20565B1739D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,12 @@ Global
 		{9CCBAFA1-F191-4CEC-A4FA-CFF9F6CA081F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CCBAFA1-F191-4CEC-A4FA-CFF9F6CA081F}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CCBAFA1-F191-4CEC-A4FA-CFF9F6CA081F}.Publish|Any CPU.Build.0 = Debug|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7029741-816D-41B2-A2C4-E20565B1739D}.Publish|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

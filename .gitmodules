@@ -1,3 +1,6 @@
 [submodule "DTLib.Ben.Demystifier"]
 	path = DTLib.Ben.Demystifier
 	url = https://github.com/Timerix22/DTLib.Ben.Demystifier.git
+[submodule "DTLib.XXHash"]
+	path = DTLib.XXHash
+	url = https://github.com/Timerix22/DTLib.XXHash.git
