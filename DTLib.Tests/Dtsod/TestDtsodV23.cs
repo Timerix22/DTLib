@@ -17,7 +17,7 @@ public static class TestDtsodV23
     public static void TestBaseTypes()
     {
         ColoredConsole.WriteLine("c", "-----[TestDtsodV23/TestBaseTypes]-----");
-        DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}base_types.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "base_types.dtsod")));
         foreach (var pair in dtsod)
             ColoredConsole.WriteLine("b", pair.Value.GetType().Name + ' ', "w", pair.Key + ' ', "c", pair.Value.ToString());
         ColoredConsole.WriteLine("g", "test completed");
@@ -25,7 +25,7 @@ public static class TestDtsodV23
     public static void TestLists()
     {
         ColoredConsole.WriteLine("c", "-------[TestDtsodV23/TestLists]-------");
-        DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}lists.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "lists.dtsod")));
         foreach (var pair in dtsod)
         {
             ColoredConsole.WriteLine("b",  pair.Value.GetType().Name + ' ', "w", pair.Key, "c",
@@ -39,7 +39,7 @@ public static class TestDtsodV23
     public static void TestComplexes()
     {
         ColoredConsole.WriteLine("c", "-----[TestDtsodV23/TestComplexes]-----");
-        DtsodV23 dtsod = new(File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}complexes.dtsod"));
+        DtsodV23 dtsod = new(File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "complexes.dtsod")));
         foreach (var complex in dtsod)
         {
             ColoredConsole.WriteLine("b", complex.Value.GetType().Name + ' ', "w", complex.Key,
@@ -55,7 +55,7 @@ public static class TestDtsodV23
     {
         ColoredConsole.WriteLine("c", "--[TestDtsodV23/TestReSerialization]--");
         var dtsod = new DtsodV23(new DtsodV23(new DtsodV23(
-            new DtsodV23(File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}complexes.dtsod")).ToString()).ToString()).ToString());
+            new DtsodV23(File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "complexes.dtsod")))).ToString()).ToString());
         ColoredConsole.WriteLine("y", dtsod.ToString());
         ColoredConsole.WriteLine("g", "test completed");
     }
@@ -64,7 +64,7 @@ public static class TestDtsodV23
     {
         ColoredConsole.WriteLine("c", "-------[TestDtsodV23/TestSpeed]-------");
         IDtsod dtsod=null;
-        string text = File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}messages.dtsod");
+        string text = File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "messages.dtsod"));
         LogOperationTime("V21 deserialization",64,()=>dtsod=new DtsodV21(text));
         LogOperationTime("V21 serialization", 64, () => _=dtsod.ToString());
         LogOperationTime("V23 deserialization", 64, () => dtsod = new DtsodV23(text));
@@ -75,7 +75,7 @@ public static class TestDtsodV23
     public static void TestMemoryConsumption()
     {
         ColoredConsole.WriteLine("c", "----[TestDtsodV23/TestMemConsumpt]----");
-        string text = File.ReadAllText($"Dtsod{Path.Sep}TestResources{Path.Sep}DtsodV23{Path.Sep}messages.dtsod");
+        string text = File.ReadAllText(Path.Concat("Dtsod","TestResources","DtsodV23", "messages.dtsod"));
         var a = GC.GetTotalMemory(true);
         var dtsods = new DtsodV23[64];
         for (int i = 0; i < dtsods.Length; i++)

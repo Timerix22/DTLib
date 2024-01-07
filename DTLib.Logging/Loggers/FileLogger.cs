@@ -27,7 +27,7 @@ public class FileLogger : ILogger
     {}
 
     public FileLogger(IOPath dir, IOPath programName, ILogFormat format)
-        : this($"{dir}{Path.Sep}{programName}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log", format)
+        : this($"{Path.Concat(dir, programName)}_{DateTime.Now.ToString(MyTimeFormat.ForFileNames)}.log", format)
     {}
 
     public FileLogger(IOPath dir, IOPath programName) : this(dir, programName, new DefaultLogFormat())

@@ -1,7 +1,3 @@
-#if NETSTANDARD2_1 || NET6_0 || NET7_0 || NET8_0
-    #define USE_SPAN
-#endif
-
 using System.Runtime.CompilerServices;
 
 namespace DTLib.Filesystem;
@@ -54,59 +50,40 @@ public static class Path
     }
 
 #if  !USE_SPAN
-    private static unsafe void  CopyTo(this string s, char* b)
+    private static void  CopyTo(this string s, char[] b, int startIndex)
     {
         for (int i = 0; i < s.Length; i++)
-            b[i] = s[i];
+            b[startIndex+i] = s[i];
     }
 #endif
     
     public static IOPath Concat(params IOPath[] parts)
     {
-#if  USE_SPAN
-        Span<bool> 
-#else
-        unsafe
+        var needSeparator = new bool[parts.Length-1];
+        int lengthSum = 0;
+        for (int i = 0; i < parts.Length-1; i++)
         {
-            bool*
-#endif
-                needSeparator = stackalloc bool[parts.Length-1];
-            int lengthSum = 0;
-            for (int i = 0; i < parts.Length-1; i++)
+            lengthSum += parts[i].Length;
+            if (!parts[i].Str.EndsWith(Sep) && !parts[i + 1].Str.StartsWith(Sep))
             {
-                lengthSum += parts[i].Length;
-                if (!parts[i].Str.EndsWith(Sep) && !parts[i + 1].Str.StartsWith(Sep))
-                {
-                    needSeparator[i] = true;
-                    lengthSum++;
-                }
-                else needSeparator[i] = false;
+                needSeparator[i] = true;
+                lengthSum++;
             }
-            lengthSum += parts[parts.Length-1].Length;
-#if USE_SPAN
-            Span<char> 
-#else
-            char*
-#endif
-                buffer = stackalloc char[lengthSum];
-            parts[0].Str.CopyTo(buffer);
-            int copiedChars = parts[0].Length;
-            for (int i = 1; i < parts.Length; i++)
-            {
-                if (needSeparator[i-1])
-                    buffer[copiedChars++] = Sep;
-#if USE_SPAN
-                parts[i].Str.CopyTo(buffer.Slice(copiedChars));
-#else
-                parts[i].Str.CopyTo(buffer+copiedChars);
-#endif
-                copiedChars += parts[i].Length;
-            }
-        
-            return new IOPath(new string(buffer), true);
-#if !USE_SPAN
+            else needSeparator[i] = false;
         }
-#endif
+        lengthSum += parts[parts.Length-1].Length;
+        var buffer = new char[lengthSum];
+        parts[0].Str.CopyTo(buffer, 0);
+        int copiedChars = parts[0].Length;
+        for (int i = 1; i < parts.Length; i++)
+        {
+            if (needSeparator[i-1])
+                buffer[copiedChars++] = Sep;
+            parts[i].Str.CopyTo(buffer, copiedChars);
+            copiedChars += parts[i].Length;
+        }
+    
+        return new IOPath(new string(buffer), true);
     }
 
     /// returns just dir name or file name with extension
