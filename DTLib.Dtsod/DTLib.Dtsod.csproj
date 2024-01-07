@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Dtsod</PackageId>
-        <Version>1.3.2</Version>
+        <Version>1.3.3</Version>
         <Authors>Timerix</Authors>
         <Description>Definitely not json</Description>
         <RepositoryType>GIT</RepositoryType>
@@ -20,10 +20,6 @@
     </PropertyGroup>
     
     <!--external dependencies-->
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-        <Reference Include="System.Dynamic" />
-        <Reference Include="Microsoft.CSharp" />
-    </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
@@ -33,7 +29,7 @@
         <ProjectReference Include="..\DTLib\DTLib.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib" Version="1.3.2" />
+        <PackageReference Include="DTLib" Version="1.3.3" />
     </ItemGroup>
     
     <!--project files-->

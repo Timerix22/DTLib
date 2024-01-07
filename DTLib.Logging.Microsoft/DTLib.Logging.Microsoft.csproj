@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <!--package info-->
-        <PackageId>DTLib.Logging</PackageId>
-        <Version>1.3.3</Version>
+        <PackageId>DTLib.Logging.Microsoft</PackageId>
+        <Version>1.0.0</Version>
         <Authors>Timerix</Authors>
-        <Description>Loggers with dependency injection</Description>
+        <Description>DTLib logger wrapper with dependency injection</Description>
         <RepositoryType>GIT</RepositoryType>
         <RepositoryUrl>https://github.com/Timerix22/DTLib</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Timerix22/DTLib</PackageProjectUrl>
@@ -19,13 +19,16 @@
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
+    <!--external dependencies-->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    </ItemGroup>
+
     <!--DTLib dependencies-->
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <ProjectReference Include="..\DTLib\DTLib.csproj" />
-        <ProjectReference Include="..\DTLib.Ben.Demystifier\DTLib.Ben.Demystifier.csproj" />
+        <ProjectReference Include="..\DTLib.Logging\DTLib.Logging.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib" Version="1.3.3" />
-        <PackageReference Include="DTLib.Ben.Demystifier" Version="1.0.6" />
+        <PackageReference Include="DTLib.Logging" Version="1.3.3" />
     </ItemGroup>
 </Project>

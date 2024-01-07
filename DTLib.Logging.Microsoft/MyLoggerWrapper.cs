@@ -1,9 +1,12 @@
-using Microsoft.Extensions.Logging;
+
 // ReSharper disable RedundantNameQualifier
 
-namespace DTLib.Logging.DependencyInjection;
+using System;
+using Microsoft.Extensions.Logging;
 
-public class MyLoggerWrapper<TCaller> : Microsoft.Extensions.Logging.ILogger<TCaller>
+namespace DTLib.Logging.Microsoft;
+
+public class MyLoggerWrapper<TCaller> : global::Microsoft.Extensions.Logging.ILogger<TCaller>
 {
     public DTLib.Logging.ILogger Logger;
     public MyLoggerWrapper(DTLib.Logging.ILogger logger)=>

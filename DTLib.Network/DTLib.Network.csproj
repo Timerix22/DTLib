@@ -2,7 +2,7 @@
     <PropertyGroup>
         <!--package info-->
         <PackageId>DTLib.Network</PackageId>
-        <Version>1.3.4</Version>
+        <Version>1.4.0</Version>
         <Authors>Timerix</Authors>
         <Description>Some sick network protocols</Description>
         <RepositoryType>GIT</RepositoryType>
@@ -14,24 +14,16 @@
         <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <DebugType>embedded</DebugType>
         <!--language features-->
-        <LangVersion>10</LangVersion>
+        <LangVersion>12</LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
-    <!--external dependencies-->
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-        <Reference Include="System.Net" />
-        <Reference Include="System.Net.Http" />
-        <Reference Include="Microsoft.CSharp" />
-    </ItemGroup>
-
     <!--DTLib dependencies-->
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <ProjectReference Include="..\DTLib\DTLib.csproj" />
         <ProjectReference Include="..\DTLib.Dtsod\DTLib.Dtsod.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="DTLib.Dtsod" Version="1.3.2" />
+        <PackageReference Include="DTLib.Dtsod" Version="1.3.3" />
     </ItemGroup>
 </Project>
