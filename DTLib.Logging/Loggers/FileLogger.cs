@@ -2,12 +2,7 @@
 
 public class FileLogger : ILogger
 {
-    public bool DebugLogEnabled { get; set; } =
-#if DEBUG
-        true;
-#else 
-        false;
-#endif
+    public bool DebugLogEnabled { get; set; } = false;
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogEnabled { get; set; } = true;
@@ -41,13 +36,15 @@ public class FileLogger : ILogger
         var msg = format.CreateMessage(context, severity, message);
         lock (LogfileStream)
         {
-            LogfileStream.FluentWrite(msg.ToBytes(StringConverter.UTF8)).Flush();
+            LogfileStream.FluentWriteString(msg)
+                .FluentWriteByte('\n'.ToByte())
+                .Flush();
         }
     }
 
     public virtual void Dispose()
     {
-        try 
+        try
         {
             LogfileStream?.Flush();
             LogfileStream?.Dispose();

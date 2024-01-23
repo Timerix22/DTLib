@@ -28,7 +28,6 @@ public class DefaultLogFormat : ILogFormat
         if (sb.Length != 0) 
             sb.Append(": ");
         sb.Append(message);
-        sb.Append('\n');
         return sb.ToString();
     }
 }

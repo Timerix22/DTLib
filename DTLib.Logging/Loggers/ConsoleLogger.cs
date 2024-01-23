@@ -5,12 +5,7 @@ namespace DTLib.Logging;
 // вывод лога в консоль и файл
 public class ConsoleLogger : ILogger
 {
-    public bool DebugLogEnabled { get; set; } = 
-#if DEBUG
-        true;
-#else 
-        false;
-#endif
+    public bool DebugLogEnabled { get; set; } = false;
     public bool InfoLogEnabled { get; set; } = true;
     public bool WarnLogEnabled { get; set; } = true;
     public bool ErrorLogEnabled { get; set; } = true;
@@ -32,7 +27,7 @@ public class ConsoleLogger : ILogger
         
         var msg = format.CreateMessage(context, severity, message);
         lock (consolelocker) 
-            ColoredConsole.Write(ColorFromSeverity(severity),msg);
+            ColoredConsole.WriteLine(ColorFromSeverity(severity),msg);
     }
 
     private static ConsoleColor ColorFromSeverity(LogSeverity severity)
